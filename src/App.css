@@ -1,3 +1,24 @@
-.App {
+/* .App {
   text-align: center;
+} */
+
+:root {
+  --height: 50px;
+  --main-color: #3498db;
+  --padding: 20px;
+}
+
+/* LEARNING PAGE CSS */
+.header-section{
+  background-color: var(--main-color);
+  /* height: var(--height); */
+  /* align-items: center; */
+}
+
+.body-section{
+  height: 1000px;
+}
+
+.modal-backdrop {
+  display: none !important;
 }
