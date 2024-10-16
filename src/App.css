@@ -9,16 +9,21 @@
 }
 
 /* LEARNING PAGE CSS */
-.header-section{
+.header-section {
   background-color: var(--main-color);
   /* height: var(--height); */
   /* align-items: center; */
 }
 
-.body-section{
+.body-section {
   height: 1000px;
 }
 
 .modal-backdrop {
   display: none !important;
+}
+
+/* Body section */
+pre{
+  font-family: "Roboto", "Arial", sans-serif !important;
 }
