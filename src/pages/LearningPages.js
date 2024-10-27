@@ -160,4 +160,5 @@ function LearningPages() {
   );
 }
 
+// Export the LearningPages component
 export default LearningPages;
