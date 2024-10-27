@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import '../App.css';
 
-const Log = () => {
+const Registration = () => {
     const [message, setMessage] = useState(null);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Xử lý đăng nhập ở đây, ví dụ gửi request đến server
-        // Nếu có lỗi, hãy gọi setMessage để hiển thị thông báo lỗi
+        // Handle registration logic here, such as sending data to the server
+        // If there's an error, call setMessage to display the error message
     };
 
     return (
@@ -21,26 +21,34 @@ const Log = () => {
             }}
         >
             <div className="container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                {/* <header>
-                    <a href="/" className="logo">
-                        <img src="logo.jpg" alt="web logo" style={{width : "40px", height :"40px" }} />
-                    </a>
-                </header> */}
+                
 
-                <div className="log-wrapper">
-                    <div className="form-box login">
-                        <h1>Log In</h1>
+                <div className="regis-wrapper">
+                    <div className="form-box register">
+                        <h1>Sign Up</h1>
                         <form onSubmit={handleSubmit}>
                             <div className="input-box">
                                 <i className='bx bxs-user-circle'></i>
                                 <input type="text" id="name" name="name" required />
-                                <label>Username</label>
+                                <label htmlFor="name">Username</label>
+                            </div>
+
+                            <div className="input-box">
+                                <i className='bx bxs-envelope'></i>
+                                <input type="email" id="email" name="email" required />
+                                <label htmlFor="email">Email</label>
                             </div>
 
                             <div className="input-box">
                                 <i className='bx bx-lock'></i>
                                 <input type="password" id="password" name="password" required />
-                                <label>Password</label>
+                                <label htmlFor="password">Password</label>
+                            </div>
+
+                            <div className="input-box">
+                                <i className='bx bx-lock'></i>
+                                <input type="password" id="passwordConfirm" name="passwordConfirm" required />
+                                <label htmlFor="passwordConfirm">Confirm Password</label>
                                 {message && (
                                     <div className="error-message">
                                         <h5 className="alert alert-danger mt-2">{message}</h5>
@@ -49,14 +57,17 @@ const Log = () => {
                             </div>
 
                             <div className="remember-forgot">
-                                <label><input type="checkbox" /> Remember me </label>
-                                <a href="#">Forgot password?</a>
+                                <label>
+                                    <input type="checkbox" required /> I agree to the terms & conditions
+                                </label>
                             </div>
 
-                            <button type="submit" className="btn">Login</button>
+                            <button type="submit" className="btn">Sign Up</button>
 
                             <div className="login-register">
-                                <p>Don't have an account? <a href="/registration" className="register-link">Sign Up</a></p>
+                                <p>
+                                    Already have an account? <a href="/login" className="login-link">Log In</a>
+                                </p>
                             </div>
                         </form>
                     </div>
@@ -66,4 +77,4 @@ const Log = () => {
     );
 };
 
-export default Log;
+export default Registration;
