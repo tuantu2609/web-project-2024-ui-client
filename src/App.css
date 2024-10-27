@@ -256,3 +256,7 @@ header{
 pre{
   font-family: "Roboto", "Arial", sans-serif !important;
 }
+
+.overflow-scroll {
+  max-height: 200px; /* Thay đổi giá trị tùy theo nhu cầu của bạn */
+}
