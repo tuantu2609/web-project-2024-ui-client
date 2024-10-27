@@ -8,6 +8,7 @@ function LearningPages() {
   const [videos, setVideos] = useState([]);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [showLessonList, setShowLessonList] = useState(true);
+  const [showFullDesc, setShowFullDesc] = useState(false);
 
   function convertDuration(seconds) {
     const hours = Math.floor(seconds / 3600);
@@ -32,6 +33,7 @@ function LearningPages() {
 
   const handleVideoChange = (index) => {
     setCurrentVideoIndex(index);
+    setShowFullDesc(false);
   };
 
   useEffect(() => {
@@ -86,8 +88,17 @@ function LearningPages() {
               <div className="mt-3 ms-3">
                 <h5>{videos[currentVideoIndex].videoTitle}</h5>
                 <pre className="mt-3">
-                  {videos[currentVideoIndex].videoDesc}
+                  {showFullDesc
+                    ? videos[currentVideoIndex].videoDesc
+                    : `${videos[currentVideoIndex].videoDesc.slice(0, 100)}...`}
                 </pre>
+                <button
+                  className="btn btn-link p-0"
+                  style={{ color: "black" }}
+                  onClick={() => setShowFullDesc(!showFullDesc)}
+                >
+                  {showFullDesc ? "Read less" : "Read more"}
+                </button>
               </div>
             )}
           </div>
@@ -127,7 +138,7 @@ function LearningPages() {
 
         {/* Button to show Lesson List */}
         <button
-          className="btn btn-dark mt-3"
+          className="btn btn-dark mt-3 ms-3"
           onClick={() => {
             setShowLessonList(!showLessonList);
             window.scrollTo({
