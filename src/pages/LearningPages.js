@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import Header from "./Header";
 import axios from "axios";
+import "../App.css";
 
 function LearningPages() {
   const [videos, setVideos] = useState([]);
@@ -160,4 +161,5 @@ function LearningPages() {
   );
 }
 
+// Export the LearningPages component
 export default LearningPages;
