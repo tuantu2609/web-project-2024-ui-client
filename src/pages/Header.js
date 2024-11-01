@@ -1,6 +1,7 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import { useNavigate } from "react-router-dom";
 
 // Import icons from Material-UI
 
@@ -8,14 +9,15 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 function Header() {
+  let navigate = useNavigate();
+
   return (
     <div className="header-section fixed-top">
       <nav className="navbar navbar-expand-lg">
-
         {/* Logo */}
         <a className="navbar-brand ms-2" href="/">
           <img
-            src="logo.jpg"
+            src="http://localhost:3000/logo.jpg"
             width="30"
             height="30"
             className="d-inline-block align-top"
@@ -127,29 +129,29 @@ function Header() {
                 aria-labelledby="dropdownMenuButton"
               >
                 <li>
-                  <a className="dropdown-item" href="/">
+                  <button
+                    className="dropdown-item"
+                    onClick={() => navigate(`/user/1`)}
+                  >
                     Profile
-                  </a>
+                  </button>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="/">
-                    My Courses
-                  </a>
+                  <button className="dropdown-item">My Courses</button>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="/">
-                    My Purchases
-                  </a>
+                  <button className="dropdown-item">My Purchases</button>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="/">
-                    Setting
-                  </a>
+                  <button className="dropdown-item">Setting</button>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="/">
+                  <button
+                    className="dropdown-item"
+                    onClick={() => navigate(`/login`)}
+                  >
                     Logout
-                  </a>
+                  </button>
                 </li>
               </ul>
             </div>

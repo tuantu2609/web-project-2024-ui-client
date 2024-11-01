@@ -1,69 +1,137 @@
-import React, { useState } from 'react';
-import '../App.css';
+import React, { useState } from "react";
+import "../App.css";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-const Log = () => {
-    const [message, setMessage] = useState(null);
+function Login() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  let navigate = useNavigate();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Xử lý đăng nhập ở đây, ví dụ gửi request đến server
-        // Nếu có lỗi, hãy gọi setMessage để hiển thị thông báo lỗi
-    };
+  const handleUsernameChange = (e) => {
+    setUsername(e.target.value);
+    if (message) setMessage("");
+  };
 
-    return (
-        <div
-            style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                minHeight: '100vh',
-                background: "url('background.jpg') no-repeat center center/cover",
-            }}
-        >
-            <div className="container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                {/* <header>
-                    <a href="/" className="logo">
-                        <img src="logo.jpg" alt="web logo" style={{width : "40px", height :"40px" }} />
-                    </a>
-                </header> */}
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+    if (message) setMessage("");
+  };
 
-                <div className="log-wrapper">
-                    <div className="form-box login">
-                        <h1>Log In</h1>
-                        <form onSubmit={handleSubmit}>
-                            <div className="input-box">
-                                <i className='bx bxs-user-circle'></i>
-                                <input type="text" id="name" name="name" required />
-                                <label>Username</label>
-                            </div>
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const data = { username: username, password: password };
+    axios
+      .post("http://localhost:3001/auth/login", data)
+      .then((response) => {
+        if (response.data.error) {
+          setMessage(response.data.error);
+        } else {
+          localStorage.setItem("accessToken", response.data.token);
+          // setAuthState({
+          //   username: response.data.username,
+          //   id: response.data.id,
+          //   status: true,
+          // });
+          alert("Login successful");
+          navigate("/");
+        }
+      })
+      .catch((error) => {
+        if (error.response) {
+          if (error.response.status === 404) {
+            setMessage("User Doesn't Exist");
+          } else if (error.response.status === 401) {
+            setMessage("Wrong Username And Password Combination");
+          } else {
+            setMessage("Internal server error.");
+          }
+        } else {
+          setMessage("Error: Unable to connect to the server.");
+        }
+      });
+  };
 
-                            <div className="input-box">
-                                <i className='bx bx-lock'></i>
-                                <input type="password" id="password" name="password" required />
-                                <label>Password</label>
-                                {message && (
-                                    <div className="error-message">
-                                        <h5 className="alert alert-danger mt-2">{message}</h5>
-                                    </div>
-                                )}
-                            </div>
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "100vh",
+        background: "url('background.jpg') no-repeat center center/cover",
+      }}
+    >
+      <div
+        className="container"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <div className="log-wrapper">
+          <div className="form-box login">
+            <h1>Log In</h1>
+            <form onSubmit={handleSubmit}>
+              <div className="input-box">
+                <i className="bx bxs-user-circle"></i>
+                <input
+                  type="text"
+                  id="username"
+                  name="username"
+                  value={username}
+                  onChange={handleUsernameChange}
+                  required
+                />
+                <label>Username</label>
+              </div>
 
-                            <div className="remember-forgot">
-                                <label><input type="checkbox" /> Remember me </label>
-                                <a href="#">Forgot password?</a>
-                            </div>
+              <div className="input-box">
+                <i className="bx bx-lock"></i>
+                <input
+                  type="password"
+                  id="pswd"
+                  name="pswd"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  required
+                />
+                <label>Password</label>
+                {message && (
+                  <div className="error-message">
+                    <h5 className="alert alert-danger mt-2">{message}</h5>
+                  </div>
+                )}
+              </div>
 
-                            <button type="submit" className="btn">Login</button>
+              <div className="remember-forgot">
+                <label>
+                  <input type="checkbox" /> Remember me{" "}
+                </label>
+                <a href="/">Forgot password?</a>
+              </div>
 
-                            <div className="login-register">
-                                <p>Don't have an account? <a href="/registration" className="register-link">Sign Up</a></p>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+              <button type="submit" className="btn">
+                Login
+              </button>
+
+              <div className="login-register">
+                <p>
+                  Don't have an account?{" "}
+                  <a href="/registration" className="register-link">
+                    Sign Up
+                  </a>
+                </p>
+              </div>
+            </form>
+          </div>
         </div>
-    );
-};
+      </div>
+    </div>
+  );
+}
 
-export default Log;
+export default Login;
