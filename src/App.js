@@ -4,6 +4,8 @@ import Login from "./pages/Login";
 import LearningPages from "./pages/LearningPages";
 import LoginFrom from "./pages/test";
 import Registration from "./pages/Registration";
+import HomePage from "./pages/HomePage";
+import Header from "./pages/Header";
 
 function App() {
   return (
@@ -13,6 +15,8 @@ function App() {
           <Route path="/" element={<LearningPages />} />
           <Route path="/login" element={<Login />} />
           <Route path="/registration" element={<Registration />} />
+          <Route path="/home" element={<HomePage />} />
+          {/* <Route path="/header" element={<Header />} /> */}
         </Routes>
       </Router>
     </div>

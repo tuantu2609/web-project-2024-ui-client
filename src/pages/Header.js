@@ -1,17 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 // Import icons from Material-UI
-
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
-function Header() {
-  return (
-    <div className="header-section fixed-top">
-      <nav className="navbar navbar-expand-lg">
 
+function Header() {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50); // Change 50 to your preferred scroll threshold
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  return (
+    <div className={`header-section fixed-top ${isScrolled ? "scrolled" : ""}`}>
+      <nav className="navbar navbar-expand-lg">
         {/* Logo */}
         <a className="navbar-brand ms-2" href="/">
           <img
@@ -41,7 +53,7 @@ function Header() {
           className="collapse navbar-collapse justify-content-between"
           id="navbarSupportedContent"
         >
-          <span className="navbar-text me-auto">HTML CSS từ Zero đến Hero</span>
+          <span className="navbar-text me-auto">From Zero to Hero</span>
 
           <form className="d-flex my-2 my-lg-0" role="search">
             <input
@@ -66,6 +78,7 @@ function Header() {
               <NotificationsIcon />
             </button>
 
+            {/* Notification Modal */}
             <div
               className="modal fade"
               id="notificationModal"
@@ -110,7 +123,7 @@ function Header() {
               </div>
             </div>
 
-            {/* Profile */}
+            {/* Profile Dropdown */}
             <div className="dropdown">
               <button
                 className="btn dropdown-toggle"
