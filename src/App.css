@@ -3,10 +3,12 @@
 } */
 
 :root {
-  --height: 50px;
-  --main-color: #1181cc;
+  --height: 60px;
+  --main-color: #3498db;
   --padding: 20px;
+  --course-img: 250px;
 }
+
  /* SCROLL BAR */
  /* Thiết lập kiểu dáng cho thanh cuộn của trình duyệt */
 ::-webkit-scrollbar {
@@ -36,13 +38,16 @@ html {
 
  /* LOGIN PAGE */
  *{
+=======
+/* LOGIN PAGE */
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family:"Poppins", sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-header{
+header {
   position: fixed;
   top: 0;
   left: 0;
@@ -55,13 +60,13 @@ header{
   z-index: 99;
 }
 
-.logo{
+.logo {
   font-size: 2em;
   color: #fff;
   user-select: none;
 }
 
-.navigation a{
+.navigation a {
   position: relative;
   font-size: 1.1em;
   color: #fff;
@@ -70,67 +75,67 @@ header{
   margin-left: 40px;
 }
 
-.log-wrapper{
+.log-wrapper {
   position: relative;
   width: 480px;
   height: 420px;
   background: transparent;
-  border: 2px solid ;
+  border: 2px solid;
   color: #fff;
   border-radius: 25px;
-  box-shadow: 0 0 30px rgba(0, 0, 0, .5);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  transition: height .2s ease;
+  transition: height 0.2s ease;
 }
 
-.log-wrapper.active{
+.log-wrapper.active {
   height: 520px;
 }
 
-.log-wrapper .form-box{
+.log-wrapper .form-box {
   width: 100%;
   padding: 40px;
 }
 
-.log-wrapper .form-box.login{
-  transition: transform .5s ease;
+.log-wrapper .form-box.login {
+  transition: transform 0.5s ease;
   transform: translateX(0);
 }
 
-.log-wrapper.active .form-box.login{
+.log-wrapper.active .form-box.login {
   transition: none;
   transform: translateX(-500px);
 }
 
-.log-wrapper .form-box.register{
+.log-wrapper .form-box.register {
   position: absolute;
   transition: none;
   transform: translateX(500px);
 }
 
-.log-wrapper.active .form-box.register{
-  transition: transform .5s ease;
+.log-wrapper.active .form-box.register {
+  transition: transform 0.5s ease;
   transform: translateX(0);
 }
 
-.form-box h1{
+.form-box h1 {
   font-size: 2em;
   color: #fff;
   text-align: center;
 }
 
-.input-box{
+.input-box {
   position: relative;
   width: 100%;
-  height:50px;
+  height: 50px;
   border-bottom: 2px solid #fff;
   margin: 30px 0;
 }
 
-.input-box label{
+.input-box label {
   position: absolute;
   top: 50%;
   left: 5px;
@@ -139,23 +144,22 @@ header{
   color: #fff;
   font-weight: 500;
   pointer-events: none;
-  transition: .5s;
+  transition: 0.5s;
 }
 
-.error-message{
+.error-message {
   color: rgb(223, 64, 64);
   position: relative;
   width: 100%;
-  height:20px;
+  height: 20px;
   margin: 10px 0;
 }
-.input-box input:focus~label,
-.input-box input:valid~label{
+.input-box input:focus ~ label,
+.input-box input:valid ~ label {
   top: -5px;
-
 }
 
-.input-box input{
+.input-box input {
   width: 100%;
   height: 100%;
   background: transparent;
@@ -167,46 +171,44 @@ header{
   padding: 0 35px 0 5px;
 }
 
-
-.log-wrapper h1{
+.log-wrapper h1 {
   font-size: 36px;
   text-align: center;
 }
 
-.log-wrapper .input-box{
+.log-wrapper .input-box {
   position: relative;
   width: 100%;
   height: 50px;
   margin: 30px 0;
 }
 
-.remember-forgot{
-  font-size: .9em;
+.remember-forgot {
+  font-size: 0.9em;
   color: #fff;
   font-weight: 500;
   display: flex;
   justify-content: space-between;
 }
 
-.remember-forgot label input{
+.remember-forgot label input {
   accent-color: #fff;
   margin-right: 3px;
-
 }
 
-.remember-forgot a{
+.remember-forgot a {
   color: #fff;
   text-decoration: none;
 }
 
-.remember-forgot a:hover{
+.remember-forgot a:hover {
   text-decoration: underline;
 }
-.input-box input::placeholder{
+.input-box input::placeholder {
   color: #fff;
 }
 
-.input-box i{
+.input-box i {
   position: absolute;
   right: 20px;
   top: 50%;
@@ -214,21 +216,21 @@ header{
   font-size: 20px;
 }
 
-.log-wrapper .remember-forgot{
+.log-wrapper .remember-forgot {
   display: flex;
   justify-content: space-between;
   font-size: 14.5px;
   margin: -15px 0 15 px;
 }
 
-.log-wrapper .btn{
+.log-wrapper .btn {
   width: 100%;
   height: 45px;
   background: #fff;
   border: none;
   outline: none;
   border-radius: 6px;
-  box-shadow:  0 0 10px rgba(0, 0, 0, .1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   font-size: 1em;
   color: #333;
@@ -236,84 +238,84 @@ header{
   margin: 20px 0 0px;
 }
 
-.login-register{
- font-size: .9em;
- color: #fff;
- text-align: center;
- font-weight: 500;
- margin:  25px 0 10px; 
+.login-register {
+  font-size: 0.9em;
+  color: #fff;
+  text-align: center;
+  font-weight: 500;
+  margin: 25px 0 10px;
 }
 
-.login-register p a{
+.login-register p a {
   color: #fff;
   text-decoration: none;
   font-weight: 600;
 }
 
-.login-register p a:hover{
+.login-register p a:hover {
   text-decoration: underline;
 }
 
 /* REGISTRATION PAGE */
-.regis-wrapper{
+.regis-wrapper {
   position: relative;
   width: 500px;
-  height: 570px;
+  height: 650px;
   background: transparent;
-  border: 2px solid ;
+  border: 2px solid;
   color: #fff;
   border-radius: 25px;
-  box-shadow: 0 0 30px rgba(0, 0, 0, .5);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  transition: height .2s ease;
+  transition: height 0.2s ease;
 }
 
-.regis-wrapper.active{
+.regis-wrapper.active {
   height: 520px;
 }
 
-.regis-wrapper .form-box{
+.regis-wrapper .form-box {
   width: 100%;
   padding: 40px;
 }
 
-.error-message{
+.error-message {
   color: rgb(223, 64, 64);
   position: relative;
   width: 100%;
-  height:20px;
+  height: 20px;
   margin: 10px 0;
 }
-.regis-wrapper h1{
+.regis-wrapper h1 {
   font-size: 36px;
   text-align: center;
 }
 
-.regis-wrapper .input-box{
+.regis-wrapper .input-box {
   position: relative;
   width: 100%;
   height: 50px;
   margin: 30px 0;
 }
 
-.regis-wrapper .btn{
+.regis-wrapper .btn {
   width: 100%;
   height: 45px;
   background: #fff;
   border: none;
   outline: none;
   border-radius: 6px;
-  box-shadow:  0 0 10px rgba(0, 0, 0, .1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   font-size: 1em;
   color: #333;
   font-weight: 600;
   margin: 20px 0 0px;
 }
-
+ 
  /* HOMEPAGE CSS  */
  .h1.courses-title{
   font-size: 3.5em;
@@ -490,6 +492,7 @@ header{
 
 
 .body-section {
+  /* margin-top: var(--height); */
   height: 1000px;
 }
 
@@ -498,14 +501,13 @@ header{
 }
 
 /* Body section */
-pre{
+pre {
   font-family: "Roboto", "Arial", sans-serif !important;
 }
 
 .overflow-scroll {
   max-height: 200px; /* Thay đổi giá trị tùy theo nhu cầu của bạn */
 }
-
 
 /* FOOTER CSS */
 .footer {
@@ -601,4 +603,108 @@ pre{
   max-width: max-content;
   width: 100%;
   margin-inline: auto;
+
+/* UserProfile */
+.banner {
+  position: relative;
+  width: 100%;
+  background: top center/cover no-repeat;
+}
+
+.banner-img {
+  width: 100%;
+  max-height: 250px;
+  object-fit: cover;
+  border-bottom: 1px solid #ddd;
+}
+
+/* .avatar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */
+
+.user-profile {
+  position: absolute;
+  bottom: -30%;
+  left: 10%;
+  display: flex;
+  align-items: flex-end;
+  z-index: 1;
+}
+
+.avatar {
+  width: 100%;
+  max-width: clamp(75px, 15vw, 150px);
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 50%;
+  border: solid #000;
+  border-width: clamp(5px, 1vw, 10px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rounded-bottom-custom {
+  border-bottom-right-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+
+.personal-detail-section .right-side {
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.left-side .col-12 {
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
+}
+
+.course-enrollment-display {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.course-enrollment-img {
+  width: var(--course-img);
+  border-radius: 10px;
+  margin-right: 10px;
+}
+
+.course-enrollment-detail {
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  .user-profile {
+    position: absolute;
+    top: 75%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column; /* Đặt user-name bên dưới avatar */
+    align-items: center; /* Căn giữa cả avatar và user-name */
+    text-align: center; /* Để văn bản trong user-name căn giữa */
+  }
+
+  .user-name {
+    margin-left: 0; /* Xóa khoảng cách bên trái */
+    margin-top: 10px; /* Tạo khoảng cách giữa avatar và user-name */
+  }
+
+  .course-enrollment-display {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+  }
 }
