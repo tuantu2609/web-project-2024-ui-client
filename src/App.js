@@ -1,27 +1,74 @@
 import "./App.css";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
+
+// Importing Pages
 import Login from "./pages/Login";
 import LearningPages from "./pages/LearningPages";
 import Registration from "./pages/Registration";
 import HomePage from "./pages/HomePage";
-import Header from "./pages/Header";
 import UserProfile from "./pages/UserProfile";
+import Header from "./pages/Header";
 
+// Importing libraries
+import { AuthContext } from "./helpers/AuthContext";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 function App() {
+  const [authState, setAuthState] = useState({
+    username: "",
+    id: 0,
+    role: "",
+    status: false,
+  });
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3001/auth/user", {
+        headers: {
+          accessToken: localStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        if (response.data.error) {
+          setAuthState({ ...authState, status: false });
+        } else {
+          setAuthState({
+            username: response.data.username,
+            id: response.data.id,
+            role: response.data.role,
+            status: true,
+          });
+        }
+      });
+  }, [authState]);
+
   return (
     <div className="App">
-      <Router>
-        <Routes>
-          <Route path="/" element={<LearningPages />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/registration" element={<Registration />} />
-          <Route path="/home" element={<HomePage />} />
-          {/* <Route path="/header" element={<Header />} /> */}
-          <Route path="/user/:id" element={<UserProfile />} />
-        </Routes>
-      </Router>
+      <AuthContext.Provider value={{ authState, setAuthState }}>
+        <Router>
+          {/* useLocation phải được đặt bên trong Router */}
+          <ConditionalHeader />
+          <Routes>
+            <Route path="/" element={<LearningPages />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/registration" element={<Registration />} />
+            <Route path="/home" element={<HomePage />} />
+            <Route path="/user/:id" element={<UserProfile />} />
+          </Routes>
+        </Router>
+      </AuthContext.Provider>
     </div>
+  );
+}
+
+// Component hiển thị Header dựa trên đường dẫn hiện tại
+function ConditionalHeader() {
+  const location = useLocation();
+  return (
+    <>
+      {location.pathname !== "/login" && location.pathname !== "/registration" && <Header />}
+    </>
   );
 }
 

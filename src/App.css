@@ -36,9 +36,6 @@ html {
   scrollbar-color: #2e97dd #3a2424; /* Màu của thanh cuộn và track  */
 }
 
- /* LOGIN PAGE */
- *{
-=======
 /* LOGIN PAGE */
 * {
   margin: 0;
@@ -603,6 +600,7 @@ pre {
   max-width: max-content;
   width: 100%;
   margin-inline: auto;
+}
 
 /* UserProfile */
 .banner {
