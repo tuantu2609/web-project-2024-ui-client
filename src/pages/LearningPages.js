@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
-import Header from "./Header";
 import axios from "axios";
 import "../App.css";
 
@@ -57,7 +56,6 @@ function LearningPages() {
 
   return (
     <div>
-      <Header />
 
       <div className="body-section">
         <div className="row">
