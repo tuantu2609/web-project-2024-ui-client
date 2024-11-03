@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "../App.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { AuthContext } from '../helpers/AuthContext'
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const {setAuthState} = useContext(AuthContext);
   let navigate = useNavigate();
 
   const handleUsernameChange = (e) => {
@@ -30,11 +32,12 @@ function Login() {
           setMessage(response.data.error);
         } else {
           localStorage.setItem("accessToken", response.data.token);
-          // setAuthState({
-          //   username: response.data.username,
-          //   id: response.data.id,
-          //   status: true,
-          // });
+          setAuthState({
+            username: response.data.username,
+            id: response.data.id,
+            role: response.data.role,
+            status: true,
+          });
           alert("Login successful");
           navigate("/");
         }

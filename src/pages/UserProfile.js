@@ -1,36 +1,29 @@
-// import React, { useEffect, useState } from "react";
-import React, { useEffect } from "react";
+// import React, { useEffect, useContext, useState } from "react";
+import React, { useEffect, useContext } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
-import Header from "./Header";
 import "../App.css";
-// import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { AuthContext } from '../helpers/AuthContext';
 // import axios from "axios";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import PeopleIcon from "@mui/icons-material/People";
 
 function UserProfile() {
-  // let navigate = useNavigate();
+  const { authState } = useContext(AuthContext);
+  let navigate = useNavigate();
 
   useEffect(() => {
-    // if (!localStorage.getItem("accessToken")) {
-    //   navigate("/login");
-    // } else {
-    //   const header = document.querySelector(".header-section");
-    //   const bodySection = document.querySelector(".body-section");
+    if (!localStorage.getItem("accessToken")) {
+      navigate("/login");
+    } else {
+      const header = document.querySelector(".header-section");
+      const bodySection = document.querySelector(".body-section");
 
-    //   if (header && bodySection) {
-    //     const headerHeight = header.offsetHeight;
-    //     bodySection.style.marginTop = `${headerHeight}px`;
-    //   }
-    // }
-    const header = document.querySelector(".header-section");
-    const bodySection = document.querySelector(".body-section");
-
-    if (header && bodySection) {
-      const headerHeight = header.offsetHeight;
-      bodySection.style.marginTop = `${headerHeight}px`;
+      if (header && bodySection) {
+        const headerHeight = header.offsetHeight;
+        bodySection.style.marginTop = `${headerHeight}px`;
+      }
     }
 
     const updateMarginTop = () => {
@@ -59,7 +52,6 @@ function UserProfile() {
 
   return (
     <div>
-      <Header />
 
       <div className="body-section container-fluid">
         <div className="banner container-lg">
@@ -77,7 +69,7 @@ function UserProfile() {
               />
             </div>
             <div className="user-name ms-2">
-              <h1>J97</h1>
+              <h1>{authState.username}</h1>
             </div>
           </div>
         </div>
