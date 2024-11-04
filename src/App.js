@@ -50,10 +50,10 @@ function App() {
           {/* useLocation phải được đặt bên trong Router */}
           <ConditionalHeader />
           <Routes>
-            <Route path="/" element={<LearningPages />} />
+            <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/registration" element={<Registration />} />
-            <Route path="/home" element={<HomePage />} />
+            <Route path="/learning" element={<LearningPages />} />
             <Route path="/user/:id" element={<UserProfile />} />
           </Routes>
         </Router>
