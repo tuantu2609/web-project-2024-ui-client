@@ -6,19 +6,9 @@ import { AuthContext } from "../helpers/AuthContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
+import { setBodySectionMarginTop } from "../helpers/styles";
 
 import PeopleIcon from "@mui/icons-material/People";
-
-// Hàm thiết lập margin cho phần body
-const setBodySectionMargin = () => {
-  const header = document.querySelector(".header-section");
-  const bodySection = document.querySelector(".body-section");
-
-  if (header && bodySection) {
-    const headerHeight = header.offsetHeight;
-    bodySection.style.marginTop = `${headerHeight}px`;
-  }
-};
 
 // Hàm lấy dữ liệu người dùng
 const fetchUserData = (setUserData) => {
@@ -66,7 +56,7 @@ function UserProfile() {
       navigate("/login");
     }
     setTimeout(() => {
-      setBodySectionMargin();
+      setBodySectionMarginTop();
       updatePersonalDetailMargin();
     }, 50);
 

@@ -1,17 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../helpers/AuthContext";
 
 // Import icons from Material-UI
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import SearchIcon from "@mui/icons-material/Search";
+import VideoCallIcon from "@mui/icons-material/VideoCall";
+// import SearchIcon from "@mui/icons-material/Search";
 
 function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const { authState, setAuthState } = useContext(AuthContext);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // State to check if user is logged in
   let navigate = useNavigate();
+
+  const logout = () => {
+    localStorage.removeItem("accessToken");
+    setAuthState({
+      fullName: "",
+      id: 0,
+      role: "",
+      status: false,
+    });
+    setIsLoggedIn(false); // Update isLoggedIn state
+    navigate("/login");
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,13 +46,6 @@ function Header() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
-  const handleLogout = () => {
-    // Clear token and update isLoggedIn state
-    localStorage.removeItem("accessToken");
-    setIsLoggedIn(false);
-    navigate("/");
-  };
 
   return (
     <div className={`header-section fixed-top ${isScrolled ? "scrolled" : ""}`}>
@@ -90,7 +98,18 @@ function Header() {
           <div className="d-flex justify-content-end">
             {isLoggedIn ? (
               <>
-                {/* Notification */}
+                {/* Teacher Upload Video */}
+                {authState.role === "teacher" && (
+                  <button
+                    type="button"
+                    className="btn ms-2"
+                    onClick={() => navigate("/upload-video")}
+                  >
+                    <VideoCallIcon />
+                  </button>
+                )}
+                
+                {/* Notifications */}
                 <button
                   type="button"
                   className="btn me-2"
@@ -164,7 +183,7 @@ function Header() {
                     <li>
                       <button
                         className="dropdown-item"
-                        onClick={() => navigate(`/user/1`)}
+                        onClick={() => navigate(`/user/${authState.id}`)}
                       >
                         Profile
                       </button>
@@ -179,7 +198,7 @@ function Header() {
                       <button className="dropdown-item">Setting</button>
                     </li>
                     <li>
-                      <button className="dropdown-item" onClick={handleLogout}>
+                      <button className="dropdown-item" onClick={logout}>
                         Logout
                       </button>
                     </li>

@@ -3,13 +3,10 @@ import { useEffect } from "react";
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
-import Header from "./Header";
 import "../App.css";
 import GroupsIcon from "@mui/icons-material/Groups";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import TimerOutlinedIcon from "@mui/icons-material/TimerOutlined";
-import Footer from "./Footer";
-import { useNavigate } from "react-router-dom";
 
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
@@ -43,7 +40,6 @@ const HomePage = ({ username }) => {
   };
   return (
     <div className="home-background">
-      <Header />
       <section className="courses">
         <div className="container">
           <div className="courses-content">
@@ -118,7 +114,6 @@ const HomePage = ({ username }) => {
         </div>
       </section>
 
-      <Footer />
     </div>
   );
 };
