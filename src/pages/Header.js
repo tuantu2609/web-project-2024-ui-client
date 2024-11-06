@@ -8,11 +8,12 @@ import { AuthContext } from "../helpers/AuthContext";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
+// import SearchIcon from "@mui/icons-material/Search";
 
 function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const { authState, setAuthState } = useContext(AuthContext);
-
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to check if user is logged in
   let navigate = useNavigate();
 
   const logout = () => {
@@ -23,10 +24,9 @@ function Header() {
       role: "",
       status: false,
     });
-
+    setIsLoggedIn(false); // Update isLoggedIn state
     navigate("/login");
   };
-  
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,6 +34,14 @@ function Header() {
     };
 
     window.addEventListener("scroll", handleScroll);
+
+    // Check for token on mount
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      // If token exists, set isLoggedIn to true
+      setIsLoggedIn(true);
+    }
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
@@ -75,122 +83,145 @@ function Header() {
 
           <form className="d-flex my-2 my-lg-0" role="search">
             <input
-              className="form-control me-2"
+              className="form-control me-5"
               type="search"
               placeholder="Search"
               aria-label="Search"
             />
+
             <button className="btn btn-primary" type="submit">
               Search
             </button>
           </form>
 
-          {/* Notification */}
+          {/* Conditional Rendering based on login status */}
           <div className="d-flex justify-content-end">
-            {authState.role === "teacher" && (
-              <button
-                type="button"
-                className="btn ms-2"
-                onClick={() => navigate("/upload-video")}
-              >
-                <VideoCallIcon />
-              </button>
-            )}
-            <button
-              type="button"
-              className="btn me-2 ms-2"
-              data-bs-toggle="modal"
-              data-bs-target="#notificationModal"
-            >
-              <NotificationsIcon />
-            </button>
-            {/* Notification Modal */}
-            <div
-              className="modal fade"
-              id="notificationModal"
-              tabIndex="-1"
-              aria-hidden="true"
-              aria-labelledby="notificationModalLabel"
-              data-bs-backdrop="static"
-              data-bs-keyboard="false"
-            >
-              <div className="modal-dialog modal-dialog-scrollable">
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <h5 className="modal-title" id="notificationModalLabel">
-                      Notifications
-                    </h5>
-                    <button
-                      type="button"
-                      className="btn-close"
-                      data-bs-dismiss="modal"
-                      aria-label="Close"
-                    ></button>
-                  </div>
-                  <div className="modal-body">
-                    <ul className="list-group list-group-flush">
-                      <li className="list-group-item">Notification 1</li>
-                      <li className="list-group-item">Notification 2</li>
-                      <li className="list-group-item">Notification 3</li>
-                      <li className="list-group-item">Notification 4</li>
-                      <li className="list-group-item">Notification 5</li>
-                    </ul>
-                  </div>
-                  <div className="modal-footer">
-                    <button
-                      type="button"
-                      className="btn btn-secondary"
-                      data-bs-dismiss="modal"
-                    >
-                      Close
-                    </button>
+            {isLoggedIn ? (
+              <>
+                {/* Teacher Upload Video */}
+                {authState.role === "teacher" && (
+                  <button
+                    type="button"
+                    className="btn ms-2"
+                    onClick={() => navigate("/upload-video")}
+                  >
+                    <VideoCallIcon />
+                  </button>
+                )}
+                
+                {/* Notifications */}
+                <button
+                  type="button"
+                  className="btn me-2"
+                  data-bs-toggle="modal"
+                  data-bs-target="#notificationModal"
+                >
+                  <NotificationsIcon />
+                </button>
+
+                {/* Notification Modal */}
+                <div
+                  className="modal fade"
+                  id="notificationModal"
+                  tabIndex="-1"
+                  aria-hidden="true"
+                  aria-labelledby="notificationModalLabel"
+                  data-bs-backdrop="static"
+                  data-bs-keyboard="false"
+                >
+                  <div className="modal-dialog modal-dialog-scrollable">
+                    <div className="modal-content">
+                      <div className="modal-header">
+                        <h5 className="modal-title" id="notificationModalLabel">
+                          Notifications
+                        </h5>
+                        <button
+                          type="button"
+                          className="btn-close"
+                          data-bs-dismiss="modal"
+                          aria-label="Close"
+                        ></button>
+                      </div>
+                      <div className="modal-body">
+                        <ul className="list-group list-group-flush">
+                          <li className="list-group-item">Notification 1</li>
+                          <li className="list-group-item">Notification 2</li>
+                          <li className="list-group-item">Notification 3</li>
+                          <li className="list-group-item">Notification 4</li>
+                          <li className="list-group-item">Notification 5</li>
+                        </ul>
+                      </div>
+                      <div className="modal-footer">
+                        <button
+                          type="button"
+                          className="btn btn-secondary"
+                          data-bs-dismiss="modal"
+                        >
+                          Close
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-            {/* Profile Dropdown */}
-            <div className="dropdown">
-              <button
-                className="btn dropdown-toggle"
-                type="button"
-                id="dropdownMenuButton"
-                data-bs-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                <AccountCircleIcon />
-              </button>
-              <ul
-                className="dropdown-menu dropdown-menu-end"
-                aria-labelledby="dropdownMenuButton"
-              >
-                <li>
+
+                {/* Profile Dropdown */}
+                <div className="dropdown">
                   <button
-                    className="dropdown-item"
-                    onClick={() => navigate(`/user/1`)}
+                    className="btn dropdown-toggle"
+                    type="button"
+                    id="dropdownMenuButton"
+                    data-bs-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
                   >
-                    Profile
+                    <AccountCircleIcon />
                   </button>
-                </li>
-                <li>
-                  <button className="dropdown-item">My Courses</button>
-                </li>
-                <li>
-                  <button className="dropdown-item">My Purchases</button>
-                </li>
-                <li>
-                  <button className="dropdown-item">Setting</button>
-                </li>
-                <li>
-                  <button
-                    className="dropdown-item"
-                    onClick={logout}
+                  <ul
+                    className="dropdown-menu dropdown-menu-end"
+                    aria-labelledby="dropdownMenuButton"
                   >
-                    Logout
-                  </button>
-                </li>
-              </ul>
-            </div>
+                    <li>
+                      <button
+                        className="dropdown-item"
+                        onClick={() => navigate(`/user/${authState.id}`)}
+                      >
+                        Profile
+                      </button>
+                    </li>
+                    <li>
+                      <button className="dropdown-item">My Courses</button>
+                    </li>
+                    <li>
+                      <button className="dropdown-item">My Purchases</button>
+                    </li>
+                    <li>
+                      <button className="dropdown-item">Setting</button>
+                    </li>
+                    <li>
+                      <button className="dropdown-item" onClick={logout}>
+                        Logout
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </>
+            ) : (
+              <>
+                {/* Sign Up and Log In buttons */}
+                <button
+                  className="btn btn-primary me-1 ms-1"
+                  onClick={() => navigate(`/registration`)}
+                >
+                  Sign Up
+                </button>
+                <button
+                  className="btn btn-secondary me-1"
+                  onClick={() => navigate(`/login`)}
+                >
+                  Log In
+                </button>
+              </>
+            )}
           </div>
         </div>
       </nav>

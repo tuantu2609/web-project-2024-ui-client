@@ -13,8 +13,9 @@ import Registration from "./pages/Registration";
 import HomePage from "./pages/HomePage";
 import UserProfile from "./pages/UserProfile";
 import Header from "./pages/Header";
-import Footer from "./pages/Footer";
 import UploadVideoPages from "./pages/UploadVideoPages";
+import Fotter from "./pages/Footer";
+import ViewAllCourses from "./pages/ViewAllCourses";
 
 // Importing libraries
 import { AuthContext } from "./helpers/AuthContext";
@@ -63,6 +64,7 @@ function App() {
             {/* <Route path="/learn" element={<LearningPages />} /> */}
             <Route path="/upload-video" element={<UploadVideoPages />} />
             <Route path="/user/:id" element={<UserProfile />} />
+            <Route path="/courses" element={<ViewAllCourses />} />
           </Routes>
           <ConditionalFooter />
         </Router>
@@ -87,6 +89,14 @@ function ConditionalFooter() {
   return (
     <>
       {location.pathname !== "/login" && location.pathname !== "/registration" && <Footer />}
+    </>
+  );
+}
+function ConditionalFooter() {
+  const location = useLocation();
+  return (
+    <>
+      { <Fotter />}
     </>
   );
 }

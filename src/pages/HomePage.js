@@ -1,5 +1,5 @@
 // import { Link } from "react-router-dom";
-// import React, { useRef } from "react";
+import { useEffect } from "react";
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
@@ -10,6 +10,7 @@ import TimerOutlinedIcon from "@mui/icons-material/TimerOutlined";
 
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+
 
 const HomePage = ({ username }) => {
   const responsive = {
@@ -27,6 +28,16 @@ const HomePage = ({ username }) => {
     },
   };
 
+  let navigate = useNavigate();
+
+  const token = localStorage.getItem("accessToken");
+  const handleJoinClick = () => {
+    if (token) {
+      navigate('/progress');
+    } else {
+      navigate('/login');
+    }
+  };
   return (
     <div className="home-background">
       <section className="courses">
@@ -44,7 +55,7 @@ const HomePage = ({ username }) => {
               <strong className="color-pass"> do bạn.</strong>
             </h2>
             <div>
-              <button className="btn btn-join">
+              <button onClick={handleJoinClick} className="btn btn-join">
                 <span>Join now</span>
               </button>
             </div>
@@ -74,7 +85,7 @@ const HomePage = ({ username }) => {
               <img src="vid.jpg" className="card-img-top" alt="..." />
               <div className="card-body">
                 <h5 className="card-title">Course name {1 + index}</h5>
-                <p className="card-price">Cousrse....</p>
+                <p className="card-description">Cousrse....</p>
                 <div className="card-info">
                   <span className="card-icon">
                     <GroupsIcon />
@@ -94,7 +105,10 @@ const HomePage = ({ username }) => {
           ))}
         </Carousel>
         <div>
-          <button className="btn btn-view">
+          <button
+            onClick={() => navigate("/courses")}
+            className="btn btn-view"
+          >
             <span>View all</span>
           </button>
         </div>
