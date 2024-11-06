@@ -16,7 +16,7 @@ import axios from "axios";
 
 function App() {
   const [authState, setAuthState] = useState({
-    username: "",
+    fullName: "",
     id: 0,
     role: "",
     status: false,
@@ -34,7 +34,7 @@ function App() {
           setAuthState({ ...authState, status: false });
         } else {
           setAuthState({
-            username: response.data.username,
+            fullName: response.data.fullName,
             id: response.data.id,
             role: response.data.role,
             status: true,
@@ -50,10 +50,10 @@ function App() {
           {/* useLocation phải được đặt bên trong Router */}
           <ConditionalHeader />
           <Routes>
-            <Route path="/" element={<LearningPages />} />
+            <Route path="/learn" element={<LearningPages />} />
             <Route path="/login" element={<Login />} />
             <Route path="/registration" element={<Registration />} />
-            <Route path="/home" element={<HomePage />} />
+            <Route path="/" element={<HomePage />} />
             <Route path="/user/:id" element={<UserProfile />} />
           </Routes>
         </Router>
