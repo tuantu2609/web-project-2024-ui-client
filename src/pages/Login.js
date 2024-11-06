@@ -34,7 +34,7 @@ function Login() {
         } else {
           localStorage.setItem("accessToken", response.data.token);
           setAuthState({
-            username: response.data.username,
+            fullName: response.data.fullName,
             id: response.data.id,
             role: response.data.role,
             status: true,
