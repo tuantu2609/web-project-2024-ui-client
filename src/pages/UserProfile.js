@@ -1,58 +1,86 @@
-// import React, { useEffect, useContext, useState } from "react";
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "../App.css";
-import { AuthContext } from '../helpers/AuthContext';
-// import axios from "axios";
+import { AuthContext } from "../helpers/AuthContext";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { format } from "date-fns";
 
 import PeopleIcon from "@mui/icons-material/People";
 
+// Hàm thiết lập margin cho phần body
+const setBodySectionMargin = () => {
+  const header = document.querySelector(".header-section");
+  const bodySection = document.querySelector(".body-section");
+
+  if (header && bodySection) {
+    const headerHeight = header.offsetHeight;
+    bodySection.style.marginTop = `${headerHeight}px`;
+  }
+};
+
+// Hàm lấy dữ liệu người dùng
+const fetchUserData = (setUserData) => {
+  axios
+    .get(`http://localhost:3001/user/details`, {
+      headers: { accessToken: localStorage.getItem("accessToken") },
+    })
+    .then((response) => {
+      setUserData(response.data);
+    })
+    .catch((error) => {
+      console.error("Error fetching user details:", error);
+    });
+};
+
+// Hàm cập nhật margin-top cho phần personal detail
+const updatePersonalDetailMargin = () => {
+  const userProfile = document.querySelector(".user-profile");
+  const personalDetail = document.querySelector(".personal-detail-section");
+  const username = document.querySelector(".user-name");
+
+  if (userProfile && personalDetail) {
+    let userProfileHeight = userProfile.offsetHeight;
+    if (window.innerWidth <= 768 && username) {
+      const usernameHeight = username.offsetHeight;
+      userProfileHeight += usernameHeight;
+    }
+    personalDetail.style.marginTop = `${userProfileHeight}px`;
+  }
+};
+
+const formatDate = (dateString, num) => {
+  if (num === 1) return format(new Date(dateString), "dd/MM/yyyy");
+  else
+    return format(new Date(dateString), "MM/yyyy");
+};
+
 function UserProfile() {
   const { authState } = useContext(AuthContext);
+  const [userData, setUserData] = useState(null);
   let navigate = useNavigate();
 
   useEffect(() => {
     if (!localStorage.getItem("accessToken")) {
       navigate("/login");
-    } else {
-      const header = document.querySelector(".header-section");
-      const bodySection = document.querySelector(".body-section");
-
-      if (header && bodySection) {
-        const headerHeight = header.offsetHeight;
-        bodySection.style.marginTop = `${headerHeight}px`;
-      }
     }
+    setTimeout(() => {
+      setBodySectionMargin();
+      updatePersonalDetailMargin();
+    }, 50);
 
-    const updateMarginTop = () => {
-      const userProfile = document.querySelector(".user-profile");
-      const personalDetail = document.querySelector(".personal-detail-section");
-      const username = document.querySelector(".user-name");
-      if (userProfile && personalDetail) {
-        let userProfileHeight = userProfile.offsetHeight;
-        if (window.innerWidth <= 768) {
-          const usernameHeight = username.offsetHeight;
-          userProfileHeight = userProfileHeight + usernameHeight;
-        }
-        personalDetail.style.marginTop = `${userProfileHeight}px`;
-      }
-    };
+    fetchUserData(setUserData);
 
-    // Gọi hàm cập nhật ngay lần đầu khi component được mount
-    updateMarginTop();
-
-    // Thêm sự kiện resize để cập nhật lại khi kích thước màn hình thay đổi
-    window.addEventListener("resize", updateMarginTop);
+    // Thêm sự kiện resize để cập nhật margin khi thay đổi kích thước màn hình
+    window.addEventListener("resize", updatePersonalDetailMargin);
     return () => {
-      window.removeEventListener("resize", updateMarginTop);
+      window.removeEventListener("resize", updatePersonalDetailMargin);
     };
-  });
+  }, [navigate]);
 
   return (
     <div>
-
       <div className="body-section container-fluid">
         <div className="banner container-lg">
           <img
@@ -69,7 +97,7 @@ function UserProfile() {
               />
             </div>
             <div className="user-name ms-2">
-              <h1>{authState.username}</h1>
+              <h1 style={{ fontWeight: 'bold' }}>{authState.fullName}</h1>
             </div>
           </div>
         </div>
@@ -81,11 +109,27 @@ function UserProfile() {
                   <div className="col-12">
                     <div className="Introduction">
                       <h4>Giới thiệu</h4>
-                      <span>
-                        {" "}
-                        <PeopleIcon /> Thành viên của TNT từ tháng 10 năm 2024
-                        
-                      </span>
+                      {userData && userData.userDetails ? (
+                        <>
+                          {/* <p>{userData.userDetails.fullName}</p>
+                          <hr /> */}
+                          <p>
+                            <strong>Phone number:</strong>{" "}
+                            {userData.userDetails.phoneNumber}
+                          </p>
+                          <p>
+                            <strong>Date of Birth:</strong>{" "}
+                            {formatDate(userData.userDetails.birthDate, 1)}
+                          </p>
+                          <hr />
+                          <span>
+                            <PeopleIcon /> Thành viên của TNT từ{" "}
+                            {formatDate(userData.userDetails.createdAt, 0)}
+                          </span>
+                        </>
+                      ) : (
+                        <p>Loading...</p>
+                      )}
                     </div>
                   </div>
                   <div className="col-12">
@@ -102,14 +146,16 @@ function UserProfile() {
                   <div className="col-12">
                     <div className="course-enrollment-display">
                       <img
-                        img
                         src="http://localhost:3000/course-img.png"
-                        alt="User Avatar"
+                        alt="Course Thumbnail"
                         className="course-enrollment-img img-fluid"
                       />
                       <div className="course-enrollment-detail">
                         <h5>HTML CSS từ Zero đến Hero</h5>
-                        <p>Trong khóa này chúng ta sẽ cùng nhau xây dựng giao diện 2 trang web là The Band & Shopee.</p>
+                        <p>
+                          Trong khóa này chúng ta sẽ cùng nhau xây dựng giao
+                          diện 2 trang web là The Band & Shopee.
+                        </p>
                       </div>
                     </div>
                   </div>

@@ -279,6 +279,7 @@ header {
   padding: 40px;
 }
 
+
 .error-message {
   color: rgb(223, 64, 64);
   position: relative;
@@ -705,4 +706,10 @@ pre {
     flex-direction: column;
     text-align: center;
   }
+}
+
+
+.scrollable-dropdown {
+  max-height: 200px; /* Adjust height as needed */
+  overflow-y: auto;
 }
