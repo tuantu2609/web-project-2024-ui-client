@@ -36,7 +36,7 @@ function Header() {
     // Clear token and update isLoggedIn state
     localStorage.removeItem("accessToken");
     setIsLoggedIn(false);
-    navigate("/login");
+    navigate("/");
   };
 
   return (

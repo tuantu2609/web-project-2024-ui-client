@@ -9,9 +9,11 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import TimerOutlinedIcon from "@mui/icons-material/TimerOutlined";
 import Footer from "./Footer";
+import { useNavigate } from "react-router-dom";
 
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+
 
 const HomePage = ({ username }) => {
   const responsive = {
@@ -29,6 +31,16 @@ const HomePage = ({ username }) => {
     },
   };
 
+  let navigate = useNavigate();
+
+  const token = localStorage.getItem("accessToken");
+  const handleJoinClick = () => {
+    if (token) {
+      navigate('/progress');
+    } else {
+      navigate('/login');
+    }
+  };
   return (
     <div className="home-background">
       <Header />
@@ -47,7 +59,7 @@ const HomePage = ({ username }) => {
               <strong className="color-pass"> do bạn.</strong>
             </h2>
             <div>
-              <button className="btn btn-join">
+              <button onClick={handleJoinClick} className="btn btn-join">
                 <span>Join now</span>
               </button>
             </div>
@@ -77,7 +89,7 @@ const HomePage = ({ username }) => {
               <img src="vid.jpg" className="card-img-top" alt="..." />
               <div className="card-body">
                 <h5 className="card-title">Course name {1 + index}</h5>
-                <p className="card-price">Cousrse....</p>
+                <p className="card-description">Cousrse....</p>
                 <div className="card-info">
                   <span className="card-icon">
                     <GroupsIcon />
@@ -97,7 +109,10 @@ const HomePage = ({ username }) => {
           ))}
         </Carousel>
         <div>
-          <button className="btn btn-view">
+          <button
+            onClick={() => navigate("/courses")}
+            className="btn btn-view"
+          >
             <span>View all</span>
           </button>
         </div>

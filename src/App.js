@@ -8,6 +8,8 @@ import Registration from "./pages/Registration";
 import HomePage from "./pages/HomePage";
 import UserProfile from "./pages/UserProfile";
 import Header from "./pages/Header";
+import Fotter from "./pages/Footer";
+import ViewAllCourses from "./pages/ViewAllCourses";
 
 // Importing libraries
 import { AuthContext } from "./helpers/AuthContext";
@@ -55,7 +57,9 @@ function App() {
             <Route path="/registration" element={<Registration />} />
             <Route path="/" element={<HomePage />} />
             <Route path="/user/:id" element={<UserProfile />} />
+            <Route path="/courses" element={<ViewAllCourses />} />
           </Routes>
+     
         </Router>
       </AuthContext.Provider>
     </div>
@@ -68,6 +72,14 @@ function ConditionalHeader() {
   return (
     <>
       {location.pathname !== "/login" && location.pathname !== "/registration" && <Header />}
+    </>
+  );
+}
+function ConditionalFooter() {
+  const location = useLocation();
+  return (
+    <>
+      { <Fotter />}
     </>
   );
 }
