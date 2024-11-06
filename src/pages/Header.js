@@ -1,16 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../helpers/AuthContext";
 
 // Import icons from Material-UI
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-
+import VideoCallIcon from "@mui/icons-material/VideoCall";
 
 function Header() {
-
   const [isScrolled, setIsScrolled] = useState(false);
+  const { authState, setAuthState } = useContext(AuthContext);
+
+  let navigate = useNavigate();
+
+  const logout = () => {
+    localStorage.removeItem("accessToken");
+    setAuthState({
+      fullName: "",
+      id: 0,
+      role: "",
+      status: false,
+    });
+
+    navigate("/login");
+  };
+  
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,9 +38,6 @@ function Header() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
-  let navigate = useNavigate();
-
 
   return (
     <div className={`header-section fixed-top ${isScrolled ? "scrolled" : ""}`}>
@@ -74,15 +87,23 @@ function Header() {
 
           {/* Notification */}
           <div className="d-flex justify-content-end">
+            {authState.role === "teacher" && (
+              <button
+                type="button"
+                className="btn ms-2"
+                onClick={() => navigate("/upload-video")}
+              >
+                <VideoCallIcon />
+              </button>
+            )}
             <button
               type="button"
-              className="btn me-2"
+              className="btn me-2 ms-2"
               data-bs-toggle="modal"
               data-bs-target="#notificationModal"
             >
               <NotificationsIcon />
             </button>
-
             {/* Notification Modal */}
             <div
               className="modal fade"
@@ -127,7 +148,6 @@ function Header() {
                 </div>
               </div>
             </div>
-
             {/* Profile Dropdown */}
             <div className="dropdown">
               <button
@@ -164,7 +184,7 @@ function Header() {
                 <li>
                   <button
                     className="dropdown-item"
-                    onClick={() => navigate(`/login`)}
+                    onClick={logout}
                   >
                     Logout
                   </button>

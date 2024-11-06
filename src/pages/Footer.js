@@ -1,5 +1,5 @@
 import React from "react";
-import { IonIcon } from "@ionic/react"; // make sure to install `@ionic/react` if you plan to use IonIcons
+import { IonIcon } from "@ionic/react";
 import {
   logoFacebook,
   logoTwitter,

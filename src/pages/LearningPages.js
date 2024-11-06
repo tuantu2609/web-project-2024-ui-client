@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import axios from "axios";
 import "../App.css";
+import { setBodySectionMarginTop } from "../helpers/styles"; 
 
 function LearningPages() {
   const [videos, setVideos] = useState([]);
@@ -37,13 +38,7 @@ function LearningPages() {
   };
 
   useEffect(() => {
-    const header = document.querySelector(".header-section");
-    const bodySection = document.querySelector(".body-section");
-
-    if (header && bodySection) {
-      const headerHeight = header.offsetHeight;
-      bodySection.style.marginTop = `${headerHeight}px`;
-    }
+    setBodySectionMarginTop();
 
     axios.get(`http://localhost:3001/videos`).then((response) => {
       const videosWithFormattedDuration = response.data.map((video) => ({
@@ -60,7 +55,7 @@ function LearningPages() {
       <div className="body-section">
         <div className="row">
           {/* Recent video */}
-          <div className={showLessonList ? "col-7" : "col-12"}>
+          <div className={showLessonList ? "col-md-7 col-sm-12" : "col-12"}>
             {/* Video section */}
             <div className="video-container">
               {videos.length > 0 ? (
@@ -104,7 +99,7 @@ function LearningPages() {
 
           {/* Show this only when showLessonList === true */}
           {showLessonList && (
-            <div className="col-5">
+            <div className="col-md-5 col-sm-12">
               <div className="lesson-list mt-2">
                 <h3>Lesson list</h3>
                 <ul className="list-group list-group-numbered">
@@ -150,11 +145,6 @@ function LearningPages() {
         </button>
       </div>
 
-      {/* <div className="footer-section">
-        <div className="container">
-          <span className="text-muted">© 2024 Học tập trực tuyến</span>
-        </div>
-      </div> */}
     </div>
   );
 }
