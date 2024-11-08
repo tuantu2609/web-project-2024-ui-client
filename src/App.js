@@ -63,7 +63,7 @@ function App() {
             {/* <Route path="/learn" element={<LearningPages />} /> */}
             <Route path="/upload-video" element={<UploadVideoPages />} />
             <Route path="/user/:id" element={<UserProfile />} />
-            <Route path="/courses" element={<ViewAllCourses />} />
+            <Route path="/courses/view-all" element={<ViewAllCourses />} />
           </Routes>
         </Router>
       </AuthContext.Provider>

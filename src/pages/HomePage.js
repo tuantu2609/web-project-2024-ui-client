@@ -1,7 +1,5 @@
-// import { Link } from "react-router-dom";
-// import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "../App.css";
@@ -13,8 +11,9 @@ import Footer from "./Footer";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 
-
 const HomePage = ({ username }) => {
+  const [courses, setCourses] = useState([]); // State để lưu trữ dữ liệu courses từ API
+
   const responsive = {
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
@@ -32,14 +31,22 @@ const HomePage = ({ username }) => {
 
   let navigate = useNavigate();
 
+  useEffect(() => {
+    fetch("http://localhost:3001/courses") // Thay đường dẫn bằng API của bạn
+      .then((response) => response.json())
+      .then((data) => setCourses(data))
+      .catch((error) => console.error("Error fetching courses:", error));
+  }, []);
+
   const token = localStorage.getItem("accessToken");
   const handleJoinClick = () => {
     if (token) {
-      navigate('/progress');
+      navigate("/progress");
     } else {
-      navigate('/login');
+      navigate("/login");
     }
   };
+
   return (
     <div className="home-background">
       <section className="courses">
@@ -82,25 +89,26 @@ const HomePage = ({ username }) => {
           autoPlay={false}
           draggable={false}
         >
-          {[...Array(4)].map((_, index) => (
-            <div className="card">
-              <img src="vid.jpg" className="card-img-top" alt="..." />
-              <div className="card-body">
-                <h5 className="card-title">Course name {1 + index}</h5>
-                <p className="card-description">Cousrse....</p>
-                <div className="card-info">
-                  <span className="card-icon">
-                    <GroupsIcon />
-                    <i className="fas fa-user-friends"></i> 131.124
-                  </span>
-                  <span className="card-icon">
-                    <FormatListBulletedIcon />
-                    <i className="fas fa-eye"></i> 9
-                  </span>
-                  <span className="card-icon">
-                    <TimerOutlinedIcon />
-                    <i className="fas fa-clock"></i> 3h12p
-                  </span>
+          {courses.slice(0, 4).map((course, index) => (
+            <div key={index} className="carousel-item-wrapper">
+              {" "}
+              {/* Wrapper for custom styling */}
+              <div className="card">
+                <img
+                  src={course.image || `${process.env.PUBLIC_URL}/vid.jpg`} // Default image if no course image
+                  className="card-img-top"
+                  alt={course.courseTitle}
+                />
+                <div className="card-body">
+                  <h5 className="card-title">{course.courseTitle}</h5>
+                  <div className="card-info">
+                    <span className="card-icon">
+                      <GroupsIcon /> {course.participants || 0}
+                    </span>
+                    <span className="card-icon">
+                      <FormatListBulletedIcon /> {course.lessons || 0}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -108,13 +116,14 @@ const HomePage = ({ username }) => {
         </Carousel>
         <div>
           <button
-            onClick={() => navigate("/courses")}
+            onClick={() => navigate("/courses/view-all")}
             className="btn btn-view"
           >
             <span>View all</span>
           </button>
         </div>
       </section>
+
       <Footer />
     </div>
   );
