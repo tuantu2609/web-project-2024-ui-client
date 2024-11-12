@@ -15,6 +15,7 @@ import UserProfile from "./pages/UserProfile";
 import Header from "./pages/Header";
 import UploadVideoPages from "./pages/UploadVideoPages";
 import ViewAllCourses from "./pages/ViewAllCourses";
+import ViewCourseDetail from "./pages/ViewCourseDetail";
 
 // Importing libraries
 import { AuthContext } from "./helpers/AuthContext";
@@ -64,6 +65,7 @@ function App() {
             <Route path="/upload-video" element={<UploadVideoPages />} />
             <Route path="/user/:id" element={<UserProfile />} />
             <Route path="/courses/view-all" element={<ViewAllCourses />} />
+            <Route path ="/courses/:id" element = {<ViewCourseDetail/>} />
           </Routes>
         </Router>
       </AuthContext.Provider>

@@ -2,14 +2,15 @@ import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import GroupsIcon from "@mui/icons-material/Groups";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import TimerOutlinedIcon from "@mui/icons-material/TimerOutlined";
 import Footer from "./Footer";
 import SchoolIcon from "@mui/icons-material/School";
+import { useNavigate } from "react-router-dom";
 
 const ViewAllCourses = () => {
-  const [courses, setCourses] = useState([]); // State để lưu dữ liệu courses từ API
+  const [courses, setCourses] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
+  const navigate = useNavigate(); // Sử dụng useNavigate
 
   useEffect(() => {
     fetch("http://localhost:3001/courses")
@@ -21,7 +22,6 @@ const ViewAllCourses = () => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentCourses = courses.slice(indexOfFirstItem, indexOfLastItem);
-
   const totalPages = Math.ceil(courses.length / itemsPerPage);
 
   const handlePreviousPage = () => {
@@ -36,6 +36,10 @@ const ViewAllCourses = () => {
     setCurrentPage(pageNumber);
   };
 
+  const handleCourseClick = (id) => {
+    navigate(`/courses/${id}`); // Điều hướng đến trang chi tiết của khóa học
+  };
+
   return (
     <div className="view-all-courses-background">
       <div className="view-all-courses">
@@ -46,17 +50,16 @@ const ViewAllCourses = () => {
             </h2>
           </div>
           <div className="row">
-            {currentCourses.map((course, index) => (
-              <div key={index} className="col-lg-3 col-md-4 col-sm-6 mb-4">
-                <div className="card">
+            {currentCourses.map((course) => (
+              <div key={course.id} className="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div className="card" onClick={() => handleCourseClick(course.id)} style={{ cursor: "pointer" }}>
                   <img
-                    src={course.image || `${process.env.PUBLIC_URL}/vid.jpg`} // Thêm ảnh mặc định nếu không có ảnh
+                    src={course.image || `${process.env.PUBLIC_URL}/vid.jpg`}
                     className="card-img-top"
-                    alt={course.courseTitle} // Thêm alt mặc định nếu cần
+                    alt={course.courseTitle}
                   />
                   <div className="card-body">
                     <h5 className="card-title">{course.courseTitle}</h5>
-                    {/* <p className="card-description">{course.courseDesc}</p> */}
                     <div className="card-info">
                       <span className="card-icon">
                         <GroupsIcon /> {course.participants || 0}
@@ -64,9 +67,6 @@ const ViewAllCourses = () => {
                       <span className="card-icon">
                         <FormatListBulletedIcon /> {course.lessons || 0}
                       </span>
-                      {/* <span className="card-icon">
-                        <TimerOutlinedIcon /> {course.duration || "0h0m"} 
-                      </span> */}
                     </div>
                   </div>
                 </div>
@@ -74,13 +74,8 @@ const ViewAllCourses = () => {
             ))}
           </div>
 
-          {/* Pagination Controls */}
           <div className="pagination-controls">
-            <button
-              onClick={handlePreviousPage}
-              disabled={currentPage === 1}
-              className="btn btn-primary mx-1"
-            >
+            <button onClick={handlePreviousPage} disabled={currentPage === 1} className="btn btn-primary mx-1">
               Previous
             </button>
 
@@ -88,21 +83,13 @@ const ViewAllCourses = () => {
               <button
                 key={index}
                 onClick={() => handlePageClick(index + 1)}
-                className={`btn mx-1 ${
-                  currentPage === index + 1
-                    ? "btn-secondary"
-                    : "btn-outline-secondary"
-                }`}
+                className={`btn mx-1 ${currentPage === index + 1 ? "btn-secondary" : "btn-outline-secondary"}`}
               >
                 {index + 1}
               </button>
             ))}
 
-            <button
-              onClick={handleNextPage}
-              disabled={currentPage === totalPages}
-              className="btn btn-primary mx-1"
-            >
+            <button onClick={handleNextPage} disabled={currentPage === totalPages} className="btn btn-primary mx-1">
               Next
             </button>
           </div>
