@@ -5,19 +5,18 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "../App.css";
 import GroupsIcon from "@mui/icons-material/Groups";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import TimerOutlinedIcon from "@mui/icons-material/TimerOutlined";
 import Footer from "./Footer";
-
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 
 const HomePage = ({ username }) => {
-  const [courses, setCourses] = useState([]); // State để lưu trữ dữ liệu courses từ API
+  const [courses, setCourses] = useState([]);
+  const navigate = useNavigate();
 
   const responsive = {
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
-      items: 4, // Show 4 cards at a time
+      items: 4,
     },
     tablet: {
       breakpoint: { max: 1024, min: 464 },
@@ -29,10 +28,8 @@ const HomePage = ({ username }) => {
     },
   };
 
-  let navigate = useNavigate();
-
   useEffect(() => {
-    fetch("http://localhost:3001/courses") // Thay đường dẫn bằng API của bạn
+    fetch("http://localhost:3001/courses")
       .then((response) => response.json())
       .then((data) => setCourses(data))
       .catch((error) => console.error("Error fetching courses:", error));
@@ -47,21 +44,22 @@ const HomePage = ({ username }) => {
     }
   };
 
+  const handleCourseClick = (courseId) => {
+    navigate(`/courses/${courseId}`);
+  };
+
   return (
     <div className="home-background">
       <section className="courses">
         <div className="container">
           <div className="courses-content">
             <h1 className="h1 courses-title">
-              <strong className="color-tt">
-                T&T - Công ty TNHH 2 thành viên{" "}
-              </strong>
+              <strong className="color-tt">T&T - Công ty TNHH 2 thành viên </strong>
             </h1>
             <h2 className="h2 courses-title">
               <strong>Học giỏi, </strong>
               <strong className="color-pass">do chúng tôi; </strong>
-              Học kém,
-              <strong className="color-pass"> do bạn.</strong>
+              Học kém, <strong className="color-pass">do bạn.</strong>
             </h2>
             <div>
               <button onClick={handleJoinClick} className="btn btn-join">
@@ -89,13 +87,11 @@ const HomePage = ({ username }) => {
           autoPlay={false}
           draggable={false}
         >
-          {courses.slice(0, 4).map((course, index) => (
-            <div key={index} className="carousel-item-wrapper">
-              {" "}
-              {/* Wrapper for custom styling */}
+          {courses.slice(0, 4).map((course) => (
+            <div key={course.id} className="carousel-item-wrapper" onClick={() => handleCourseClick(course.id)}>
               <div className="card">
                 <img
-                  src={course.image || `${process.env.PUBLIC_URL}/vid.jpg`} // Default image if no course image
+                  src={course.image || `${process.env.PUBLIC_URL}/vid.jpg`}
                   className="card-img-top"
                   alt={course.courseTitle}
                 />
@@ -115,10 +111,7 @@ const HomePage = ({ username }) => {
           ))}
         </Carousel>
         <div>
-          <button
-            onClick={() => navigate("/courses/view-all")}
-            className="btn btn-view"
-          >
+          <button onClick={() => navigate("/courses/view-all")} className="btn btn-view">
             <span>View all</span>
           </button>
         </div>
