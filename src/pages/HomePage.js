@@ -54,7 +54,9 @@ const HomePage = ({ username }) => {
         <div className="container">
           <div className="courses-content">
             <h1 className="h1 courses-title">
-              <strong className="color-tt">T&T - Công ty TNHH 2 thành viên </strong>
+              <strong className="color-tt">
+                T&T - Công ty TNHH 2 thành viên{" "}
+              </strong>
             </h1>
             <h2 className="h2 courses-title">
               <strong>Học giỏi, </strong>
@@ -88,7 +90,11 @@ const HomePage = ({ username }) => {
           draggable={false}
         >
           {courses.slice(0, 4).map((course) => (
-            <div key={course.id} className="carousel-item-wrapper" onClick={() => handleCourseClick(course.id)}>
+            <div
+              key={course.id}
+              className="carousel-item-wrapper"
+              onClick={() => handleCourseClick(course.id)}
+            >
               <div className="card">
                 <img
                   src={course.image || `${process.env.PUBLIC_URL}/vid.jpg`}
@@ -110,13 +116,15 @@ const HomePage = ({ username }) => {
             </div>
           ))}
         </Carousel>
-        <div>
-          <button onClick={() => navigate("/courses/view-all")} className="btn btn-view">
-            <span>View all</span>
-          </button>
-        </div>
       </section>
-
+      <div className="container">
+        <button
+          onClick={() => navigate("/courses/view-all")}
+          className="btn btn-view"
+        >
+          <span>View all</span>
+        </button>
+      </div>
       <Footer />
     </div>
   );

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 import "../App.css";
 import Footer from "./Footer";
 
@@ -34,21 +35,23 @@ const ViewCourseDetail = () => {
 
   return (
     <div className="course-detail-background">
-      <div className="course-detail-container">
-        <div className="course-header">
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg"
-            alt="Logo"
-            className="course-logo"
-          />{" "}
-          {/* Thay bằng link logo khác nếu cần */}
-          <div className="course-title-container">
+      <div className="container course-detail-container">
+        <div className="row course-header align-items-center">
+          <div className="col-md-2 text-center">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg"
+              alt="Logo"
+              className="course-logo img-fluid"
+            />
+          </div>
+          <div className="col-md-10">
             <h1 className="course-title">{course.courseTitle}</h1>
             <p className="course-desc">{course.courseDesc}</p>
           </div>
+          
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 };
