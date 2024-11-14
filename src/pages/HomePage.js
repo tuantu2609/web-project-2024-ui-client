@@ -13,7 +13,6 @@ import Footer from "./Footer";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 
-
 const HomePage = ({ username }) => {
   const responsive = {
     desktop: {
@@ -35,9 +34,9 @@ const HomePage = ({ username }) => {
   const token = localStorage.getItem("accessToken");
   const handleJoinClick = () => {
     if (token) {
-      navigate('/progress');
+      navigate("/progress");
     } else {
-      navigate('/login');
+      navigate("/login");
     }
   };
   return (
@@ -83,11 +82,13 @@ const HomePage = ({ username }) => {
           draggable={false}
         >
           {[...Array(4)].map((_, index) => (
-            <div className="card">
+            <div className="card" key={index}>
+              {" "}
+              {/* Thêm key={index} */}
               <img src="vid.jpg" className="card-img-top" alt="..." />
               <div className="card-body">
                 <h5 className="card-title">Course name {1 + index}</h5>
-                <p className="card-description">Cousrse....</p>
+                <p className="card-description">Course....</p>
                 <div className="card-info">
                   <span className="card-icon">
                     <GroupsIcon />
@@ -107,10 +108,7 @@ const HomePage = ({ username }) => {
           ))}
         </Carousel>
         <div>
-          <button
-            onClick={() => navigate("/courses")}
-            className="btn btn-view"
-          >
+          <button onClick={() => navigate("/courses")} className="btn btn-view">
             <span>View all</span>
           </button>
         </div>

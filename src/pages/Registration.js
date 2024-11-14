@@ -106,7 +106,11 @@ const Registration = () => {
         navigate("/login");
       })
       .catch((error) => {
-        if (error.response && error.response.data && error.response.data.error) {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.error
+        ) {
           setErrorMessage(error.response.data.error);
         } else {
           setErrorMessage("Failed to create user. Please try again.");
@@ -394,7 +398,9 @@ const Registration = () => {
                     </label>
                   </div>
                   {errorMessage && (
-                    <p className="error-message">{errorMessage}</p>
+                    <div className="alert alert-danger" role="alert">
+                      {errorMessage}
+                    </div>
                   )}
                   <div
                     style={{

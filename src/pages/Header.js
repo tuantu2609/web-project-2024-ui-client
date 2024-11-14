@@ -8,6 +8,7 @@ import { AuthContext } from "../helpers/AuthContext";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
+import SchoolIcon from "@mui/icons-material/School";
 // import SearchIcon from "@mui/icons-material/Search";
 
 function Header() {
@@ -51,7 +52,7 @@ function Header() {
     <div className={`header-section fixed-top ${isScrolled ? "scrolled" : ""}`}>
       <nav className="navbar navbar-expand-lg">
         {/* Logo */}
-        <a className="navbar-brand ms-2" href="/">
+        <a className="navbar-brand ms-2 d-flex align-items-center" href="/">
           <img
             src="http://localhost:3000/logo.jpg"
             width="30"
@@ -59,6 +60,7 @@ function Header() {
             className="d-inline-block align-top"
             alt=""
           />
+          <span className="navbar-text ms-2">From Zero to Hero</span>
         </a>
 
         {/* Navbar Toggler */}
@@ -79,11 +81,11 @@ function Header() {
           className="collapse navbar-collapse justify-content-between"
           id="navbarSupportedContent"
         >
-          <span className="navbar-text me-auto">From Zero to Hero</span>
+          {/* <span className="navbar-text me-auto">From Zero to Hero</span> */}
 
-          <form className="d-flex my-2 my-lg-0" role="search">
+          <form className="d-flex flex-grow-1 my-2 my-lg-0" role="search">
             <input
-              className="form-control me-5"
+              className="form-control me-1"
               type="search"
               placeholder="Search"
               aria-label="Search"
@@ -100,15 +102,24 @@ function Header() {
               <>
                 {/* Teacher Upload Video */}
                 {authState.role === "teacher" && (
-                  <button
-                    type="button"
-                    className="btn ms-2"
-                    onClick={() => navigate("/upload-video")}
-                  >
-                    <VideoCallIcon />
-                  </button>
+                  <div className="d-flex align-items-center">
+                    <button
+                      type="button"
+                      className="btn ms-2"
+                      onClick={() => navigate("/upload-courses")}
+                    >
+                      <SchoolIcon />
+                    </button>
+                    <button
+                      type="button"
+                      className="btn ms-2"
+                      onClick={() => navigate("/upload-video")}
+                    >
+                      <VideoCallIcon />
+                    </button>
+                  </div>
                 )}
-                
+
                 {/* Notifications */}
                 <button
                   type="button"
