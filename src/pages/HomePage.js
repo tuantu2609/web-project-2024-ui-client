@@ -8,6 +8,7 @@ import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import Footer from "./Footer";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import { setBodySectionMarginTop } from "../helpers/styles";
 
 const HomePage = ({ username }) => {
   const [courses, setCourses] = useState([]);
@@ -29,6 +30,7 @@ const HomePage = ({ username }) => {
   };
 
   useEffect(() => {
+    setBodySectionMarginTop();
     fetch("http://localhost:3001/courses")
       .then((response) => response.json())
       .then((data) => setCourses(data))
@@ -111,37 +113,11 @@ const HomePage = ({ username }) => {
                       <FormatListBulletedIcon /> {course.lessons || 0}
                     </span>
                   </div>
-          {[...Array(4)].map((_, index) => (
-            <div className="card" key={index}>
-              {" "}
-              {/* Thêm key={index} */}
-              <img src="vid.jpg" className="card-img-top" alt="..." />
-              <div className="card-body">
-                <h5 className="card-title">Course name {1 + index}</h5>
-                <p className="card-description">Course....</p>
-                <div className="card-info">
-                  <span className="card-icon">
-                    <GroupsIcon />
-                    <i className="fas fa-user-friends"></i> 131.124
-                  </span>
-                  <span className="card-icon">
-                    <FormatListBulletedIcon />
-                    <i className="fas fa-eye"></i> 9
-                  </span>
-                  <span className="card-icon">
-                    <TimerOutlinedIcon />
-                    <i className="fas fa-clock"></i> 3h12p
-                  </span>
                 </div>
               </div>
             </div>
           ))}
         </Carousel>
-        <div>
-          <button onClick={() => navigate("/courses")} className="btn btn-view">
-            <span>View all</span>
-          </button>
-        </div>
       </section>
       <div className="container">
         <button
