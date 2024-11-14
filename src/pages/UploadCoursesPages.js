@@ -5,7 +5,7 @@ import { setBodySectionMarginTop } from "../helpers/styles";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../helpers/AuthContext";
 
-// import axios from "axios";
+import axios from "axios";
 
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 
@@ -19,13 +19,55 @@ function UploadCoursesPages() {
   let navigate = useNavigate();
 
   useEffect(() => {
-    setBodySectionMarginTop();
-    window.scrollTo(0, 0);
-  }, []);
+    if (!localStorage.getItem("accessToken")) {
+      navigate("/login");
+    }
+    else if (authState.role !== "teacher") {
+      navigate("/");
+    }
+    else {
+      setBodySectionMarginTop();
+      window.scrollTo(0, 0);
+    }
+  }, [navigate, authState.role]);
 
   const adjustTextareaHeight = (e) => {
     e.target.style.height = "auto";
     e.target.style.height = `${e.target.scrollHeight}px`;
+  };
+
+  const handleUpload = async () => {
+    if (title && description) {
+      const data = {
+        courseTitle: title,
+        courseDesc: description,
+      };
+      axios
+        .post(
+          `http://localhost:3001/courses`,
+          data, // Pass data as the second argument
+          {
+            headers: { accessToken: localStorage.getItem("accessToken") },
+          }
+        )
+        .then((response) => {
+          if (response.data.error) {
+            setAlertType("danger");
+            setAlertMessage(response.data.error);
+          } else {
+            setAlertType("success");
+            setAlertMessage("Course uploaded successfully!");
+          }
+        })
+        .catch((error) => {
+          console.error("Error uploading course:", error);
+          setAlertType("danger");
+          setAlertMessage("Failed to upload course");
+        });
+    } else {
+      setAlertType("danger");
+      setAlertMessage("Please provide course title and description");
+    }
   };
 
   return (
@@ -38,7 +80,10 @@ function UploadCoursesPages() {
           >
             <ArrowBackIosNewIcon /> Back
           </button>
-          <button className="btn btn-success ms-auto me-3 mt-3 mb-3">
+          <button
+            className="btn btn-success ms-auto me-3 mt-3 mb-3"
+            onClick={handleUpload}
+          >
             Upload Course
           </button>
         </div>
@@ -55,7 +100,12 @@ function UploadCoursesPages() {
               className="btn-close"
               data-bs-dismiss="alert"
               aria-label="Close"
-              onClick={() => setAlertMessage("")}
+              onClick={() => {
+                setAlertMessage("");
+                if (alertType === "success") {
+                  navigate("/");
+                }
+              }}
             ></button>
           </div>
         )}
@@ -79,9 +129,9 @@ function UploadCoursesPages() {
                 style={{
                   fontWeight: "bold",
                   maxWidth: "600px",
-                  color: "#FFFFFF", 
+                  color: "#FFFFFF",
                   backgroundColor: "rgba(255, 255, 255, 0.2)",
-                  border: "1px solid #E0E0E0"
+                  border: "1px solid #E0E0E0",
                 }}
                 disabled
               ></textarea>

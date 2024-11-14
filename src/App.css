@@ -7,11 +7,11 @@
   --main-color: #3498db;
   --padding: 20px;
   --course-img: 250px;
-  --background-img: url('/public/background.jpg');
+  --background-img: url("/public/background.jpg");
 }
 
- /* SCROLL BAR */
- /* Thiết lập kiểu dáng cho thanh cuộn của trình duyệt */
+/* SCROLL BAR */
+/* Thiết lập kiểu dáng cho thanh cuộn của trình duyệt */
 ::-webkit-scrollbar {
   width: 8px; /* Độ rộng của thanh cuộn dọc  */
   height: 8px; /*Độ cao của thanh cuộn ngang */
@@ -281,7 +281,6 @@ header {
   padding: 40px;
 }
 
-
 .error-message {
   color: rgb(223, 64, 64);
   position: relative;
@@ -315,27 +314,27 @@ header {
   font-weight: 600;
   margin: 20px 0 0px;
 }
- 
- /* HOMEPAGE CSS  */
- .h1.courses-title{
+
+/* HOMEPAGE CSS  */
+.h1.courses-title {
   font-size: 3vw;
   line-height: 1.2;
- }
- .h2.courses-title{
+}
+.h2.courses-title {
   font-size: 2.5em;
   line-height: 1.2;
- }
- .home-background{
-  background-image: var(--background-img); 
+}
+.home-background {
+  background-image: var(--background-img);
   background-size: cover;
   background-position: center;
   min-height: 100vh;
   width: 100%;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   color: white;
- }
+}
 
- .courses {
+.courses {
   background-size: cover;
   background-position: center;
   height: 50vh;
@@ -345,25 +344,32 @@ header {
   padding-block: 100px;
 }
 
-.courses-content { margin-top: 60px; }
+.courses-content {
+  margin-top: 60px;
+}
 
 .courses-subtitle {
-  color: #00FFFF;
+  color: #00ffff;
   font-size: 1.5em;
   font-weight: 300;
   margin-bottom: 10px;
 }
 
-.courses-title { margin-bottom: 30px; }
+.courses-title {
+  margin-bottom: 30px;
+}
 
-.courses-title > .color-tt { color: #00FFFF; }
-.courses-title > .color-pass { color: #FFFFA1; }
-
+.courses-title > .color-tt {
+  color: #00ffff;
+}
+.courses-title > .color-pass {
+  color: #ffffa1;
+}
 
 .btn.btn-join {
   margin-top: 15px;
   background-color: #007bff;
-  color: white; 
+  color: white;
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
@@ -372,20 +378,19 @@ header {
 }
 
 .btn.btn-join:hover {
-  background-color: #0056b3; 
-  color: #ffffff; 
+  background-color: #0056b3;
+  color: #ffffff;
 }
 
-  /* DISPLAY COURSE */
-  .react-multi-carousel-list {
-    height: 350px;
+/* DISPLAY COURSE */
+.react-multi-carousel-list {
+  height: 350px;
 }
-  
 
-  .displayed.container {
-    position: relative;
-    overflow: hidden;
-    padding: 20px;
+.displayed.container {
+  position: relative;
+  overflow: hidden;
+  padding: 20px;
 }
 .carousel-item-wrapper {
   width: 100%; /* Adjust width to fit carousel */
@@ -462,85 +467,82 @@ header {
   color: #888;
 }
 
+.btn.btn-view {
+  background-color: whitesmoke;
+  color: black;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  display: block;
+  text-align: center;
+  width: fit-content;
+  margin-left: auto; /* Giúp nút tự động căn sang bên phải */
+  margin-right: 25px; /* Khoảng cách nhỏ bên phải */
+}
 
+.btn.btn-view:hover {
+  background-color: #0056b3;
+  color: #ffffff;
+}
 
-  .btn.btn-view {
-    background-color: whitesmoke; 
-    color: black; 
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    display: block;
-    text-align: center;
-    width: fit-content;
-    margin-left: auto; /* Giúp nút tự động căn sang bên phải */
-    margin-right: 25px; /* Khoảng cách nhỏ bên phải */
-  }
-  
-  .btn.btn-view:hover {
-    background-color: #0056b3; 
-    color: #ffffff; 
-  }
-
-  @media (max-width: 576px) {
+@media (max-width: 576px) {
   .btn.btn-view {
     font-size: 12px;
     padding: 6px 16px;
   }
 }
 
-
-  /* VIEW ALL COURSES*/
-  .view-all-courses-background{
-    background-image: url('/public/background.jpg'); 
-    background-size: cover;
-    background-position: center;
-  }
-  .view-all-courses {
-    background-size: cover;
-    background-position: center;
-    min-height: 100vh;
-    width: 100%;
-    font-family: 'Poppins', sans-serif;
-    color: white;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    padding-top: 50px;
+/* VIEW ALL COURSES*/
+.view-all-courses-background {
+  background-image: url("/public/background.jpg");
+  background-size: cover;
+  background-position: center;
 }
-.view-all-courses .card-title{
+.view-all-courses {
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  width: 100%;
+  font-family: "Poppins", sans-serif;
+  color: white;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 50px;
+}
+.view-all-courses .card-title {
   white-space: normal;
 }
 
 .view-all-courses .tray {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 20px;
-    border-radius: 10px;
-    margin-top: 10px;
-    margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 10px;
+  margin-bottom: 20px;
 }
 
 .view-all-courses .tray .courses-title {
-    text-align: center;
-    margin: 0;
-    font-size: 3em;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    font-weight: 300;
-    color: #ffffff;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  text-align: center;
+  margin: 0;
+  font-size: 3em;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  font-weight: 300;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .view-all-courses .tray .courses-title svg {
-    font-size: 1.2em;
+  font-size: 1.2em;
 }
-
 
 .view-all-courses .card {
   background-color: #fff;
@@ -555,14 +557,14 @@ header {
 }
 
 .view-all-courses .card img {
-    height: 180px;
-    object-fit: cover;
+  height: 180px;
+  object-fit: cover;
 }
 
 .view-all-courses .card-info {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
 }
 
 .pagination-controls {
@@ -577,9 +579,8 @@ header {
 }
 
 /* VIEW COURSE DETAILS */
-/* VIEW COURSE DETAILS */
 .course-detail-background {
-  background-image: url('/public/background.jpg');
+  background-image: url("/public/background.jpg");
   background-size: cover;
   background-position: center;
   min-height: 100vh;
@@ -654,11 +655,25 @@ header {
 /* ========================================================== */
 /* Upload video Page */
 /* ========================================================== */
-.UploadPages-background{
-  background-image: url('/public/background_2.jpg'); 
+.course-selector{
+  font-family: Fancy Cut, Almarai, Times, serif;
+}
+
+
+.UploadPages-background {
+  background-image: url("/public/background.jpg");
+  background-position: center;
+  background-size: cover;
+}
+
+/* .UploadPages-background {
+  background-image: url("/public/background_2.jpg");
   background-size: cover;
   background-position: center;
-}
+  background-repeat: repeat-y; 
+  min-height: 100%; 
+} */
+
 
 .video-preview {
   width: 100%;
@@ -674,7 +689,6 @@ header {
   resize: none;
   font-family: Fancy Cut, Almarai, Times, serif;
   border-color: #bfbfbf;
-  /* max-height: 160px; */
 }
 
 .custom-textarea:is(:focus, :valid) {
@@ -687,11 +701,9 @@ header {
   width: 0px;
 }
 
-  
-  
 
 /* LEARNING PAGE CSS */
- /* transparent when at top */
+/* transparent when at top */
 .header-section {
   background-color: #2e97dd;
   transition: background-color 0.3s ease;
@@ -699,10 +711,9 @@ header {
 
 /* solid background when scrolled  */
 .header-section.scrolled {
-  background-color: var(--main-color); 
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2); 
+  background-color: var(--main-color);
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
 }
-
 
 .body-section {
   /* margin-top: var(--height); */
@@ -729,7 +740,6 @@ pre {
   padding-block: 80px 50px;
 }
 
-
 .footer-brand-wrapper .logo {
   width: max-content;
   margin-inline: auto;
@@ -747,15 +757,17 @@ pre {
 }
 
 .footer-link {
-  color: hsl(0, 3%, 80%);;
-  font-size: 14px;;
+  color: hsl(0, 3%, 80%);
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   padding: 5px 15px;
   transition: 0.15s ease;
 }
 
-:is(.footer-link, .quicklink-link, .social-link):is(:hover, :focus) { color:  hsl(57, 97%, 45%); }
+:is(.footer-link, .quicklink-link, .social-link):is(:hover, :focus) {
+  color: hsl(57, 97%, 45%);
+}
 
 .divider {
   height: 4px;
@@ -764,18 +776,22 @@ pre {
   border-bottom: 1px solid hsla(0, 0%, 100%, 0.1);
 }
 
-.quicklink-list { margin-bottom: 20px; }
+.quicklink-list {
+  margin-bottom: 20px;
+}
 
 .quicklink-link {
-  color:  hsl(0, 0%, 74%);
+  color: hsl(0, 0%, 74%);
   font-size: 13px;
   font-weight: 500;
   text-transform: uppercase;
   padding: 2px 10px;
-  transition:  0.15s ease;
+  transition: 0.15s ease;
 }
 
-.social-list { column-gap: 10px; }
+.social-list {
+  column-gap: 10px;
+}
 
 .social-link {
   background: hsl(225, 25%, 9%);
@@ -790,9 +806,11 @@ pre {
   transition: 0.15s ease;
 }
 
-.footer-bottom { padding-block: 25px; }
+.footer-bottom {
+  padding-block: 25px;
+}
 
-.footer-bottom .container{
+.footer-bottom .container {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -922,7 +940,6 @@ pre {
     text-align: center;
   }
 }
-
 
 .scrollable-dropdown {
   max-height: 200px; /* Adjust height as needed */

@@ -1,8 +1,10 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { setBodySectionMarginTop } from "../helpers/styles";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../helpers/AuthContext";
+import Footer from "./Footer";
 
 import axios from "axios";
 
@@ -11,6 +13,7 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import LoopIcon from "@mui/icons-material/Loop";
 
 function UploadVideoPages() {
+  const { authState } = useContext(AuthContext);
   const [videoPreview, setVideoPreview] = useState(null);
   const [videoFile, setVideoFile] = useState(null);
   const [title, setTitle] = useState("");
@@ -19,13 +22,36 @@ function UploadVideoPages() {
   const [alertMessage, setAlertMessage] = useState("");
   const [alertType, setAlertType] = useState("danger");
   const [isUploading, setIsUploading] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState("");
+  const [courses, setCourses] = useState([]);
 
   let navigate = useNavigate();
 
+  const handleOptionClick = (courseId) => {
+    setSelectedCourse(courseId);
+  };
+
   useEffect(() => {
-    setBodySectionMarginTop();
-    window.scrollTo(0, 0);
-  }, []);
+    if (!localStorage.getItem("accessToken")) {
+      navigate("/login");
+    }
+    else if (authState.role !== "teacher"){
+      navigate("/");
+    }
+    else {
+      setBodySectionMarginTop();
+      window.scrollTo(0, 0);
+      axios
+        .get("http://localhost:3001/courses")
+        .then((response) => {
+          setCourses(response.data);
+          console.log("Courses:", response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching courses:", error);
+        });
+    }
+  }, [navigate, authState.role]);
 
   const handleVideoUpload = (e) => {
     const file = e.target.files[0];
@@ -49,17 +75,19 @@ function UploadVideoPages() {
   const handleConfirm = () => {
     setAlertMessage("");
 
-    if (videoFile && title && description) {
+    if (videoFile && title && description && selectedCourse) {
       const formData = new FormData();
       formData.append("video", videoFile);
       formData.append("videoTitle", title);
       formData.append("videoDesc", description);
+      formData.append("courseID", selectedCourse);
 
       setIsUploading(true);
 
       axios
         .post("http://localhost:3001/videos", formData, {
           headers: {
+            accessToken: localStorage.getItem("accessToken"),
             "Content-Type": "multipart/form-data",
           },
         })
@@ -100,7 +128,7 @@ function UploadVideoPages() {
           {videoPreview && (
             <>
               <button
-                className="btn btn-outline-secondary me-3 mt-3 mb-3"
+                className="btn btn-outline-light me-3 mt-3 mb-3"
                 onClick={handleChangeVideo}
               >
                 <UploadFileIcon /> Change Video
@@ -140,12 +168,57 @@ function UploadVideoPages() {
               className="btn-close"
               data-bs-dismiss="alert"
               aria-label="Close"
-              onClick={() => setAlertMessage("")}
+              onClick={() => {
+                setAlertMessage("");
+                if (alertType === "success") {
+                  navigate("/");
+                }
+              }}
             ></button>
           </div>
         )}
 
         <div className="container">
+          <div className="d-flex align-items-center mb-3">
+            <label
+              htmlFor="courseSelect"
+              className="form-label me-2"
+              style={{
+                fontFamily: "Fancy Cut, Almarai, Times, serif",
+                color: "#E0E0E0",
+                fontSize: "1.5rem",
+              }}
+            >
+              Course:
+            </label>
+            <select
+              className="form-select"
+              id="courseSelect"
+              value={selectedCourse}
+              onChange={(e) => handleOptionClick(e.target.value)} 
+              required
+              style={{
+                width: "200px", // Adjust the width as needed
+                backgroundColor: "transparent", // Make background transparent
+                border: "1px solid #E0E0E0", // Optional: set a light border color
+                color: "#E0E0E0", // Text color to contrast with background
+                fontSize: "1rem",
+              }}
+            >
+              <option value="" style={{ color: "#000" }}disabled>
+                Select Course...
+              </option>
+              {courses.map((course) => (
+                <option
+                  key={course.id}
+                  value={course.id} 
+                  style={{ color: "#000" }}
+                >
+                  {course.courseTitle}
+                </option>
+              ))}
+            </select>
+          </div>
           <div className="row justify-content-center">
             {videoPreview ? (
               <>
@@ -205,7 +278,7 @@ function UploadVideoPages() {
                   />
                   <label
                     htmlFor="file-input"
-                    className="btn btn-outline-primary"
+                    className="btn btn-outline-light"
                     style={{ cursor: "pointer" }}
                   >
                     <UploadFileIcon className="me-2" /> Select Video
@@ -216,6 +289,7 @@ function UploadVideoPages() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

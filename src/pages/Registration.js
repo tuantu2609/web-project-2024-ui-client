@@ -97,7 +97,7 @@ const Registration = () => {
       phone: phone,
       birthDate: `${birthDate.year}-${birthDate.month}-${birthDate.day}`,
     };
-    console.log(userData);
+    // console.log(userData);
 
     axios
       .post("http://localhost:3001/auth/registration", userData)
