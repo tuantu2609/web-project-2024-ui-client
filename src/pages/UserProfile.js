@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from "react";
+import React, { useEffect, useLayoutEffect, useContext, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "../App.css";
@@ -55,10 +55,8 @@ function UserProfile() {
     if (!localStorage.getItem("accessToken")) {
       navigate("/login");
     }
-    setTimeout(() => {
-      setBodySectionMarginTop();
-      updatePersonalDetailMargin();
-    }, 50);
+
+    window.scrollTo(0, 0);
 
     fetchUserData(setUserData);
 
@@ -68,6 +66,13 @@ function UserProfile() {
       window.removeEventListener("resize", updatePersonalDetailMargin);
     };
   }, [navigate]);
+
+  useLayoutEffect(() => {
+    if (userData) {
+      setBodySectionMarginTop();
+      setTimeout(updatePersonalDetailMargin, 50);
+    }
+  }, [userData]);
 
   return (
     <div>
