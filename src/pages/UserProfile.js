@@ -52,13 +52,13 @@ function UserProfile() {
   let navigate = useNavigate();
 
   useEffect(() => {
-    if (!localStorage.getItem("accessToken")) {
-      navigate("/login");
-    }
-
     window.scrollTo(0, 0);
 
     fetchUserData(setUserData);
+
+    if (!localStorage.getItem("accessToken")) {
+      navigate("/login");
+    }
 
     // Thêm sự kiện resize để cập nhật margin khi thay đổi kích thước màn hình
     window.addEventListener("resize", updatePersonalDetailMargin);
