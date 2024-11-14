@@ -8,11 +8,12 @@ import {
 
 // Importing Pages
 import Login from "./pages/Login";
-// import LearningPages from "./pages/LearningPages";
+import LearningPages from "./pages/LearningPages";
 import Registration from "./pages/Registration";
 import HomePage from "./pages/HomePage";
 import UserProfile from "./pages/UserProfile";
 import Header from "./pages/Header";
+import UploadCoursesPages from "./pages/UploadCoursesPages";
 import UploadVideoPages from "./pages/UploadVideoPages";
 import ViewAllCourses from "./pages/ViewAllCourses";
 import ViewCourseDetail from "./pages/ViewCourseDetail";
@@ -61,7 +62,8 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/registration" element={<Registration />} />
-            {/* <Route path="/learn" element={<LearningPages />} /> */}
+            <Route path="/learn" element={<LearningPages />} />
+            <Route path="/upload-courses" element={<UploadCoursesPages />} />
             <Route path="/upload-video" element={<UploadVideoPages />} />
             <Route path="/user/:id" element={<UserProfile />} />
             <Route path="/courses/view-all" element={<ViewAllCourses />} />

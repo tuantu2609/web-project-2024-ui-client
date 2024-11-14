@@ -151,6 +151,7 @@ header {
   width: 100%;
   height: 20px;
   margin: 10px 0;
+  padding: 10px;
 }
 .input-box input:focus ~ label,
 .input-box input:valid ~ label {
@@ -575,7 +576,6 @@ header {
   margin: 0 5px;
 }
 
-
 /* VIEW COURSE DETAILS */
 /* VIEW COURSE DETAILS */
 .course-detail-background {
@@ -651,16 +651,44 @@ header {
   }
 }
 
-  
+/* ========================================================== */
+/* Upload video Page */
+/* ========================================================== */
+.UploadPages-background{
+  background-image: url('/public/background_2.jpg'); 
+  background-size: cover;
+  background-position: center;
+}
+
+.video-preview {
+  width: 100%;
+  height: auto;
+}
+
+.custom-textarea {
+  width: 100%;
+  height: 60px;
+  padding: 15px;
+  border-radius: 5px;
+  outline: none;
+  resize: none;
+  font-family: Fancy Cut, Almarai, Times, serif;
+  border-color: #bfbfbf;
+  /* max-height: 160px; */
+}
+
+.custom-textarea:is(:focus, :valid) {
+  border-color: #000;
+  border-width: 2px;
+  padding: 14px;
+}
+
+.custom-textarea::-webkit-scrollbar {
+  width: 0px;
+}
 
   
   
-
-
-
-
-
-
 
 /* LEARNING PAGE CSS */
  /* transparent when at top */

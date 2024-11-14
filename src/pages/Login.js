@@ -3,13 +3,13 @@ import "../App.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { AuthContext } from '../helpers/AuthContext'
+import { AuthContext } from "../helpers/AuthContext";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const {setAuthState} = useContext(AuthContext);
+  const { setAuthState } = useContext(AuthContext);
   let navigate = useNavigate();
 
   const handleUsernameChange = (e) => {
@@ -21,7 +21,6 @@ function Login() {
     setPassword(e.target.value);
     if (message) setMessage("");
   };
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -106,7 +105,18 @@ function Login() {
                 <label>Password</label>
                 {message && (
                   <div className="error-message">
-                    <h5 className="alert alert-danger mt-2">{message}</h5>
+                    <h5
+                      className="alert alert-danger alert-dismissible fade show"
+                      role="alert"
+                    >
+                      {message}{" "}
+                      <button
+                        type="button"
+                        className="btn-close"
+                        aria-label="Close"
+                        onClick={() => setMessage("")}
+                      ></button>
+                    </h5>
                   </div>
                 )}
               </div>
