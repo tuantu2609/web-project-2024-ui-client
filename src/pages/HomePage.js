@@ -1,23 +1,22 @@
-// import { Link } from "react-router-dom";
-// import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "../App.css";
 import GroupsIcon from "@mui/icons-material/Groups";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import TimerOutlinedIcon from "@mui/icons-material/TimerOutlined";
 import Footer from "./Footer";
-
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 
 const HomePage = ({ username }) => {
+  const [courses, setCourses] = useState([]);
+  const navigate = useNavigate();
+
   const responsive = {
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
-      items: 4, // Show 4 cards at a time
+      items: 4,
     },
     tablet: {
       breakpoint: { max: 1024, min: 464 },
@@ -29,7 +28,12 @@ const HomePage = ({ username }) => {
     },
   };
 
-  let navigate = useNavigate();
+  useEffect(() => {
+    fetch("http://localhost:3001/courses")
+      .then((response) => response.json())
+      .then((data) => setCourses(data))
+      .catch((error) => console.error("Error fetching courses:", error));
+  }, []);
 
   const token = localStorage.getItem("accessToken");
   const handleJoinClick = () => {
@@ -39,6 +43,11 @@ const HomePage = ({ username }) => {
       navigate("/login");
     }
   };
+
+  const handleCourseClick = (courseId) => {
+    navigate(`/courses/${courseId}`);
+  };
+
   return (
     <div className="home-background">
       <section className="courses">
@@ -52,8 +61,7 @@ const HomePage = ({ username }) => {
             <h2 className="h2 courses-title">
               <strong>Học giỏi, </strong>
               <strong className="color-pass">do chúng tôi; </strong>
-              Học kém,
-              <strong className="color-pass"> do bạn.</strong>
+              Học kém, <strong className="color-pass">do bạn.</strong>
             </h2>
             <div>
               <button onClick={handleJoinClick} className="btn btn-join">
@@ -81,6 +89,28 @@ const HomePage = ({ username }) => {
           autoPlay={false}
           draggable={false}
         >
+          {courses.slice(0, 4).map((course) => (
+            <div
+              key={course.id}
+              className="carousel-item-wrapper"
+              onClick={() => handleCourseClick(course.id)}
+            >
+              <div className="card">
+                <img
+                  src={course.image || `${process.env.PUBLIC_URL}/vid.jpg`}
+                  className="card-img-top"
+                  alt={course.courseTitle}
+                />
+                <div className="card-body">
+                  <h5 className="card-title">{course.courseTitle}</h5>
+                  <div className="card-info">
+                    <span className="card-icon">
+                      <GroupsIcon /> {course.participants || 0}
+                    </span>
+                    <span className="card-icon">
+                      <FormatListBulletedIcon /> {course.lessons || 0}
+                    </span>
+                  </div>
           {[...Array(4)].map((_, index) => (
             <div className="card" key={index}>
               {" "}
@@ -113,6 +143,14 @@ const HomePage = ({ username }) => {
           </button>
         </div>
       </section>
+      <div className="container">
+        <button
+          onClick={() => navigate("/courses/view-all")}
+          className="btn btn-view"
+        >
+          <span>View all</span>
+        </button>
+      </div>
       <Footer />
     </div>
   );
