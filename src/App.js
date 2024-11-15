@@ -5,6 +5,7 @@ import {
   Routes,
   useLocation,
 } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 // Importing Pages
 import Login from "./pages/Login";
@@ -34,25 +35,63 @@ function App() {
   });
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/auth/user", {
-        headers: {
-          accessToken: localStorage.getItem("accessToken"),
-        },
-      })
-      .then((response) => {
-        if (response.data.error) {
-          setAuthState({ ...authState, status: false });
-        } else {
-          setAuthState({
-            fullName: response.data.fullName,
-            id: response.data.id,
-            role: response.data.role,
-            status: true,
+    const token = localStorage.getItem("accessToken");
+
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const role = decodedToken.role;
+
+      if (role === "admin") {
+        axios
+        .get("http://localhost:3001/admin/auth", {
+          headers: {
+            accessToken: token,
+          },
+        })
+        .then((response) => {
+          if (response.data.error) {
+            setAuthState((prevState) => ({ ...prevState, status: false }));
+          } else {
+            setAuthState((prevState) => ({
+              ...prevState,
+              fullName: response.data.fullName,
+              id: response.data.id,
+              role: response.data.role,
+              status: true,
+            }));
+          }
+        })
+        .catch((error) => {
+          console.error("Error during user auth:", error);
+          setAuthState((prevState) => ({ ...prevState, status: false }));
+        });
+      } else {
+        axios
+          .get("http://localhost:3001/auth/user", {
+            headers: {
+              accessToken: token,
+            },
+          })
+          .then((response) => {
+            if (response.data.error) {
+              setAuthState((prevState) => ({ ...prevState, status: false }));
+            } else {
+              setAuthState((prevState) => ({
+                ...prevState,
+                fullName: response.data.fullName,
+                id: response.data.id,
+                role: response.data.role,
+                status: true,
+              }));
+            }
+          })
+          .catch((error) => {
+            console.error("Error during user auth:", error);
+            setAuthState((prevState) => ({ ...prevState, status: false }));
           });
-        }
-      });
-  }, [authState]);
+      }
+    }
+  }, []);
 
   return (
     <div className="App">
@@ -88,7 +127,6 @@ function ConditionalHeader() {
         location.pathname !== "/registration" && <Header /> &&
         location.pathname !== "/tnhh2tv" && <Header /> &&
         location.pathname !== "/AdminDashboard" && <Header />}
-
     </>
   );
 }
