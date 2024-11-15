@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import axios from "axios";
 import "../App.css";
-import { setBodySectionMarginTop } from "../helpers/styles"; 
+import { setBodySectionMarginTop } from "../helpers/styles";
 
 function LearningPages() {
   const [videos, setVideos] = useState([]);
@@ -40,18 +40,21 @@ function LearningPages() {
   useEffect(() => {
     setBodySectionMarginTop();
 
-    axios.get(`http://localhost:3001/videos`).then((response) => {
-      const videosWithFormattedDuration = response.data.map((video) => ({
-        ...video,
-        videoDuration: convertDuration(video.videoDuration), // Chuyển đổi
-      }));
-      setVideos(videosWithFormattedDuration);
-    });
+    axios
+      .get(`http://localhost:3001/videos`, {
+        headers: { accessToken: localStorage.getItem("accessToken") },
+      })
+      .then((response) => {
+        const videosWithFormattedDuration = response.data.map((video) => ({
+          ...video,
+          videoDuration: convertDuration(video.videoDuration), // Chuyển đổi
+        }));
+        setVideos(videosWithFormattedDuration);
+      });
   }, []);
 
   return (
     <div>
-
       <div className="body-section">
         <div className="row">
           {/* Recent video */}
@@ -144,7 +147,6 @@ function LearningPages() {
           {showLessonList ? "Hide" : "Show"}
         </button>
       </div>
-
     </div>
   );
 }
