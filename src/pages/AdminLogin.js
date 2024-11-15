@@ -25,12 +25,14 @@ function AdminLogin() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = { username, password };
+
     axios
       .post("http://localhost:3001/admin/login", data)
       .then((response) => {
         if (response.data.error) {
           setMessage(response.data.error);
         } else {
+          // Lưu token với tên riêng cho admin
           localStorage.setItem("accessToken", response.data.token);
           setAuthState({
             fullName: response.data.fullName,
