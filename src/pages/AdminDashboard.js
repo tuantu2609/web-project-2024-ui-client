@@ -8,6 +8,7 @@ function AdminDashboard() {
   return (
     <div>
       welcome to admin dashboard!!!!!!
+      <Footer/>
     </div>
   );
 }
