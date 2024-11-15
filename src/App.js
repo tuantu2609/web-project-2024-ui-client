@@ -17,6 +17,8 @@ import UploadCoursesPages from "./pages/UploadCoursesPages";
 import UploadVideoPages from "./pages/UploadVideoPages";
 import ViewAllCourses from "./pages/ViewAllCourses";
 import ViewCourseDetail from "./pages/ViewCourseDetail";
+import AdminLogin from "./pages/AdminLogin";
+import AdminDashboard from "./pages/AdminDashboard";
 
 // Importing libraries
 import { AuthContext } from "./helpers/AuthContext";
@@ -67,7 +69,9 @@ function App() {
             <Route path="/upload-video" element={<UploadVideoPages />} />
             <Route path="/user/:id" element={<UserProfile />} />
             <Route path="/courses/view-all" element={<ViewAllCourses />} />
-            <Route path ="/courses/:id" element = {<ViewCourseDetail/>} />
+            <Route path="/courses/:id" element={<ViewCourseDetail />} />
+            <Route path="/tnhh2tv" element={<AdminLogin />} />
+            <Route path="/AdminDashboard" element={<AdminDashboard />} />
           </Routes>
         </Router>
       </AuthContext.Provider>
@@ -81,7 +85,10 @@ function ConditionalHeader() {
   return (
     <>
       {location.pathname !== "/login" &&
-        location.pathname !== "/registration" && <Header />}
+        location.pathname !== "/registration" && <Header /> &&
+        location.pathname !== "/tnhh2tv" && <Header /> &&
+        location.pathname !== "/AdminDashboard" && <Header />}
+
     </>
   );
 }
