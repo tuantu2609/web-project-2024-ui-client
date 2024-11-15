@@ -583,45 +583,19 @@ header {
   background-image: url("/public/background.jpg");
   background-size: cover;
   background-position: center;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 }
 
 .course-detail-container {
-  background-color: rgba(249, 249, 249, 0.9); /* Đảm bảo nền hơi trong suốt */
-  max-width: 800px;
-  margin: 20px auto;
+  background-color: rgba(249, 249, 249, 0.9);
   padding: 30px;
   border-radius: 8px;
   box-shadow: 0px 4px 16px rgba(5, 3, 3, 0.1);
   font-family: Arial, sans-serif;
-  text-align: left;
-}
-
-.course-header {
-  display: flex;
-  flex-wrap: wrap; /* Để hỗ trợ khi trên màn hình nhỏ */
-  align-items: center;
-  margin-bottom: 20px;
 }
 
 .course-logo {
   width: 60px;
-  height: auto; /* Cho phép tỷ lệ ảnh duy trì khi co giãn */
-  margin-right: 20px;
-}
-
-@media (max-width: 576px) {
-  .course-logo {
-    margin: 0 auto 20px; /* Căn giữa logo và thêm khoảng cách dưới */
-    display: block;
-  }
-}
-
-.course-title-container {
-  flex: 1;
+  height: auto;
 }
 
 .course-title {
@@ -629,27 +603,12 @@ header {
   font-weight: bold;
   color: #333;
   margin: 0;
-  text-align: left;
-}
-
-@media (max-width: 576px) {
-  .course-title {
-    font-size: 1.5rem; /* Giảm kích thước chữ trên màn hình nhỏ */
-    text-align: center;
-  }
 }
 
 .course-desc {
   font-size: 1.1rem;
   color: #555;
   margin-top: 10px;
-}
-
-@media (max-width: 576px) {
-  .course-desc {
-    font-size: 1rem; /* Giảm kích thước chữ trên màn hình nhỏ */
-    text-align: center;
-  }
 }
 
 /* ========================================================== */
