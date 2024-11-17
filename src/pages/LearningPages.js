@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import axios from "axios";
 import "../App.css";
 import { setBodySectionMarginTop } from "../helpers/styles";
 
+
 function LearningPages() {
+  const { courseId, videoId } = useParams();
   const [videos, setVideos] = useState([]);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [showLessonList, setShowLessonList] = useState(true);
   const [showFullDesc, setShowFullDesc] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   function convertDuration(seconds) {
     const hours = Math.floor(seconds / 3600);
@@ -32,26 +36,49 @@ function LearningPages() {
     }
   }
 
+  const findVideoIndexById = (videos, videoId) => {
+    return videos.findIndex((video) => video.videoId === parseInt(videoId));
+  };
+
   const handleVideoChange = (index) => {
     setCurrentVideoIndex(index);
     setShowFullDesc(false);
   };
 
   useEffect(() => {
-    setBodySectionMarginTop();
+    setIsLoading(true);
 
     axios
-      .get(`http://localhost:3001/videos`, {
+      .get(`http://localhost:3001/courseVideo/course-le/${courseId}`, {
         headers: { accessToken: localStorage.getItem("accessToken") },
       })
       .then((response) => {
         const videosWithFormattedDuration = response.data.map((video) => ({
           ...video,
-          videoDuration: convertDuration(video.videoDuration), // Chuyển đổi
+          videoDuration: convertDuration(video.Video.videoDuration), // Chuyển đổi
         }));
         setVideos(videosWithFormattedDuration);
+
+        const initialIndex = findVideoIndexById(
+          videosWithFormattedDuration,
+          videoId
+        );
+        setCurrentVideoIndex(initialIndex >= 0 ? initialIndex : 0); // Nếu không tìm thấy, mặc định 0
+
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setIsLoading(false);
       });
-  }, []);
+  }, [courseId, videoId]);
+
+  useEffect(() => {
+    if (videos) {
+      setBodySectionMarginTop();
+    }
+  }, [videos]);
+
+  if (isLoading) return <p>Loading videos...</p>;
 
   return (
     <div>
@@ -63,14 +90,14 @@ function LearningPages() {
             <div className="video-container">
               {videos.length > 0 ? (
                 <video
-                  key={videos[currentVideoIndex].videoURL}
+                  key={videos[currentVideoIndex].Video.videoURL}
                   width="100%"
                   height={showLessonList ? "auto" : "600"}
                   autoPlay
                   controls
                 >
                   <source
-                    src={videos[currentVideoIndex].videoURL}
+                    src={videos[currentVideoIndex].Video.videoURL}
                     type="video/mp4"
                   />
                   Your browser does not support the video tag.
@@ -83,11 +110,16 @@ function LearningPages() {
             {/* Video Title and Video Description */}
             {videos.length > 0 && (
               <div className="mt-3 ms-3">
-                <h5>{videos[currentVideoIndex].videoTitle}</h5>
+                <h5>{videos[currentVideoIndex].Video.videoTitle}</h5>
                 <pre className="mt-3">
-                  {showFullDesc
-                    ? videos[currentVideoIndex].videoDesc
-                    : `${videos[currentVideoIndex].videoDesc.slice(0, 100)}...`}
+                  {videos[currentVideoIndex].Video.videoDesc
+                    ? showFullDesc
+                      ? videos[currentVideoIndex].Video.videoDesc
+                      : `${videos[currentVideoIndex].Video.videoDesc.slice(
+                          0,
+                          100
+                        )}...`
+                    : "No description available"}
                 </pre>
                 <button
                   className="btn btn-link p-0"
@@ -120,9 +152,9 @@ function LearningPages() {
                       onClick={() => handleVideoChange(index)}
                     >
                       <div className="ms-2 me-auto">
-                        <div className="fw-bold">{video.videoTitle}</div>
+                        <div className="fw-bold">{video.Video.videoTitle}</div>
                         <span className="badge text-bg-secondary rounded-pill">
-                          {video.videoDuration}
+                          {video.Video.videoDuration}
                         </span>
                       </div>
                     </li>

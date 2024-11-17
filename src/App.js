@@ -11,6 +11,7 @@ import { jwtDecode } from "jwt-decode";
 import Login from "./pages/Login";
 import LearningPages from "./pages/LearningPages";
 import Registration from "./pages/Registration";
+import ForgotPassword from "./pages/ForgotPassword";
 import HomePage from "./pages/HomePage";
 import UserProfile from "./pages/UserProfile";
 import Header from "./pages/Header";
@@ -103,7 +104,8 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/registration" element={<Registration />} />
-            <Route path="/learn" element={<LearningPages />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/learn/:courseId/:videoId" element={<LearningPages />} />
             <Route path="/upload-courses" element={<UploadCoursesPages />} />
             <Route path="/upload-video" element={<UploadVideoPages />} />
             <Route path="/user/:id" element={<UserProfile />} />

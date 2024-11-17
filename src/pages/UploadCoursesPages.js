@@ -22,7 +22,7 @@ function UploadCoursesPages() {
     if (!localStorage.getItem("accessToken")) {
       navigate("/login");
     }
-    else if (authState.role !== "teacher") {
+    else if (authState.role !== "instructor") {
       navigate("/");
     }
     else {

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Footer from "./Footer";
+import { useNavigate } from "react-router-dom";
+
 import GroupsIcon from "@mui/icons-material/Groups";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import Footer from "./Footer";
 import SchoolIcon from "@mui/icons-material/School";
-import { useNavigate } from "react-router-dom";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 
 const ViewAllCourses = () => {
   const [courses, setCourses] = useState([]);
@@ -13,9 +15,17 @@ const ViewAllCourses = () => {
   const navigate = useNavigate(); // Sử dụng useNavigate
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     fetch("http://localhost:3001/courses")
       .then((response) => response.json())
-      .then((data) => setCourses(data))
+      // .then((data) => setCourses(data))
+      .then((data) => {
+        // Lọc chỉ các khóa học có status là "active"
+        const activeCourses = data.filter(
+          (course) => course.status === "active"
+        );
+        setCourses(activeCourses);
+      })
       .catch((error) => console.error("Error fetching courses:", error));
   }, []);
 
@@ -45,6 +55,12 @@ const ViewAllCourses = () => {
       <div className="view-all-courses">
         <section className="container">
           <div className="tray">
+            <button
+              className="btn btn-primary mt-3 mb-3"
+              onClick={() => navigate(-1)}
+            >
+              <ArrowBackIosNewIcon /> Back
+            </button>
             <h2 className="courses-title">
               <SchoolIcon /> All Courses
             </h2>
@@ -52,7 +68,11 @@ const ViewAllCourses = () => {
           <div className="row">
             {currentCourses.map((course) => (
               <div key={course.id} className="col-lg-3 col-md-4 col-sm-6 mb-4">
-                <div className="card" onClick={() => handleCourseClick(course.id)} style={{ cursor: "pointer" }}>
+                <div
+                  className="card"
+                  onClick={() => handleCourseClick(course.id)}
+                  style={{ cursor: "pointer" }}
+                >
                   <img
                     src={course.image || `${process.env.PUBLIC_URL}/vid.jpg`}
                     className="card-img-top"
@@ -75,7 +95,11 @@ const ViewAllCourses = () => {
           </div>
 
           <div className="pagination-controls">
-            <button onClick={handlePreviousPage} disabled={currentPage === 1} className="btn btn-primary mx-1">
+            <button
+              onClick={handlePreviousPage}
+              disabled={currentPage === 1}
+              className="btn btn-primary mx-1"
+            >
               Previous
             </button>
 
@@ -83,13 +107,21 @@ const ViewAllCourses = () => {
               <button
                 key={index}
                 onClick={() => handlePageClick(index + 1)}
-                className={`btn mx-1 ${currentPage === index + 1 ? "btn-secondary" : "btn-outline-secondary"}`}
+                className={`btn mx-1 ${
+                  currentPage === index + 1
+                    ? "btn-secondary"
+                    : "btn-outline-secondary"
+                }`}
               >
                 {index + 1}
               </button>
             ))}
 
-            <button onClick={handleNextPage} disabled={currentPage === totalPages} className="btn btn-primary mx-1">
+            <button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+              className="btn btn-primary mx-1"
+            >
               Next
             </button>
           </div>

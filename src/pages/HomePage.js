@@ -33,14 +33,20 @@ const HomePage = ({ username }) => {
     setBodySectionMarginTop();
     fetch("http://localhost:3001/courses")
       .then((response) => response.json())
-      .then((data) => setCourses(data))
+      // .then((data) => setCourses(data)) //Nếu muốn hiện hết thì dùng dòng này
+      .then((data) => { // Lọc chỉ các khóa học có status là "active"
+        const activeCourses = data.filter(
+          (course) => course.status === "active"
+        );
+        setCourses(activeCourses);
+      })
       .catch((error) => console.error("Error fetching courses:", error));
   }, []);
 
   const token = localStorage.getItem("accessToken");
   const handleJoinClick = () => {
     if (token) {
-      navigate("/progress");
+      navigate("/courses/view-all");
     } else {
       navigate("/login");
     }
