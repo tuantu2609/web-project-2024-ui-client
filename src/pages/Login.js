@@ -3,6 +3,7 @@ import "../App.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { AuthContext } from "../helpers/AuthContext";
 import CryptoJS from "crypto-js";
 

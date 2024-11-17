@@ -19,6 +19,7 @@ function ViewCourseDetail() {
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [alertType, setAlertType] = useState("danger");
+  const [canViewVideos, setCanViewVideos] = useState(false);
 
   let navigate = useNavigate();
 
@@ -44,6 +45,12 @@ function ViewCourseDetail() {
   }
 
   const handleEnroll = async (courseId) => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
     if (authState.role === "instructor") {
       setAlertMessage("Enrollment is only available for students.");
       setAlertType("warning");
@@ -92,8 +99,16 @@ function ViewCourseDetail() {
   }, [course]);
 
   useEffect(() => {
-    const checkEnrollmentStatus = async () => {
+    const checkPermissions = async () => {
       try {
+        // Kiểm tra người dùng có phải là instructor
+        if (authState.id === course?.Instructor?.id) {
+          setCanViewVideos(true);
+          setIsEnrolled(true); // Instructor tự động xem được video
+          return;
+        }
+
+        // Kiểm tra người dùng đã ghi danh hay chưa
         const response = await axios.get(
           `http://localhost:3001/courses/check-enrollment/${id}`,
           {
@@ -102,14 +117,19 @@ function ViewCourseDetail() {
             },
           }
         );
+        setCanViewVideos(response.data.enrolled);
         setIsEnrolled(response.data.enrolled);
       } catch (error) {
-        console.error("Error checking enrollment status:", error);
+        console.error("Error checking permissions:", error);
+        setCanViewVideos(false); // Không cho phép nếu có lỗi
+        setIsEnrolled(false);
       }
     };
 
-    checkEnrollmentStatus();
-  }, [id]);
+    if (course) {
+      checkPermissions();
+    }
+  }, [authState.id, course, id]);
 
   if (!course) {
     return <p>Loading course details...</p>;
@@ -146,19 +166,25 @@ function ViewCourseDetail() {
           </div>
         )}
         <div className="row course-detail-container d-flex align-items-center">
-          <div className="col-md-2 col-sm-12 d-flex justify-content-center">
+          <div className="col-md-4 col-sm-12 d-flex justify-content-center mb-3">
             <img
-              src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg"
-              alt="Logo"
-              className="course-logo img-fluid"
+              src={course?.thumbnail ? course.thumbnail : "/vid.jpg"}
+              alt={course?.courseTitle || "Default Thumbnail"}
+              className="img-fluid"
             />
           </div>
-          <div className="col-md-10 col-sm-12 d-flex flex-column justify-content-center text-md-start text-center">
+          <div className="col-md-8 col-sm-12 d-flex flex-column justify-content-center text-md-start text-center">
             <h1 className="course-title">{course?.courseTitle}</h1>
             <p className="course-desc">{course?.courseDesc}</p>
           </div>
           {!isEnrolled && (
             <div className="col-12 text-md-start text-center mt-3">
+              {course?.Instructor?.UserDetail?.fullName && (
+                <p className="course-instructor">
+                  <strong>Instructor: </strong>
+                  {course.Instructor.UserDetail.fullName}
+                </p>
+              )}
               <div className="d-flex flex-column flex-md-row justify-content-md-start justify-content-center align-items-center gap-3">
                 <p className="course-price fw-bold mb-0">
                   {course?.coursePrice > 0
@@ -181,13 +207,19 @@ function ViewCourseDetail() {
               {videos.map((video, index) => (
                 <li
                   key={video.videoId}
-                  className="list-group-item d-flex align-items-center"
-                  style={{ cursor: "pointer" }}
-                  onClick={() => navigate(`/learn/${id}/${video.videoId}`)}
+                  className={`list-group-item d-flex align-items-center ${
+                    canViewVideos ? "cursor-pointer" : "disabled"
+                  }`}
+                  style={{ cursor: canViewVideos ? "pointer" : "not-allowed" }}
+                  onClick={() =>
+                    canViewVideos
+                      ? navigate(`/learn/${id}/${video.videoId}`)
+                      : alert("You do not have permission to view this video.")
+                  }
                 >
                   <PlayCircleIcon
                     className="me-3"
-                    style={{ color: "#2e97dd" }}
+                    style={{ color: canViewVideos ? "#2e97dd" : "grey" }}
                   />
 
                   {/* Số thứ tự và tiêu đề video */}

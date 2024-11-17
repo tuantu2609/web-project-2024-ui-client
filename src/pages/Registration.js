@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "../App.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import PendingIcon from "@mui/icons-material/Pending";
@@ -54,12 +55,8 @@ const Registration = () => {
       );
 
       if (checkResponse.status === 200) {
-        // Nếu username/email không trùng, tiếp tục gửi mã xác minh
-        const generatedCode = Math.floor(10000 + Math.random() * 90000); // Tạo mã xác minh
-
         await axios.post("http://localhost:3001/auth/send-email", {
           email,
-          code: generatedCode,
         });
 
         alert("Verification code sent to your email.");
@@ -79,11 +76,11 @@ const Registration = () => {
   const handleCodeInput = (e, index) => {
     const value = e.target.value.replace(/[^0-9]/g, ""); // Chỉ cho phép số
     const updatedCode = verificationCode.split("");
-  
+
     if (value) {
       updatedCode[index] = value; // Cập nhật giá trị tại ô hiện tại
       setVerificationCode(updatedCode.join("")); // Cập nhật state
-  
+
       // Chuyển focus sang ô tiếp theo nếu không phải ô cuối
       if (index < 4) {
         const nextInput = document.querySelectorAll(".code-input")[index + 1];
@@ -91,15 +88,14 @@ const Registration = () => {
       }
     }
   };
-  
 
   const handleKeyDown = (e, index) => {
     if (e.key === "Backspace") {
       e.preventDefault(); // Ngăn hành vi mặc định của phím Backspace
-  
+
       // Chuyển verificationCode thành mảng để thao tác
       const updatedCode = verificationCode.split("");
-  
+
       if (updatedCode[index]) {
         // Nếu ô hiện tại có ký tự, xóa ký tự tại ô đó
         updatedCode[index] = "";
@@ -108,7 +104,7 @@ const Registration = () => {
         // Nếu ô hiện tại trống, chuyển focus về ô trước đó và xóa ký tự tại đó
         updatedCode[index - 1] = "";
         setVerificationCode(updatedCode.join(""));
-  
+
         // Di chuyển focus về ô trước
         const prevInput = document.querySelectorAll(".code-input")[index - 1];
         if (prevInput) prevInput.focus();

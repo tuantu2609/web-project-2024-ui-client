@@ -105,9 +105,10 @@ const HomePage = ({ username }) => {
             >
               <div className="card">
                 <img
-                  src={course.image || `${process.env.PUBLIC_URL}/vid.jpg`}
+                  src={course.thumbnail || "/vid.jpg"}
                   className="card-img-top"
-                  alt={course.courseTitle}
+                  alt={course.courseTitle || "Course Thumbnail"}
+                  // style={{ width: "100%", height: "259px", objectFit: "cover" }}
                 />
                 <div className="card-body">
                   <h5 className="card-title">{course.courseTitle}</h5>

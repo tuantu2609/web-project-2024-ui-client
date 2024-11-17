@@ -3,6 +3,7 @@ import "../App.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import PendingIcon from "@mui/icons-material/Pending";
@@ -137,8 +138,8 @@ const ForgotPassword = () => {
           alignItems: "center",
         }}
       >
-        <div className="regis-wrapper">
-          <div className="form-box register">
+        <div className="log-wrapper">
+          <div className="form-box login">
             {step === 1 && (
               <>
                 <h1>Forgot Password</h1>
@@ -160,9 +161,28 @@ const ForgotPassword = () => {
                       <h5>{errorMessage}</h5>
                     </div>
                   )}
-                  <button type="submit" className="btn" disabled={isLoading}>
-                    {isLoading ? <PendingIcon /> : "Send Verification Code"}
-                  </button>
+                  <div className="d-flex justify-content-between align-items-center mt-3">
+                    <button
+                      type="button"
+                      onClick={() => navigate("/login")}
+                      className="btn btn-secondary"
+                      style={{
+                        width: "30%",
+                      }}
+                    >
+                      <ArrowBackIcon /> Back
+                    </button>
+                    <button
+                      type="submit"
+                      className="btn btn-primary"
+                      style={{
+                        width: "30%",
+                      }}
+                      disabled={isLoading}
+                    >
+                      {isLoading ? <PendingIcon /> : "Next Step"}
+                    </button>
+                  </div>
                 </form>
               </>
             )}
@@ -171,7 +191,8 @@ const ForgotPassword = () => {
                 <form onSubmit={handleVerifyCode}>
                   <h2>Check your email</h2>
                   <p>
-                    Enter the 5-digit verification code sent to <strong>{email}</strong>.
+                    Enter the 5-digit verification code sent to{" "}
+                    <strong>{email}</strong>.
                   </p>
                   <div className="code-inputs">
                     {[...Array(5)].map((_, index) => (
