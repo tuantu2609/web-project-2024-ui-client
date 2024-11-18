@@ -33,14 +33,20 @@ const HomePage = ({ username }) => {
     setBodySectionMarginTop();
     fetch("http://localhost:3001/courses")
       .then((response) => response.json())
-      .then((data) => setCourses(data))
+      // .then((data) => setCourses(data)) //Nếu muốn hiện hết thì dùng dòng này
+      .then((data) => { // Lọc chỉ các khóa học có status là "active"
+        const activeCourses = data.filter(
+          (course) => course.status === "active"
+        );
+        setCourses(activeCourses);
+      })
       .catch((error) => console.error("Error fetching courses:", error));
   }, []);
 
   const token = localStorage.getItem("accessToken");
   const handleJoinClick = () => {
     if (token) {
-      navigate("/progress");
+      navigate("/courses/view-all");
     } else {
       navigate("/login");
     }
@@ -99,9 +105,10 @@ const HomePage = ({ username }) => {
             >
               <div className="card">
                 <img
-                  src={course.image || `${process.env.PUBLIC_URL}/vid.jpg`}
+                  src={course.thumbnail || "/vid.jpg"}
                   className="card-img-top"
-                  alt={course.courseTitle}
+                  alt={course.courseTitle || "Course Thumbnail"}
+                  // style={{ width: "100%", height: "259px", objectFit: "cover" }}
                 />
                 <div className="card-body">
                   <h5 className="card-title">{course.courseTitle}</h5>
