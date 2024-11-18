@@ -5,7 +5,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import axios from "axios";
 import "../App.css";
 import { setBodySectionMarginTop } from "../helpers/styles";
-
+import { convertDuration } from "../helpers/time";
 
 function LearningPages() {
   const { courseId, videoId } = useParams();
@@ -14,27 +14,6 @@ function LearningPages() {
   const [showLessonList, setShowLessonList] = useState(true);
   const [showFullDesc, setShowFullDesc] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
-  function convertDuration(seconds) {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = Math.floor(seconds % 60);
-
-    // Tạo định dạng
-    if (hours > 0) {
-      return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
-        2,
-        "0"
-      )}:${String(secs).padStart(2, "0")}`;
-    } else if (minutes > 0) {
-      return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(
-        2,
-        "0"
-      )}`;
-    } else {
-      return `00:${String(secs).padStart(2, "0")}`;
-    }
-  }
 
   const findVideoIndexById = (videos, videoId) => {
     return videos.findIndex((video) => video.videoId === parseInt(videoId));
@@ -55,7 +34,8 @@ function LearningPages() {
       .then((response) => {
         const videosWithFormattedDuration = response.data.map((video) => ({
           ...video,
-          videoDuration: convertDuration(video.Video.videoDuration), // Chuyển đổi
+          // videoDuration: convertDuration(video.Video.videoDuration),
+          videoDuration: convertDuration(Math.round(video.Video.videoDuration)),
         }));
         setVideos(videosWithFormattedDuration);
 
@@ -154,7 +134,7 @@ function LearningPages() {
                       <div className="ms-2 me-auto">
                         <div className="fw-bold">{video.Video.videoTitle}</div>
                         <span className="badge text-bg-secondary rounded-pill">
-                          {video.Video.videoDuration}
+                          {video.videoDuration}
                         </span>
                       </div>
                     </li>

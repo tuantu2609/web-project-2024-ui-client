@@ -12,20 +12,6 @@ import { Modal, Button, Form } from "react-bootstrap";
 import PeopleIcon from "@mui/icons-material/People";
 import EditIcon from "@mui/icons-material/Edit";
 
-// Hàm lấy dữ liệu người dùng
-const fetchUserData = (setUserData) => {
-  axios
-    .get(`http://localhost:3001/user/details`, {
-      headers: { accessToken: localStorage.getItem("accessToken") },
-    })
-    .then((response) => {
-      setUserData(response.data);
-    })
-    .catch((error) => {
-      console.error("Error fetching user details:", error);
-    });
-};
-
 // Hàm cập nhật margin-top cho phần personal detail
 const updatePersonalDetailMargin = () => {
   const userProfile = document.querySelector(".user-profile");
@@ -57,7 +43,39 @@ function UserProfile() {
   const [userData, setUserData] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editData, setEditData] = useState({});
+  const [enrolledCourses, setEnrolledCourses] = useState([]);
+  const [isLoading, setIsLoading] = useState(false); // Trạng thái tải
+  const [successMessage, setSuccessMessage] = useState(""); // Thông báo thành công
+
   const navigate = useNavigate();
+
+  // Hàm lấy dữ liệu người dùng
+  const fetchUserData = (setUserData) => {
+    axios
+      .get(`http://localhost:3001/user/details`, {
+        headers: { accessToken: localStorage.getItem("accessToken") },
+      })
+      .then((response) => {
+        setUserData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching user details:", error);
+      });
+  };
+
+  const fetchEnrolledCourses = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:3001/enrollment/enrolled",
+        {
+          headers: { accessToken: localStorage.getItem("accessToken") },
+        }
+      );
+      setEnrolledCourses(response.data);
+    } catch (error) {
+      console.error("Error fetching enrolled courses:", error);
+    }
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -68,6 +86,7 @@ function UserProfile() {
     }
 
     fetchUserData(setUserData);
+    fetchEnrolledCourses();
 
     // Thêm sự kiện resize để cập nhật margin khi thay đổi kích thước màn hình
     window.addEventListener("resize", updatePersonalDetailMargin);
@@ -81,14 +100,14 @@ function UserProfile() {
       setBodySectionMarginTop();
       setTimeout(updatePersonalDetailMargin, 50);
       setEditData({
-        fullName: userData.userDetails?.fullName || "",
+        fullName: authState?.fullName || "",
         birthDate: userData.userDetails?.birthDate || "",
         phoneNumber: userData.userDetails?.phoneNumber || "",
         address: userData.userDetails?.address || "",
         profilePictureURL: userData.userDetails?.profilePictureURL || "",
       });
     }
-  }, [userData]);
+  }, [userData, authState?.fullName]);
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
@@ -98,78 +117,48 @@ function UserProfile() {
       setEditData({ ...editData, [name]: value });
     }
   };
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-
-    if (file) {
-      // Validate file type
-      const allowedTypes = [
-        "image/jpeg",
-        "image/png",
-        "image/jpg",
-        "image/gif",
-        "image/bmp",
-      ];
-      if (!allowedTypes.includes(file.type)) {
-        alert(
-          "Invalid file type. Only JPEG, PNG, JPG, GIF, and BMP are allowed."
-        );
-        return;
-      }
-
-      // Validate file size (e.g., less than 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        alert("File size exceeds the maximum limit of 5MB.");
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append("image", file);
-
-      // Upload the file
-      axios
-        .post(`http://localhost:3001/user/upload-profile-picture`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            accessToken: localStorage.getItem("accessToken"),
-          },
-        })
-        .then((response) => {
-          // Update profile picture URL in state
-          setEditData({ ...editData, profilePictureURL: response.data.url });
-          alert("Upload successful!");
-        })
-        .catch((error) => {
-          console.error("Error uploading image:", error);
-          alert("Failed to upload image. Please try again.");
-        });
-    }
-  };
 
   const handleSave = () => {
+    setIsLoading(true); // Bật trạng thái tải
+    setSuccessMessage(""); // Xóa thông báo cũ
+
+    const formData = new FormData(); // Dùng để chứa dữ liệu và file
     const updatedFields = {};
+
+    // Kiểm tra các trường thay đổi
     Object.keys(editData).forEach((key) => {
       if (
-        editData[key] !== userData.userDetails[key] && // Check if the value is updated
-        editData[key]?.trim() !== "" // Ensure the value is not empty
+        key !== "profilePictureURL" && // Bỏ qua trường ảnh ở đây
+        editData[key] !== userData.userDetails[key] &&
+        editData[key]?.trim() !== ""
       ) {
         updatedFields[key] = editData[key];
       }
     });
 
-    if (Object.keys(updatedFields).length === 0) {
-      setShowEditModal(false);
-      return;
+    // Thêm dữ liệu thay đổi vào FormData
+    Object.keys(updatedFields).forEach((key) => {
+      formData.append(key, updatedFields[key]);
+    });
+
+    // Xử lý ảnh nếu người dùng tải lên
+    const fileInput = document.getElementById("profilePictureInput");
+    if (fileInput?.files?.length > 0) {
+      formData.append("profilePicture", fileInput.files[0]); // Thêm file ảnh vào FormData
     }
 
+    // Gửi yêu cầu API
     axios
-      .put(`http://localhost:3001/user/update`, updatedFields, {
-        headers: { accessToken: localStorage.getItem("accessToken") },
+      .put("http://localhost:3001/user/details", formData, {
+        headers: {
+          accessToken: localStorage.getItem("accessToken"),
+          "Content-Type": "multipart/form-data",
+        },
       })
       .then(() => {
+        setSuccessMessage("Profile updated successfully!");
+        fetchUserData(setUserData); // Tải lại dữ liệu người dùng
         setShowEditModal(false);
-        fetchUserData(setUserData); // Làm mới userData
-        // Cập nhật authState nếu fullName thay đổi
         if (updatedFields.fullName) {
           setAuthState((prev) => ({
             ...prev,
@@ -179,6 +168,9 @@ function UserProfile() {
       })
       .catch((error) => {
         console.error("Error updating user details:", error);
+      })
+      .finally(() => {
+        setIsLoading(false); // Tắt trạng thái tải
       });
   };
 
@@ -208,6 +200,21 @@ function UserProfile() {
           </div>
         </div>
         <div className="personal-detail-section container-lg">
+          {successMessage && (
+            <div
+              className="alert alert-success alert-dismissible fade show"
+              role="alert"
+            >
+              {successMessage}
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+                onClick={() => setSuccessMessage("")} // Đặt lại successMessage khi đóng
+              ></button>
+            </div>
+          )}
           <div className="row">
             <div className="col-md-6 col-sm-12">
               <div className="left-side container-lg">
@@ -263,22 +270,34 @@ function UserProfile() {
               <div className="right-side container-lg">
                 <h4>Các khóa học đã tham gia</h4>
                 <div className="row">
-                  <div className="col-12">
-                    <div className="course-enrollment-display">
-                      <img
-                        src="http://localhost:3000/course-img.png"
-                        alt="Course Thumbnail"
-                        className="course-enrollment-img img-fluid"
-                      />
-                      <div className="course-enrollment-detail">
-                        <h5>HTML CSS từ Zero đến Hero</h5>
-                        <p>
-                          Trong khóa này chúng ta sẽ cùng nhau xây dựng giao
-                          diện 2 trang web là The Band & Shopee.
-                        </p>
+                  {enrolledCourses.length > 0 ? (
+                    enrolledCourses.map((course) => (
+                      <div
+                        className="col-12"
+                        key={course.courseId}
+                        onClick={() =>
+                          navigate(
+                            `/learn/${course.courseId}/${course.firstVideoId}`
+                          )
+                        } // Thêm sự kiện onClick để chuyển hướng
+                        style={{ cursor: "pointer" }}
+                      >
+                        <div className="course-enrollment-display mb-3">
+                          <img
+                            src={course.thumbnail || "vid.jpg"}
+                            alt={course.courseTitle}
+                            className="course-enrollment-img img-fluid"
+                          />
+                          <div className="course-enrollment-detail">
+                            <h5>{course.courseTitle}</h5>
+                            <p>{course.courseDesc}</p>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
+                    ))
+                  ) : (
+                    <p>Bạn chưa tham gia khóa học nào.</p>
+                  )}
                 </div>
               </div>
             </div>
@@ -317,7 +336,11 @@ function UserProfile() {
               <Form.Control
                 type="date"
                 name="birthDate"
-                value={editData.birthDate?.split("T")[0] || ""}
+                value={
+                  editData.birthDate
+                    ? format(new Date(editData.birthDate), "yyyy-MM-dd")
+                    : ""
+                }
                 onChange={handleEditChange}
               />
             </Form.Group>
@@ -345,8 +368,17 @@ function UserProfile() {
               </div>
               <Form.Control
                 type="file"
+                id="profilePictureInput"
                 accept="image/*"
-                onChange={(e) => handleImageUpload(e)}
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (file) {
+                    setEditData({
+                      ...editData,
+                      profilePictureURL: URL.createObjectURL(file), // Hiển thị ảnh tạm thời
+                    });
+                  }
+                }}
               />
             </Form.Group>
           </Form>
@@ -356,11 +388,18 @@ function UserProfile() {
             variant="secondary"
             className="btn-cancel"
             onClick={() => setShowEditModal(false)}
+            disabled={isLoading}
           >
             Cancel
           </Button>
-          <Button variant="primary" className="btn-save" onClick={handleSave}>
-            Save Changes
+          <Button
+            variant="primary"
+            className="btn-save"
+            onClick={handleSave}
+            disabled={isLoading} // Disable khi đang tải
+          >
+            {isLoading ? "Saving..." : "Save Changes"}{" "}
+            {/* Thay đổi text khi đang tải */}
           </Button>
         </Modal.Footer>
       </Modal>
