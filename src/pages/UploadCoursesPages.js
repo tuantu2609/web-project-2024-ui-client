@@ -90,16 +90,12 @@ function UploadCoursesPages() {
       return;
     }
 
-    if (!thumbnailFile) {
-      setAlertType("danger");
-      setAlertMessage("Please upload a thumbnail image for the course.");
-      return;
-    }
-
     const formData = new FormData();
     formData.append("courseTitle", title);
     formData.append("courseDesc", description);
-    formData.append("thumbnail", thumbnailFile);
+    if (thumbnailFile) {
+      formData.append("thumbnail", thumbnailFile);
+    }
 
     setIsUploading(true);
 
