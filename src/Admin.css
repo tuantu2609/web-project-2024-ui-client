@@ -1,0 +1,410 @@
+/* ================= Navigation ================= */
+.nav-header {
+    display: flex;
+    align-items: center;
+    padding: 20px 25px; /* Adjusted for more padding */
+    color: #fff;
+    font-size: 1.5rem; /* Increased font size */
+    font-weight: 700; /* Made the font bold */
+    background: #333;
+    border-bottom: 1px solid #444;
+}
+
+.admin__menu-navigation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 100%;
+    background: #000;
+    border-left: none;
+    margin: 0;
+    padding: 0;
+    transition: 0.3s ease-in-out;
+    overflow: hidden;
+    z-index: 1000;
+}
+
+.admin__menu-navigation ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.admin__menu-navigation ul li {
+    width: 100%;
+    margin-bottom: 5px;
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+}
+
+/* Styling for Navigation Buttons */
+.nav-btn {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 20px 25px; /* Increased padding for larger button area */
+    color: #fff;
+    background: none;
+    border: none;
+    text-align: left;
+    font-size: 1.2rem; /* Increased font size for the button text */
+    font-weight: 600; /* Made the button text slightly bolder */
+    text-decoration: none;
+    transition: background 0.3s ease, color 0.3s ease;
+    cursor: pointer;
+}
+
+.nav-btn:hover,
+.nav-btn:focus {
+    background: #fff;
+    color: #000;
+    outline: none;
+    border-left: 5px solid #000;
+}
+
+.nav-btn .icon {
+    min-width: 50px; /* Increased width for icons */
+    height: 50px; /* Increased height for icons */
+    line-height: 50px;
+    text-align: center;
+    font-size: 2rem; /* Made icons larger */
+}
+
+.nav-btn .title {
+    margin-left: 15px; /* Adjusted spacing between icon and text */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 600; /* Slightly bolder text for the menu items */
+    font-size: 1.2rem; /* Increased font size for text */
+}
+
+/* Active State Styling for Buttons */
+.admin__menu-navigation ul li.active .nav-btn {
+    background: #fff;
+    color: #000;
+    border-left: 5px solid #000;
+}
+
+.admin__menu-navigation ul li .nav-btn:active {
+    transform: scale(0.95);
+}
+
+
+
+/* ================= Main Content ================= */
+.admin__menu-main {
+    position: relative;
+    width: calc(100% - 300px);
+    margin-left: 300px;
+    min-height: 100vh;
+    background: #fff;
+    transition: 0.3s ease-in-out;
+}
+.admin__menu-main.active {
+    width: calc(100% - 80px);
+    margin-left: 80px;
+}
+
+/* ================= Top Bar ================= */
+.admin__menu-topbar {
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #ddd;
+}
+.admin__menu-toggle {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #000;
+}
+.admin__menu-user {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    cursor: pointer;
+}
+.admin__menu-user p {
+    margin-right: 10px;
+    font-size: 1rem;
+    text-transform: capitalize;
+}
+
+/* ================= Cards Section ================= */
+.admin__cardBox {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Ensures four cards in a row */
+    gap: 20px;
+    padding: 20px;
+    background: #fff;
+}
+
+.admin__cardBox .admin__card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column; /* Align items vertically */
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.admin__cardBox .admin__card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.admin__cardBox .admin__card .numbers {
+    font-weight: bold;
+    font-size: 2rem;
+    color: #000;
+}
+
+.admin__cardBox .admin__card .cardName {
+    font-size: 1rem;
+    color: #888;
+    margin-top: 5px;
+}
+
+.admin__cardBox .admin__card .iconBx {
+    font-size: 3rem;
+    color: #888;
+}
+
+/* ================= Recent Orders ================= */
+.recentOrders {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+}
+.admin__cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.admin__cardHeader h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #000;
+}
+.admin__cardHeader .btn {
+    padding: 8px 16px;
+    background: #000;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+.admin__cardHeader .btn:hover {
+    background: #fff;
+    color: #000;
+    border: 1px solid #000;
+}
+
+/* ================= Media Queries ================= */
+@media (max-width: 991px) {
+    .admin__menu-navigation {
+        left: -300px;
+        transition: 0.3s ease-in-out;
+    }
+    .admin__menu-navigation.active {
+        left: 0;
+    }
+    .admin__menu-main {
+        width: 100%;
+        margin-left: 0;
+    }
+    .admin__cardBox {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 480px) {
+    .admin__cardBox {
+        grid-template-columns: 1fr;
+    }
+    .admin__menu-navigation {
+        width: 100%;
+        left: -100%;
+    }
+    .admin__menu-navigation.active {
+        width: 100%;
+        left: 0;
+    }
+}
+
+/* ==================== Notifications Section ==================== */
+.notifications {
+    background: #fff;
+    margin: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .notifications h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+  }
+  
+  .notifications ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .notifications ul li {
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+    color: #666;
+    font-size: 1rem;
+  }
+  
+  .notifications ul li:last-child {
+    border-bottom: none;
+  }
+  
+  /* ==================== Quick Actions Section ==================== */
+  .quick-actions {
+    background: #fff;
+    margin: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .quick-actions h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+  }
+  
+  .quick-actions .action-buttons {
+    display: flex;
+    gap: 15px;
+  }
+  
+  .quick-actions .btn {
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-transform: capitalize;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+  
+  .quick-actions .btn:hover {
+    transform: translateY(-3px);
+  }
+  
+  /* ==================== Engagement Section ==================== */
+  .engagement {
+    background: #fff;
+    margin: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .engagement h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+  }
+  
+  .engagement .engagement-cards {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .engagement-card {
+    flex: 1;
+    background: #f7f7f7;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .engagement-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  .engagement-card p {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 10px;
+  }
+  
+  .engagement-card h4 {
+    font-size: 2rem;
+    color: #333;
+    font-weight: bold;
+  }
+  
+  /* ==================== Upcoming Tasks Section ==================== */
+  .upcoming-tasks {
+    background: #fff;
+    margin: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .upcoming-tasks h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+  }
+  
+  .upcoming-tasks ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .upcoming-tasks ul li {
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+    color: #666;
+    font-size: 1rem;
+  }
+  
+  .upcoming-tasks ul li:last-child {
+    border-bottom: none;
+  }
+  
+  /* ==================== General Adjustments ==================== */
+  .container-fluid {
+    background: #f1f4f7;
+    min-height: 100vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  section {
+    margin-bottom: 20px;
+  }
+  
