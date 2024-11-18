@@ -284,7 +284,7 @@ function UserProfile() {
                       >
                         <div className="course-enrollment-display mb-3">
                           <img
-                            src={course.thumbnail || "vid.jpg"}
+                            src={course.thumbnail || "http://localhost:3000/vid.jpg"}
                             alt={course.courseTitle}
                             className="course-enrollment-img img-fluid"
                           />
