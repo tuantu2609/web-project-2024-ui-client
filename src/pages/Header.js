@@ -3,18 +3,18 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../helpers/AuthContext";
-
-// Import icons from Material-UI
+import axios from "axios";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
 import SchoolIcon from "@mui/icons-material/School";
-// import SearchIcon from "@mui/icons-material/Search";
 
 function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
   const { authState, setAuthState } = useContext(AuthContext);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to check if user is logged in
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   let navigate = useNavigate();
 
   const logout = () => {
@@ -25,21 +25,19 @@ function Header() {
       role: "",
       status: false,
     });
-    setIsLoggedIn(false); // Update isLoggedIn state
+    setIsLoggedIn(false);
     navigate("/login");
   };
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50); // Change 50 to your preferred scroll threshold
+      setIsScrolled(window.scrollY > 50);
     };
 
     window.addEventListener("scroll", handleScroll);
 
-    // Check for token on mount
     const token = localStorage.getItem("accessToken");
     if (token) {
-      // If token exists, set isLoggedIn to true
       setIsLoggedIn(true);
     }
 
@@ -47,6 +45,40 @@ function Header() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  const handleSearchChange = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+  
+    if (!query.trim()) {
+      setSearchResults([]); // Clear results if query is empty
+      return;
+    }
+  
+    axios
+      .get(`http://localhost:3001/courses/search?query=${query}`, {
+        headers: {
+          accessToken: localStorage.getItem("accessToken") || "",
+        },
+      })
+      .then((response) => {
+        setSearchResults(response.data); // Store search results in state
+      })
+      .catch((error) => {
+        console.error("Error fetching search results:", error);
+        setSearchResults([]); // Clear results if there’s an error
+      });
+  };
+  
+  
+  
+
+  const handleResultClick = (courseId) => {
+    navigate(`/learn/${courseId}/0`); // Navigate to the course page
+    setSearchQuery(""); // Clear search query
+    setSearchResults([]); // Clear search results
+  };
+  
 
   return (
     <div className={`header-section fixed-top ${isScrolled ? "scrolled" : ""}`}>
@@ -81,20 +113,29 @@ function Header() {
           className="collapse navbar-collapse justify-content-between"
           id="navbarSupportedContent"
         >
-          {/* <span className="navbar-text me-auto">From Zero to Hero</span> */}
-
-          <form className="d-flex flex-grow-1 my-2 my-lg-0" role="search">
+          {/* Search Bar */}
+          <div className="search-bar position-relative flex-grow-1">
             <input
               className="form-control me-1"
               type="search"
-              placeholder="Search"
-              aria-label="Search"
+              placeholder="Search for courses..."
+              value={searchQuery}
+              onChange={handleSearchChange}
             />
-
-            <button className="btn btn-primary" type="submit">
-              Search
-            </button>
-          </form>
+            {searchResults.length > 0 && (
+              <div className="search-results dropdown-menu show">
+                {searchResults.map((course) => (
+                  <button
+                    key={course.id}
+                    className="dropdown-item"
+                    onClick={() => handleResultClick(course.id)}
+                  >
+                    {course.courseTitle}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
           {/* Conditional Rendering based on login status */}
           <div className="d-flex justify-content-end">
@@ -185,7 +226,6 @@ function Header() {
                 >
                   <NotificationsIcon />
                 </button>
-
                 {/* Notification Modal */}
                 <div
                   className="modal fade"
@@ -233,13 +273,7 @@ function Header() {
 
                 {/* Profile Dropdown */}
                 <div className="dropdown d-flex align-items-center">
-                  <span
-                    className="me-2"
-                    style={{
-                      fontFamily: "Fancy Cut, Almarai, Times, serif",
-                      fontWeight: "bold",
-                    }}
-                  >
+                  <span className="me-2" style={{ fontWeight: "bold" }}>
                     {authState.fullName}
                   </span>
                   <button

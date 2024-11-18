@@ -31,10 +31,37 @@
   background-color: #0056b3; /* Màu thanh cuộn khi di chuột vào  */
 }
 
+
 /* Thiết lập cho Firefox  */
 html {
   scrollbar-width: thin; /* Độ rộng của thanh cuộn  */
   scrollbar-color: #2e97dd #3a2424; /* Màu của thanh cuộn và track  */
+}
+
+/* SEARCH BAR IN HEADER */
+.search-bar {
+  position: relative;
+}
+
+.search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1050;
+  background-color: white;
+  width: 100%;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.search-results .dropdown-item {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.search-results .dropdown-item:hover {
+  background-color: #f8f9fa;
 }
 
 /* LOGIN PAGE */
@@ -920,6 +947,55 @@ pre {
 .course-enrollment-detail {
   flex: 1;
 }
+.edit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px; /* Giảm padding */
+  font-size: 14px; /* Kích thước chữ nhỏ */
+  border-radius: 50%; /* Làm nút tròn */
+  background-color: #fff; /* Màu nền trắng */
+  border: 1px solid #000; /* Viền đen */
+  color: #000; /* Màu chữ đen */
+  transition: all 0.3s ease; /* Hiệu ứng mượt */
+}
+
+.edit-btn:hover {
+  background-color: #000; /* Đổi màu nền sang đen khi hover */
+  color: #fff; /* Chữ chuyển sang trắng khi hover */
+  border-color: #000; /* Giữ viền đen */
+}
+
+.edit-btn svg {
+  font-size: 18px; /* Kích thước icon */
+}
+
+/* Center-align image preview in the form */
+img.img-thumbnail {
+  display: block;
+  margin: 0 auto;
+}
+
+/* Button hover effects */
+.btn-cancel {
+  background-color: #f8f9fa;
+  color: #6c757d;
+  border: 1px solid #ced4da;
+}
+
+.btn-cancel:hover {
+  background-color: #e2e6ea;
+}
+
+.btn-save {
+  background-color: #0d6efd;
+  border: none;
+}
+
+.btn-save:hover {
+  background-color: #084298;
+}
+
 
 @media (max-width: 768px) {
   .user-profile {
