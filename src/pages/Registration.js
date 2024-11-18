@@ -3,8 +3,10 @@ import "../App.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import PendingIcon from "@mui/icons-material/Pending";
 
 const Registration = () => {
   const [step, setStep] = useState(1);
@@ -15,47 +17,21 @@ const Registration = () => {
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
   const [errorMessage, setErrorMessage] = useState(""); // Thêm state để lưu thông báo lỗi
-  // const [isEmailValid, setIsEmailValid] = useState(false);
-  ///
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
   const [birthDate, setBirthDate] = useState({ month: "", day: "", year: "" });
 
+  const [verificationCode, setVerificationCode] = useState("");
+
+  const [isLoading, setIsLoading] = useState(false);
+
   let navigate = useNavigate();
 
-  // const handleSubmit = (event) => {
-  //   event.preventDefault();
-
-  //   if (password !== confirmPassword) {
-  //     setErrorMessage("Passwords do not match!");
-  //     return;
-  //   }
-
-  //   if (!isEmailValid) {
-  //     setErrorMessage("Please enter a valid email!");
-  //     return;
-  //   }
-
-  //   axios
-  //     .post("http://localhost:3001/auth/registration", {
-  //       username: username,
-  //       password: password,
-  //       email: email,
-  //       role: role,
-  //     })
-  //     .then((response) => {
-  //       alert("User created successfully!");
-  //       navigate("/login");
-  //     })
-  //     .catch((error) => {
-  //       console.error("There was an error creating the user!", error);
-  //       alert("Failed to create user. Please try again.");
-  //     });
-  // };
-
-  const handleNext = (event) => {
+  const handleNext = async (event) => {
     event.preventDefault();
+
+    // Kiểm tra các trường hợp thiếu dữ liệu hoặc mật khẩu không khớp
     if (!username || !password || !confirmPassword || !email) {
       setErrorMessage("Please fill out all fields.");
       return;
@@ -64,15 +40,102 @@ const Registration = () => {
       setErrorMessage("Passwords do not match.");
       return;
     }
+
+    setIsLoading(true); // Bật trạng thái loading
     setErrorMessage("");
-    setStep(2); // Proceed to personal information step
+
+    try {
+      // Bước 1: Kiểm tra trùng lặp username hoặc email
+      const checkResponse = await axios.post(
+        "http://localhost:3001/auth/check-duplicate",
+        {
+          username,
+          email,
+        }
+      );
+
+      if (checkResponse.status === 200) {
+        await axios.post("http://localhost:3001/auth/send-email", {
+          email,
+        });
+
+        alert("Verification code sent to your email.");
+        setStep(2); // Chuyển sang bước 2
+      }
+    } catch (error) {
+      if (error.response && error.response.data && error.response.data.error) {
+        setErrorMessage(error.response.data.error); // Lỗi từ server (email/username trùng)
+      } else {
+        setErrorMessage("Something went wrong. Please try again.");
+      }
+    } finally {
+      setIsLoading(false); // Tắt loading
+    }
   };
 
-  const handleBack = () => {
-    setStep(1); // Go back to account information step
+  const handleCodeInput = (e, index) => {
+    const value = e.target.value.replace(/[^0-9]/g, ""); // Chỉ cho phép số
+    const updatedCode = verificationCode.split("");
+
+    if (value) {
+      updatedCode[index] = value; // Cập nhật giá trị tại ô hiện tại
+      setVerificationCode(updatedCode.join("")); // Cập nhật state
+
+      // Chuyển focus sang ô tiếp theo nếu không phải ô cuối
+      if (index < 4) {
+        const nextInput = document.querySelectorAll(".code-input")[index + 1];
+        if (nextInput) nextInput.focus();
+      }
+    }
   };
 
-  const handleSignUp = (event) => {
+  const handleKeyDown = (e, index) => {
+    if (e.key === "Backspace") {
+      e.preventDefault(); // Ngăn hành vi mặc định của phím Backspace
+
+      // Chuyển verificationCode thành mảng để thao tác
+      const updatedCode = verificationCode.split("");
+
+      if (updatedCode[index]) {
+        // Nếu ô hiện tại có ký tự, xóa ký tự tại ô đó
+        updatedCode[index] = "";
+        setVerificationCode(updatedCode.join("")); // Cập nhật state
+      } else if (index > 0) {
+        // Nếu ô hiện tại trống, chuyển focus về ô trước đó và xóa ký tự tại đó
+        updatedCode[index - 1] = "";
+        setVerificationCode(updatedCode.join(""));
+
+        // Di chuyển focus về ô trước
+        const prevInput = document.querySelectorAll(".code-input")[index - 1];
+        if (prevInput) prevInput.focus();
+      }
+    }
+  };
+
+  const handleVerifyCode = async (event) => {
+    event.preventDefault();
+    setIsLoading(true);
+
+    try {
+      await axios.post("http://localhost:3001/auth/verify-code", {
+        email,
+        code: verificationCode,
+      });
+      alert("Verification successful!");
+      setErrorMessage("");
+      setStep(3);
+    } catch (error) {
+      if (error.response && error.response.data && error.response.data.error) {
+        setErrorMessage(error.response.data.error);
+      } else {
+        setErrorMessage("Something went wrong. Please try again.");
+      }
+    } finally {
+      setIsLoading(false); // Tắt loading
+    }
+  };
+
+  const handleSignUp = async (event) => {
     event.preventDefault();
     if (
       !firstName ||
@@ -85,37 +148,34 @@ const Registration = () => {
       setErrorMessage("Please fill out all fields.");
       return;
     }
+
+    setIsLoading(true); // Bật loading
     setErrorMessage("");
 
     const userData = {
-      username: username,
-      password: password,
-      email: email,
-      role: role,
-      firstName: firstName,
-      lastName: lastName,
-      phone: phone,
+      username,
+      password,
+      email,
+      role,
+      firstName,
+      lastName,
+      phone,
       birthDate: `${birthDate.year}-${birthDate.month}-${birthDate.day}`,
     };
-    // console.log(userData);
 
-    axios
-      .post("http://localhost:3001/auth/registration", userData)
-      .then((response) => {
-        alert("User created successfully!");
-        navigate("/login");
-      })
-      .catch((error) => {
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.error
-        ) {
-          setErrorMessage(error.response.data.error);
-        } else {
-          setErrorMessage("Failed to create user. Please try again.");
-        }
-      });
+    try {
+      await axios.post("http://localhost:3001/auth/registration", userData);
+      alert("User created successfully!");
+      navigate("/login");
+    } catch (error) {
+      if (error.response && error.response.data && error.response.data.error) {
+        setErrorMessage(error.response.data.error);
+      } else {
+        setErrorMessage("Failed to create user. Please try again.");
+      }
+    } finally {
+      setIsLoading(false); // Tắt loading
+    }
   };
 
   const DateOptions = (start, end, onSelect) => {
@@ -185,9 +245,9 @@ const Registration = () => {
       >
         <div className="regis-wrapper">
           <div className="form-box register">
-            <h1 style={{ textAlign: "center" }}>Sign Up</h1>
-            {step === 1 ? (
+            {step === 1 && (
               <>
+                <h1>Sign Up</h1>
                 <form onSubmit={handleNext}>
                   <div className="input-box">
                     <i className="bx bxs-user-circle"></i>
@@ -255,14 +315,17 @@ const Registration = () => {
                           className="form-check-input"
                           type="radio"
                           name="role"
-                          value="teacher"
-                          id="teacher"
+                          value="instructor"
+                          id="instructor"
                           onChange={(e) => setRole(e.target.value)}
-                          checked={role === "teacher"}
+                          checked={role === "instructor"}
                           required
                         />
-                        <label className="form-check-label" htmlFor="teacher">
-                          Teacher
+                        <label
+                          className="form-check-label"
+                          htmlFor="instructor"
+                        >
+                          Instructor
                         </label>
                       </div>
                       <div className="form-check">
@@ -282,8 +345,8 @@ const Registration = () => {
                     </div>
                   </div>
 
-                  <button type="submit" className="btn">
-                    Next Step
+                  <button type="submit" className="btn" disabled={isLoading}>
+                    {isLoading ? <PendingIcon /> : "Next Step"}
                   </button>
 
                   <div className="login-register">
@@ -296,8 +359,59 @@ const Registration = () => {
                   </div>
                 </form>
               </>
-            ) : (
+            )}
+            {step === 2 && (
               <>
+                <form onSubmit={handleVerifyCode}>
+                  <h2 className="form-title">Check your email</h2>
+                  <p>
+                    We sent a reset link to <strong>{email}</strong>. Enter the
+                    5-digit code from the email.
+                  </p>
+
+                  <div className="code-inputs">
+                    {[...Array(5)].map((_, index) => (
+                      <input
+                        type="text"
+                        maxLength="1"
+                        className="form-control code-input"
+                        value={verificationCode[index] || ""}
+                        onKeyDown={(e) => handleKeyDown(e, index)}
+                        onChange={(e) => handleCodeInput(e, index)}
+                        key={index}
+                        required
+                      />
+                    ))}
+                  </div>
+
+                  {errorMessage && (
+                    <div className="error-message">
+                      <h5>{errorMessage}</h5>
+                    </div>
+                  )}
+
+                  <div className="button-container">
+                    <button
+                      type="button"
+                      onClick={() => setStep(1)} // Quay lại bước trước đó
+                      className="btn back-button"
+                    >
+                      Back
+                    </button>
+                    <button
+                      type="submit"
+                      className="btn verify-button"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? <PendingIcon /> : "Verify Code"}
+                    </button>
+                  </div>
+                </form>
+              </>
+            )}
+            {step === 3 && (
+              <>
+                <h1>Personal Information</h1>
                 <form onSubmit={handleSignUp}>
                   <div className="input-box">
                     <input
@@ -411,7 +525,7 @@ const Registration = () => {
                   >
                     <button
                       type="button"
-                      onClick={handleBack}
+                      onClick={() => setStep(2)}
                       className="btn"
                       style={{
                         width: "30%",
@@ -425,8 +539,9 @@ const Registration = () => {
                       style={{
                         width: "30%",
                       }}
+                      disabled={isLoading}
                     >
-                      Sign Up
+                      {isLoading ? <PendingIcon /> : "Sign Up"}
                     </button>
                   </div>
                 </form>

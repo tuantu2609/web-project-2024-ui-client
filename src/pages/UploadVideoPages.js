@@ -34,15 +34,15 @@ function UploadVideoPages() {
   useEffect(() => {
     if (!localStorage.getItem("accessToken")) {
       navigate("/login");
-    }
-    else if (authState.role !== "teacher"){
+    } else if (authState.role !== "instructor") {
       navigate("/");
-    }
-    else {
+    } else {
       setBodySectionMarginTop();
       window.scrollTo(0, 0);
       axios
-        .get("http://localhost:3001/courses")
+        .get("http://localhost:3001/courses/instructor", {
+          headers: { accessToken: localStorage.getItem("accessToken") },
+        })
         .then((response) => {
           setCourses(response.data);
           console.log("Courses:", response.data);
@@ -195,7 +195,7 @@ function UploadVideoPages() {
               className="form-select"
               id="courseSelect"
               value={selectedCourse}
-              onChange={(e) => handleOptionClick(e.target.value)} 
+              onChange={(e) => handleOptionClick(e.target.value)}
               required
               style={{
                 width: "200px", // Adjust the width as needed
@@ -205,13 +205,13 @@ function UploadVideoPages() {
                 fontSize: "1rem",
               }}
             >
-              <option value="" style={{ color: "#000" }}disabled>
+              <option value="" style={{ color: "#000" }} disabled>
                 Select Course...
               </option>
               {courses.map((course) => (
                 <option
                   key={course.id}
-                  value={course.id} 
+                  value={course.id}
                   style={{ color: "#000" }}
                 >
                   {course.courseTitle}
@@ -249,7 +249,7 @@ function UploadVideoPages() {
                         .replace(/\n/g, " "); // Loại bỏ dấu xuống dòng
                       setTitle((prevTitle) => prevTitle + text); // Thêm văn bản đã xử lý vào Title
                     }}
-                    style={{ overflow: "hidden" }}
+                    style={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}
                     className="custom-textarea mb-3"
                     required
                   ></textarea>

@@ -100,8 +100,8 @@ function Header() {
           <div className="d-flex justify-content-end">
             {isLoggedIn ? (
               <>
-                {/* Teacher Upload Video */}
-                {authState.role === "teacher" && (
+                {/* Instructor Upload Video */}
+                {authState.role === "instructor" && (
                   <div className="d-flex align-items-center">
                     <button
                       type="button"
@@ -176,7 +176,16 @@ function Header() {
                 </div>
 
                 {/* Profile Dropdown */}
-                <div className="dropdown">
+                <div className="dropdown d-flex align-items-center">
+                  <span
+                    className="me-2"
+                    style={{
+                      fontFamily: "Fancy Cut, Almarai, Times, serif",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {authState.fullName}
+                  </span>
                   <button
                     className="btn dropdown-toggle"
                     type="button"

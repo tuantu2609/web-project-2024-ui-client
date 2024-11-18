@@ -315,6 +315,29 @@ header {
   margin: 20px 0 0px;
 }
 
+.code-inputs {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px; /* Khoảng cách giữa các ô */
+  max-width: 300px;
+  margin: 20px auto;
+}
+
+.code-input {
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  font-size: 24px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  outline: none;
+  background-color: white; /* Màu nền của ô */
+}
+
+.code-input:focus {
+  border-color: #007BFF; /* Màu viền khi nhập liệu */
+}
+
 /* HOMEPAGE CSS  */
 .h1.courses-title {
   font-size: 3vw;
@@ -519,7 +542,8 @@ header {
 .view-all-courses .tray {
   display: flex;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
+  justify-content: space-between;
   gap: 10px;
   padding: 20px;
   border-radius: 10px;
@@ -527,9 +551,13 @@ header {
   margin-bottom: 20px;
 }
 
+.view-all-courses .tray .btn {
+  margin: 0;
+}
+
 .view-all-courses .tray .courses-title {
   text-align: center;
-  margin: 0;
+  margin: 0 auto;
   font-size: 3em;
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
@@ -609,6 +637,12 @@ header {
   font-size: 1.1rem;
   color: #555;
   margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .course-title, .course-desc {
+    text-align: center; /* Giữ nội dung nằm giữa trên màn hình nhỏ */
+  }
 }
 
 /* ========================================================== */
