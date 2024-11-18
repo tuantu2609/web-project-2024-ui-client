@@ -19,6 +19,8 @@ import UploadCoursesPages from "./pages/UploadCoursesPages";
 import UploadVideoPages from "./pages/UploadVideoPages";
 import ViewAllCourses from "./pages/ViewAllCourses";
 import ViewCourseDetail from "./pages/ViewCourseDetail";
+import ManageCoursesPages from "./pages/ManageCoursesPages";
+import ManageVideoPages from "./pages/ManageVideosPages";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 
@@ -111,6 +113,8 @@ function App() {
             <Route path="/user/:id" element={<UserProfile />} />
             <Route path="/courses/view-all" element={<ViewAllCourses />} />
             <Route path="/courses/:id" element={<ViewCourseDetail />} />
+            <Route path="/manage-courses" element={<ManageCoursesPages />} />
+            <Route path="/manage-videos" element={<ManageVideoPages />} />
             <Route path="/tnhh2tv" element={<AdminLogin />} />
             <Route path="/AdminDashboard" element={<AdminDashboard />} />
           </Routes>

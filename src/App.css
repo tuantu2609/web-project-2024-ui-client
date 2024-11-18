@@ -694,6 +694,18 @@ header {
   width: 0px;
 }
 
+.custom-textarea:disabled {
+  color: white !important; /* Đặt màu chữ thành trắng */
+  background-color: rgba(255, 255, 255, 0.2) !important; /* Đảm bảo nền vẫn rõ ràng */
+  cursor: not-allowed; /* Hiển thị biểu tượng chuột cho biết không thể chỉnh sửa */
+  opacity: 0.8; /* Làm mờ nội dung */
+}
+
+.custom-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='white' d='M2 5L4 1H0z'/%3E%3C/svg%3E") !important;
+  background-size: 8px 8px !important;
+}
+
 
 /* LEARNING PAGE CSS */
 /* transparent when at top */
