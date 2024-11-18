@@ -56,7 +56,7 @@ function Header() {
     }
   
     axios
-      .get(`http://localhost:3001/courses/search?query=${query}`, {
+      .get(`http://localhost:3001/search?query=${query}`, { // Updated to /search
         headers: {
           accessToken: localStorage.getItem("accessToken") || "",
         },
@@ -72,9 +72,10 @@ function Header() {
   
   
   
+  
 
   const handleResultClick = (courseId) => {
-    navigate(`/learn/${courseId}/0`); // Navigate to the course page
+    navigate(`/courses/${courseId}`); // Navigate to the course page
     setSearchQuery(""); // Clear search query
     setSearchResults([]); // Clear search results
   };
