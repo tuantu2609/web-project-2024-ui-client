@@ -40,7 +40,7 @@ function UploadVideoPages() {
       setBodySectionMarginTop();
       window.scrollTo(0, 0);
       axios
-        .get("http://localhost:3001/courses/instructor", {
+        .get("http://52.7.83.229:3001/courses/instructor", {
           headers: { accessToken: localStorage.getItem("accessToken") },
         })
         .then((response) => {
@@ -85,7 +85,7 @@ function UploadVideoPages() {
       setIsUploading(true);
 
       axios
-        .post("http://localhost:3001/videos", formData, {
+        .post("http://52.7.83.229:3001/videos", formData, {
           headers: {
             accessToken: localStorage.getItem("accessToken"),
             "Content-Type": "multipart/form-data",

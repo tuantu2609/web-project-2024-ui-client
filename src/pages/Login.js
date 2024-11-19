@@ -47,7 +47,7 @@ function Login() {
     e.preventDefault();
     const data = { username: username, password: password };
     axios
-      .post("http://localhost:3001/auth/login", data)
+      .post("http://52.7.83.229:3001/auth/login", data)
       .then((response) => {
         if (response.data.error) {
           setMessage(response.data.error);

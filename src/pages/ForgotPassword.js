@@ -26,7 +26,7 @@ const ForgotPassword = () => {
     setErrorMessage("");
 
     try {
-      await axios.post("http://localhost:3001/auth/send-reset-code", { email });
+      await axios.post("http://52.7.83.229:3001/auth/send-reset-code", { email });
       alert("Verification code sent to your email.");
       setStep(2); // Chuyển sang bước nhập mã
     } catch (error) {
@@ -45,7 +45,7 @@ const ForgotPassword = () => {
     setErrorMessage("");
 
     try {
-      await axios.post("http://localhost:3001/auth/verify-reset-code", {
+      await axios.post("http://52.7.83.229:3001/auth/verify-reset-code", {
         email,
         code: verificationCode,
       });
@@ -73,7 +73,7 @@ const ForgotPassword = () => {
     setErrorMessage("");
 
     try {
-      await axios.post("http://localhost:3001/auth/reset-password", {
+      await axios.post("http://52.7.83.229:3001/auth/reset-password", {
         email,
         password,
       });
@@ -215,18 +215,18 @@ const ForgotPassword = () => {
                   )}
                   <div className="button-container">
                     <button
-                      type="button"
-                      onClick={() => setStep(1)}
-                      className="btn back-button"
-                    >
-                      Back
-                    </button>
-                    <button
                       type="submit"
                       className="btn verify-button"
                       disabled={isLoading}
                     >
                       {isLoading ? <PendingIcon /> : "Verify Code"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setStep(1)}
+                      className="btn back-button"
+                    >
+                      Back
                     </button>
                   </div>
                 </form>

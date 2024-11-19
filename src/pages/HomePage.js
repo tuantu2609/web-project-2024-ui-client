@@ -31,7 +31,7 @@ const HomePage = ({ username }) => {
 
   useEffect(() => {
     setBodySectionMarginTop();
-    fetch("http://localhost:3001/courses")
+    fetch("http://52.7.83.229:3001/courses")
       .then((response) => response.json())
       // .then((data) => setCourses(data)) //Nếu muốn hiện hết thì dùng dòng này
       .then((data) => { // Lọc chỉ các khóa học có status là "active"

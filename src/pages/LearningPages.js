@@ -28,7 +28,7 @@ function LearningPages() {
     setIsLoading(true);
 
     axios
-      .get(`http://localhost:3001/courseVideo/course-le/${courseId}`, {
+      .get(`http://52.7.83.229:3001/courseVideo/course-le/${courseId}`, {
         headers: { accessToken: localStorage.getItem("accessToken") },
       })
       .then((response) => {

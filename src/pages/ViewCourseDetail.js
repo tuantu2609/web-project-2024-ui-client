@@ -39,7 +39,7 @@ function ViewCourseDetail() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3001/enrollment/enroll",
+        "http://52.7.83.229:3001/enrollment/enroll",
         { courseId },
         {
           headers: {
@@ -62,11 +62,11 @@ function ViewCourseDetail() {
   };
 
   useEffect(() => {
-    axios.get(`http://localhost:3001/courses/${id}`).then((response) => {
+    axios.get(`http://52.7.83.229:3001/courses/${id}`).then((response) => {
       setCourse(response.data);
     });
     axios
-      .get(`http://localhost:3001/courseVideo/course-re/${id}`)
+      .get(`http://52.7.83.229:3001/courseVideo/course-re/${id}`)
       .then((response) => {
         setVideos(response.data);
       });
@@ -90,7 +90,7 @@ function ViewCourseDetail() {
 
         // Kiểm tra người dùng đã ghi danh hay chưa
         const response = await axios.get(
-          `http://localhost:3001/enrollment/check-enrollment/${id}`,
+          `http://52.7.83.229:3001/enrollment/check-enrollment/${id}`,
           {
             headers: {
               accessToken: localStorage.getItem("accessToken"),

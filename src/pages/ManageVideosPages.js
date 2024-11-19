@@ -36,7 +36,7 @@ function ManageVideoPages() {
       navigate("/login");
     } else if (authState?.role === "instructor") {
       axios
-        .get("http://localhost:3001/courses/instructor", {
+        .get("http://52.7.83.229:3001/courses/instructor", {
           headers: { accessToken: localStorage.getItem("accessToken") },
         })
         .then((response) => {
@@ -48,7 +48,7 @@ function ManageVideoPages() {
 
   const fetchVideosByCourse = (courseId) => {
     axios
-      .get(`http://localhost:3001/courseVideo/course-le/${courseId}`, {
+      .get(`http://52.7.83.229:3001/courseVideo/course-le/${courseId}`, {
         headers: { accessToken: localStorage.getItem("accessToken") },
       })
       .then((response) => {
@@ -147,7 +147,7 @@ function ManageVideoPages() {
         formData.append("video", videoFile);
 
         await axios.put(
-          `http://localhost:3001/videos/${selectedVideo.id}`,
+          `http://52.7.83.229:3001/videos/${selectedVideo.id}`,
           formData,
           {
             headers: {
@@ -159,7 +159,7 @@ function ManageVideoPages() {
       } else {
         // Nếu không có file mới, gửi JSON
         await axios.put(
-          `http://localhost:3001/videos/${selectedVideo.id}`,
+          `http://52.7.83.229:3001/videos/${selectedVideo.id}`,
           {
             videoTitle: title,
             videoDesc: description,
@@ -193,7 +193,7 @@ function ManageVideoPages() {
     setIsDeleting(true);
 
     try {
-      await axios.delete(`http://localhost:3001/videos/${selectedVideo.id}`, {
+      await axios.delete(`http://52.7.83.229:3001/videos/${selectedVideo.id}`, {
         headers: { accessToken: localStorage.getItem("accessToken") },
       });
 

@@ -52,7 +52,7 @@ function UserProfile() {
   // Hàm lấy dữ liệu người dùng
   const fetchUserData = (setUserData) => {
     axios
-      .get(`http://localhost:3001/user/details`, {
+      .get(`http://52.7.83.229:3001/user/details`, {
         headers: { accessToken: localStorage.getItem("accessToken") },
       })
       .then((response) => {
@@ -66,7 +66,7 @@ function UserProfile() {
   const fetchEnrolledCourses = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3001/enrollment/enrolled",
+        "http://52.7.83.229:3001/enrollment/enrolled",
         {
           headers: { accessToken: localStorage.getItem("accessToken") },
         }
@@ -149,7 +149,7 @@ function UserProfile() {
 
     // Gửi yêu cầu API
     axios
-      .put("http://localhost:3001/user/details", formData, {
+      .put("http://52.7.83.229:3001/user/details", formData, {
         headers: {
           accessToken: localStorage.getItem("accessToken"),
           "Content-Type": "multipart/form-data",
@@ -180,7 +180,7 @@ function UserProfile() {
         <div className="banner container-lg">
           <img
             className="img-fluid rounded-bottom-custom banner-img"
-            src="http://localhost:3000/banner.png"
+            src="/public/banner.png"
             alt="banner"
           />
           <div className="user-profile">
@@ -188,7 +188,7 @@ function UserProfile() {
               <img
                 src={
                   editData.profilePictureURL ||
-                  "http://localhost:3000/UserAvatar.png"
+                  "/public/UserAvatar.png"
                 }
                 alt="User Avatar"
                 className="avatar rounded-circle"
@@ -284,7 +284,7 @@ function UserProfile() {
                       >
                         <div className="course-enrollment-display mb-3">
                           <img
-                            src={course.thumbnail || "http://localhost:3000/vid.jpg"}
+                            src={course.thumbnail || "/public/vid.jpg"}
                             alt={course.courseTitle}
                             className="course-enrollment-img img-fluid"
                           />

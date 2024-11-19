@@ -16,7 +16,7 @@ const ViewAllCourses = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    fetch("http://localhost:3001/courses")
+    fetch("http://52.7.83.229:3001/courses")
       .then((response) => response.json())
       // .then((data) => setCourses(data))
       .then((data) => {

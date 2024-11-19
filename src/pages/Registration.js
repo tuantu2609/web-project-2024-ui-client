@@ -47,7 +47,7 @@ const Registration = () => {
     try {
       // Bước 1: Kiểm tra trùng lặp username hoặc email
       const checkResponse = await axios.post(
-        "http://localhost:3001/auth/check-duplicate",
+        "http://52.7.83.229:3001/auth/check-duplicate",
         {
           username,
           email,
@@ -55,7 +55,7 @@ const Registration = () => {
       );
 
       if (checkResponse.status === 200) {
-        await axios.post("http://localhost:3001/auth/send-email", {
+        await axios.post("http://52.7.83.229:3001/auth/send-email", {
           email,
         });
 
@@ -117,7 +117,7 @@ const Registration = () => {
     setIsLoading(true);
 
     try {
-      await axios.post("http://localhost:3001/auth/verify-code", {
+      await axios.post("http://52.7.83.229:3001/auth/verify-code", {
         email,
         code: verificationCode,
       });
@@ -164,7 +164,7 @@ const Registration = () => {
     };
 
     try {
-      await axios.post("http://localhost:3001/auth/registration", userData);
+      await axios.post("http://52.7.83.229:3001/auth/registration", userData);
       alert("User created successfully!");
       navigate("/login");
     } catch (error) {
@@ -392,18 +392,18 @@ const Registration = () => {
 
                   <div className="button-container">
                     <button
-                      type="button"
-                      onClick={() => setStep(1)} // Quay lại bước trước đó
-                      className="btn back-button"
-                    >
-                      Back
-                    </button>
-                    <button
                       type="submit"
                       className="btn verify-button"
                       disabled={isLoading}
                     >
                       {isLoading ? <PendingIcon /> : "Verify Code"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setStep(1)} // Quay lại bước trước đó
+                      className="btn back-button"
+                    >
+                      Back
                     </button>
                   </div>
                 </form>

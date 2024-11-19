@@ -56,7 +56,7 @@ function Header() {
     }
   
     axios
-      .get(`http://localhost:3001/search?query=${query}`, { // Updated to /search
+      .get(`http://52.7.83.229:3001/search?query=${query}`, { // Updated to /search
         headers: {
           accessToken: localStorage.getItem("accessToken") || "",
         },
@@ -87,7 +87,7 @@ function Header() {
         {/* Logo */}
         <a className="navbar-brand ms-2 d-flex align-items-center" href="/">
           <img
-            src="http://localhost:3000/logo.jpg"
+            src="logo.jpg"
             width="30"
             height="30"
             className="d-inline-block align-top"
