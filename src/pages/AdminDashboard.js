@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "../Admin.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +14,11 @@ import LogoutIcon from "@mui/icons-material/Logout";
 
 function AdminDashboard() {
   const { authState, setAuthState } = useContext(AuthContext);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [totalCourses, setTotalCourses] = useState(0);
+  const [totalEnrollments, setTotalEnrollments] = useState(0);
+  const [totalVideos, setTotalVideos] = useState(0);
+
   const navigate = useNavigate();
 
   const logout = () => {
@@ -26,6 +31,64 @@ function AdminDashboard() {
     });
     navigate("/tnhh2tv");
   };
+
+  // Gọi API để lấy dữ liệu
+  const accessToken = localStorage.getItem('accessToken');
+
+  useEffect(() => {
+    if (!accessToken) {
+      console.error("Access token is missing!");
+      return;
+    }
+
+    // Hàm lấy tổng số người dùng
+    fetch("http://localhost:3001/auth", {
+      headers: {
+        accessToken,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setTotalUsers(data.length);
+      })
+      .catch((error) => console.error("Error fetching users:", error));
+
+    // Hàm lấy tổng số khóa học
+    fetch("http://localhost:3001/courses", {
+      headers: {
+        accessToken,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setTotalCourses(data.length);
+      })
+      .catch((error) => console.error("Error fetching courses:", error));
+
+    // Hàm lấy tổng số ghi danh (enrollments)
+    fetch("http://localhost:3001/enrollment/all", {
+      headers: {
+        accessToken,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setTotalEnrollments(data.length);
+      })
+      .catch((error) => console.error("Error fetching enrollments:", error));
+
+    // Hàm lấy tổng số video
+    fetch("http://localhost:3001/videos", {
+      headers: {
+        accessToken,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setTotalVideos(data.length);
+      })
+      .catch((error) => console.error("Error fetching videos:", error));
+  }, [accessToken]);
 
   return (
     <div className="container-fluid">
@@ -109,10 +172,10 @@ function AdminDashboard() {
         <section>
           <div className="admin__cardBox">
             {[
-              { label: "Total Users", value: "2,345", icon: "fa-solid fa-user" },
-              { label: "Total Courses", value: "123", icon: "fa-solid fa-book-open" },
-              { label: "Total Enrollments", value: "3,456", icon: "fa-solid fa-user-graduate" },
-              { label: "Total Videos", value: "876", icon: "fa-solid fa-video" },
+              { label: "Total Users", value: totalUsers, icon: "fa-solid fa-user" },
+              { label: "Total Courses", value: totalCourses, icon: "fa-solid fa-book-open" },
+              { label: "Total Enrollments", value: totalEnrollments, icon: "fa-solid fa-user-graduate" },
+              { label: "Total Videos", value: totalVideos, icon: "fa-solid fa-video" },
             ].map(({ label, value, icon }, index) => (
               <div className="admin__card" key={index}>
                 <div>
