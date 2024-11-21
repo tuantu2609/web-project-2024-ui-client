@@ -5,6 +5,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { setBodySectionMarginTop } from "../helpers/styles";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../helpers/AuthContext";
+import { convertDuration } from "../helpers/time";
 
 import axios from "axios";
 
@@ -23,27 +24,6 @@ function ViewCourseDetail() {
 
   let navigate = useNavigate();
 
-  function convertDuration(seconds) {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = Math.floor(seconds % 60);
-
-    // Tạo định dạng
-    if (hours > 0) {
-      return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
-        2,
-        "0"
-      )}:${String(secs).padStart(2, "0")}`;
-    } else if (minutes > 0) {
-      return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(
-        2,
-        "0"
-      )}`;
-    } else {
-      return `00:${String(secs).padStart(2, "0")}`;
-    }
-  }
-
   const handleEnroll = async (courseId) => {
     const token = localStorage.getItem("accessToken");
     if (!token) {
@@ -59,7 +39,7 @@ function ViewCourseDetail() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3001/courses/enroll",
+        "http://localhost:3001/enrollment/enroll",
         { courseId },
         {
           headers: {
@@ -110,7 +90,7 @@ function ViewCourseDetail() {
 
         // Kiểm tra người dùng đã ghi danh hay chưa
         const response = await axios.get(
-          `http://localhost:3001/courses/check-enrollment/${id}`,
+          `http://localhost:3001/enrollment/check-enrollment/${id}`,
           {
             headers: {
               accessToken: localStorage.getItem("accessToken"),

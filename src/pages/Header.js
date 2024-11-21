@@ -145,20 +145,76 @@ function Header() {
                 {/* Instructor Upload Video */}
                 {authState.role === "instructor" && (
                   <div className="d-flex align-items-center">
-                    <button
-                      type="button"
-                      className="btn ms-2"
-                      onClick={() => navigate("/upload-courses")}
-                    >
-                      <SchoolIcon />
-                    </button>
-                    <button
-                      type="button"
-                      className="btn ms-2"
+                    <div className="dropdown">
+                      <button
+                        type="button"
+                        className="btn ms-2 dropdown-toggle"
+                        id="courseActionsDropdown"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        <SchoolIcon />
+                      </button>
+                      <ul
+                        className="dropdown-menu"
+                        aria-labelledby="courseActionsDropdown"
+                      >
+                        <li>
+                          <button
+                            className="dropdown-item"
+                            onClick={() => navigate("/upload-courses")}
+                          >
+                            Upload Course
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            className="dropdown-item"
+                            onClick={() => navigate("/manage-courses")}
+                          >
+                            Manage Course
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="dropdown">
+                      <button
+                        type="button"
+                        className="btn ms-2 dropdown-toggle"
+                        id="videoActionsDropdown"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        <VideoCallIcon  />
+                      </button>
+                      <ul
+                        className="dropdown-menu"
+                        aria-labelledby="videoActionsDropdown"
+                      >
+                        <li>
+                          {/* <button
+                            className="dropdown-item"
+                            onClick={() => navigate("/upload-courses")}
+                          >
+                            Upload Course
+                          </button> */}
+                                              <button
+                      className="dropdown-item"
                       onClick={() => navigate("/upload-video")}
                     >
-                      <VideoCallIcon />
+                      Upload Video
                     </button>
+                        </li>
+                        <li>
+                          <button
+                            className="dropdown-item"
+                            onClick={() => navigate("/manage-videos")}
+                          >
+                            Manage Video
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 )}
 

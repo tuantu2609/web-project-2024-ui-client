@@ -192,7 +192,7 @@ function UploadVideoPages() {
               Course:
             </label>
             <select
-              className="form-select"
+              className="form-select custom-select"
               id="courseSelect"
               value={selectedCourse}
               onChange={(e) => handleOptionClick(e.target.value)}
