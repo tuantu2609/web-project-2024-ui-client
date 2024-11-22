@@ -9,7 +9,6 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import GroupIcon from "@mui/icons-material/Group";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import PlaylistPlayIcon from "@mui/icons-material/PlaylistPlay";
-import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
 import LogoutIcon from "@mui/icons-material/Logout";
 
 function AdminDashboard() {
@@ -33,7 +32,7 @@ function AdminDashboard() {
   };
 
   // Gọi API để lấy dữ liệu
-  const accessToken = localStorage.getItem('accessToken');
+  const accessToken = localStorage.getItem("accessToken");
 
   useEffect(() => {
     if (!accessToken) {
@@ -96,7 +95,10 @@ function AdminDashboard() {
       <section className="admin__menu-navigation">
         <ul>
           <li className="no-hover">
-            <div className="nav-header">
+            <div
+              className="nav-header"
+              onClick={() => navigate("/AdminDashboard")}
+            >
               <span className="icon">
                 <i className="fa-solid fa-gem"></i>
               </span>
@@ -104,7 +106,10 @@ function AdminDashboard() {
             </div>
           </li>
           <li>
-            <button className="nav-btn" onClick={() => navigate("#")}>
+            <button
+              className="nav-btn"
+              onClick={() => navigate("/AdminDashboard/UsersControll")}
+            >
               <span className="icon">
                 <AccountCircleIcon />
               </span>
@@ -135,14 +140,7 @@ function AdminDashboard() {
               <span className="title">Videos</span>
             </button>
           </li>
-          <li>
-            <button className="nav-btn" onClick={() => navigate("#")}>
-              <span className="icon">
-                <SettingsApplicationsIcon />
-              </span>
-              <span className="title">Settings</span>
-            </button>
-          </li>
+
           <li>
             <button className="nav-btn" onClick={logout}>
               <span className="icon">
@@ -172,10 +170,26 @@ function AdminDashboard() {
         <section>
           <div className="admin__cardBox">
             {[
-              { label: "Total Users", value: totalUsers, icon: "fa-solid fa-user" },
-              { label: "Total Courses", value: totalCourses, icon: "fa-solid fa-book-open" },
-              { label: "Total Enrollments", value: totalEnrollments, icon: "fa-solid fa-user-graduate" },
-              { label: "Total Videos", value: totalVideos, icon: "fa-solid fa-video" },
+              {
+                label: "Total Users",
+                value: totalUsers,
+                icon: "fa-solid fa-user",
+              },
+              {
+                label: "Total Courses",
+                value: totalCourses,
+                icon: "fa-solid fa-book-open",
+              },
+              {
+                label: "Total Enrollments",
+                value: totalEnrollments,
+                icon: "fa-solid fa-user-graduate",
+              },
+              {
+                label: "Total Videos",
+                value: totalVideos,
+                icon: "fa-solid fa-video",
+              },
             ].map(({ label, value, icon }, index) => (
               <div className="admin__card" key={index}>
                 <div>

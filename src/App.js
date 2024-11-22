@@ -23,6 +23,7 @@ import ManageCoursesPages from "./pages/ManageCoursesPages";
 import ManageVideoPages from "./pages/ManageVideosPages";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
+import UsersControll from "./pages/UsersControll";
 
 // Importing libraries
 import { AuthContext } from "./helpers/AuthContext";
@@ -117,6 +118,7 @@ function App() {
             <Route path="/manage-videos" element={<ManageVideoPages />} />
             <Route path="/tnhh2tv" element={<AdminLogin />} />
             <Route path="/AdminDashboard" element={<AdminDashboard />} />
+            <Route path="/AdminDashboard/UsersControll" element={<UsersControll />} />
           </Routes>
         </Router>
       </AuthContext.Provider>
@@ -132,7 +134,8 @@ function ConditionalHeader() {
       {location.pathname !== "/login" &&
         location.pathname !== "/registration" && <Header /> &&
         location.pathname !== "/tnhh2tv" && <Header /> &&
-        location.pathname !== "/AdminDashboard" && <Header />}
+        location.pathname !== "/AdminDashboard" && <Header /> &&
+        location.pathname !== "/AdminDashboard/UsersControll" && <Header />}
     </>
   );
 }
