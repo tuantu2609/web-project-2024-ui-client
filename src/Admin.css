@@ -415,106 +415,134 @@
     margin-right: 0; /* Remove margin for the last button */
   }
   
-  
-  .modal-edit {
-    display: block; /* Make modal visible */
-    position: fixed;
-    z-index: 1050;
-    background: rgba(0, 0, 0, 0.5); /* Dimmed background */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-  }
-  
+  /* modal edit */
+
+  /* ======== Modal Wrapper ======== */
+.modal-edit {
+  display: block;
+  position: fixed;
+  z-index: 1050;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  overflow: auto;
+}
+
+/* ======== Modal Content ======== */
+.modal-edit-content {
+  max-width: 900px;
+  margin: 5% auto;
+  padding: 30px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  font-family: 'Arial', sans-serif;
+}
+
+.modal-edit-content h3 {
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-align: center;
+  color: #333;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 10px;
+}
+
+/* ======== Form Layout ======== */
+.modal-edit-content .row {
+  display: flex;
+  gap: 20px;
+}
+
+.modal-edit-content .col-6 {
+  flex: 1;
+}
+
+.modal-edit-content .form-group {
+  margin-bottom: 20px;
+}
+
+.modal-edit-content .form-group label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+.modal-edit-content .form-group input {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #f9f9f9;
+  transition: border-color 0.3s ease;
+}
+
+.modal-edit-content .form-group input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* ======== Buttons ======== */
+.modal-edit-content .mt-3 {
+  display: flex;
+  gap: 15px;
+}
+
+.modal-edit-content .btn {
+  padding: 12px 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 6px;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.modal-edit-content .btn-success {
+  background: #28a745;
+  color: #fff;
+  border: none;
+}
+
+.modal-edit-content .btn-success:hover {
+  background: #218838;
+}
+
+.modal-edit-content .btn-secondary {
+  background: #6c757d;
+  color: #fff;
+  border: none;
+}
+
+.modal-edit-content .btn-secondary:hover {
+  background: #5a6268;
+}
+
+.modal-edit-content .btn:active {
+  transform: scale(0.97);
+}
+
+/* ======== Media Query for Responsiveness ======== */
+@media (max-width: 768px) {
   .modal-edit-content {
-    background: #fff;
-    margin: 10% auto; /* Center modal vertically */
+    max-width: 95%;
     padding: 20px;
-    border: 1px solid #ddd; /* Subtle border */
-    width: 40%; /* Set modal width */
-    border-radius: 8px; /* Slightly rounded corners */
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Subtle shadow for a pop-up effect */
-    font-family: Arial, sans-serif; /* Standardize font */
   }
-  
-  /* Modal Heading */
-  .modal-edit-content h3 {
-    margin-bottom: 20px;
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #333;
+
+  .modal-edit-content .row {
+    flex-direction: column;
   }
-  
-  /* Form Fields */
-  .modal-edit-content .form-group {
-    margin-bottom: 15px;
-  }
-  
-  .modal-edit-content .form-group label {
-    display: block;
-    font-size: 1rem;
-    font-weight: 500;
-    margin-bottom: 5px;
-    color: #555;
-  }
-  
-  .modal-edit-content .form-group input,
-  .modal-edit-content .form-group select {
+
+  .modal-edit-content .col-6 {
     width: 100%;
-    padding: 8px 12px;
-    font-size: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-sizing: border-box;
-    transition: border-color 0.3s ease;
   }
-  
-  .modal-edit-content .form-group input:focus,
-  .modal-edit-content .form-group select:focus {
-    outline: none;
-    border-color: #007bff; /* Highlight on focus */
-  }
-  
-  /* Buttons */
-  .modal-edit-content .d-flex {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-  }
-  
-  .modal-edit-content .btn {
-    padding: 10px 20px;
-    font-size: 1rem;
-    border-radius: 5px;
-    cursor: pointer;
-    border: none;
-    transition: background 0.3s ease, transform 0.2s ease;
-  }
-  
-  .modal-edit-content .btn-success {
-    background: #28a745;
-    color: #fff;
-  }
-  
-  .modal-edit-content .btn-success:hover {
-    background: #218838;
-  }
-  
-  .modal-edit-content .btn-secondary {
-    background: #6c757d;
-    color: #fff;
-  }
-  
-  .modal-edit-content .btn-secondary:hover {
-    background: #5a6268;
-  }
-  
-  .modal-edit-content .btn:active {
-    transform: scale(0.97); /* Slight scale-down effect */
-  }
-  
+}
+
+
   .modal-view {
     display: block; /* Hiển thị modal */
     position: fixed;

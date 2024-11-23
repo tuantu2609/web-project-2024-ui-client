@@ -65,7 +65,7 @@ function AdminDashboard() {
       .catch((error) => console.error("Error fetching courses:", error));
 
     // Hàm lấy tổng số ghi danh (enrollments)
-    fetch("http://localhost:3001/enrollment/all", {
+    fetch("http://localhost:3001/enrollment", {
       headers: {
         accessToken,
       },
@@ -97,6 +97,7 @@ function AdminDashboard() {
           <li className="no-hover">
             <div
               className="nav-header"
+              style={{ cursor: "pointer" }}
               onClick={() => navigate("/AdminDashboard")}
             >
               <span className="icon">
@@ -174,24 +175,33 @@ function AdminDashboard() {
                 label: "Total Users",
                 value: totalUsers,
                 icon: "fa-solid fa-user",
+                route: "/AdminDashboard/UsersControll", // Ensure route is defined for all cards
               },
               {
                 label: "Total Courses",
                 value: totalCourses,
                 icon: "fa-solid fa-book-open",
+                route: "#", // Add a route for navigation
               },
               {
                 label: "Total Enrollments",
                 value: totalEnrollments,
                 icon: "fa-solid fa-user-graduate",
+                route: "#", // Add a route for navigation
               },
               {
                 label: "Total Videos",
                 value: totalVideos,
                 icon: "fa-solid fa-video",
+                route: "#", // Add a route for navigation
               },
-            ].map(({ label, value, icon }, index) => (
-              <div className="admin__card" key={index}>
+            ].map(({ label, value, icon, route }, index) => (
+              <div
+                className="admin__card"
+                key={index}
+                onClick={() =>navigate(route)} 
+                
+              >
                 <div>
                   <div className="numbers">{value}</div>
                   <div className="cardName">{label}</div>

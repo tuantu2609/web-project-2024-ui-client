@@ -50,25 +50,24 @@ function UserControlPage() {
 
   const fetchUsers = () => {
     const accessToken = localStorage.getItem("accessToken");
+  
     fetch("http://localhost:3001/admin/users/details", {
-      // Sử dụng API mới
-      headers: {
-        accessToken,
-      },
+      headers: { accessToken },
     })
       .then((response) => response.json())
       .then((data) => {
-        // Chuyển đổi dữ liệu thành định dạng mong muốn
         const formattedUsers = data.map((account) => ({
           id: account.id,
-          fullName: account.UserDetail ? account.UserDetail.fullName : "N/A",
+          fullName: account.UserDetail?.fullName || "N/A",
           email: account.email,
           role: account.role,
         }));
-        setUsers(formattedUsers); // Cập nhật danh sách user
+  
+        setUsers(formattedUsers); // Update the users state
       })
       .catch((error) => console.error("Error fetching users:", error));
   };
+  
 
   useEffect(() => {
     fetchUsers();
@@ -110,13 +109,19 @@ function UserControlPage() {
   const handleEdit = (id, updatedData) => {
     const accessToken = localStorage.getItem("accessToken");
 
+    // Ensure birthDate is in YYYY-MM-DD format
+    const formattedData = {
+      ...updatedData,
+      birthDate: updatedData.birthDate || null, // Send null if birthDate is empty
+    };
+
     fetch(`http://localhost:3001/admin/update-user/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         accessToken,
       },
-      body: JSON.stringify(updatedData), // Dữ liệu cần cập nhật
+      body: JSON.stringify(formattedData),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -124,14 +129,39 @@ function UserControlPage() {
           alert(`Failed to update user: ${data.error}`);
         } else {
           alert("User updated successfully");
-          fetchUsers(); // Tải lại danh sách người dùng sau khi cập nhật
+          fetchUsers(); // Refresh the user list after updating
         }
       })
       .catch((error) => console.error("Error updating user:", error));
   };
 
-  const openEditModal = (user) => {
-    setEditingUser(user); // Lưu người dùng đang chỉnh sửa
+  const openEditModal = (id) => {
+    const accessToken = localStorage.getItem("accessToken");
+
+    fetch(`http://localhost:3001/admin/users/details/${id}`, {
+      headers: { accessToken },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          console.error("Error fetching user details:", data.error);
+          alert("Failed to fetch user details");
+        } else {
+          const birthDate = data.UserDetail?.birthDate
+            ? new Date(data.UserDetail.birthDate).toISOString().split("T")[0] // Format to YYYY-MM-DD
+            : "";
+
+          const editingData = {
+            id: data.id,
+            fullName: data.UserDetail?.fullName || "",
+            address: data.UserDetail?.address || "",
+            phoneNumber: data.UserDetail?.phoneNumber || "",
+            birthDate, // Use formatted date
+          };
+          setEditingUser(editingData); // Open modal with fetched data
+        }
+      })
+      .catch((error) => console.error("Error fetching user details:", error));
   };
 
   const closeEditModal = () => {
@@ -154,6 +184,8 @@ function UserControlPage() {
   const handleCreateUser = (e) => {
     e.preventDefault(); // Prevent form submission
     const accessToken = localStorage.getItem("accessToken"); // Get token
+  
+    // Step 1: Create User
     fetch("http://localhost:3001/admin/create-user", {
       method: "POST",
       headers: {
@@ -168,19 +200,25 @@ function UserControlPage() {
           alert(`Failed to create user: ${data.error}`);
         } else {
           alert("User created successfully");
-          fetchUsers(); // Refresh the user list
-          setShowCreateUserModal(false); // Close modal
+  
+          // Step 2: Refresh user list
+          fetchUsers(); // Refresh the user list with updated data
+  
+          // Step 3: Reset the form fields and close the modal
           setNewUser({
             username: "",
             fullName: "",
             email: "",
             password: "",
-            role: "student",
-          }); // Reset form
+            role: "student", // Default role
+          });
+          setShowCreateUserModal(false); // Close modal
         }
       })
       .catch((error) => console.error("Error creating user:", error));
   };
+  
+  
 
   return (
     <div className="container-fluid">
@@ -304,7 +342,7 @@ function UserControlPage() {
 
                     <button
                       className="btn btn-warning btn-sm mr-2 action-btn"
-                      onClick={() => openEditModal(user)} // Mở modal chỉnh sửa
+                      onClick={() => openEditModal(user.id)} // Mở modal chỉnh sửa
                     >
                       Edit
                     </button>
@@ -328,7 +366,7 @@ function UserControlPage() {
             </tbody>
           </table>
         </section>
-        {/* Modal chỉnh sửa người dùng */}
+        {/* Modal edit user */}
         {editingUser && (
           <div className="modal-edit">
             <div className="modal-edit-content">
@@ -336,115 +374,123 @@ function UserControlPage() {
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
-                  handleEdit(editingUser.id, editingUser); // Gọi API cập nhật
-                  closeEditModal(); // Đóng modal
+                  handleEdit(editingUser.id, editingUser); // Save updated data
+                  closeEditModal(); // Close the modal
                 }}
               >
-                <div className="form-group">
-                  <label>Full Name</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={editingUser.fullName}
-                    onChange={(e) =>
-                      setEditingUser({
-                        ...editingUser,
-                        fullName: e.target.value,
-                      })
-                    }
-                  />
+                <div className="row">
+                  <div className="col-6">
+                    <h5>Edit Details</h5>
+                    <div className="form-group">
+                      <label>Full Name</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={editingUser.fullName}
+                        onChange={(e) =>
+                          setEditingUser({
+                            ...editingUser,
+                            fullName: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Address</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={editingUser.address}
+                        onChange={(e) =>
+                          setEditingUser({
+                            ...editingUser,
+                            address: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Phone Number</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={editingUser.phoneNumber}
+                        onChange={(e) =>
+                          setEditingUser({
+                            ...editingUser,
+                            phoneNumber: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Birth Date</label>
+                      <input
+                        type="date"
+                        className="form-control"
+                        value={editingUser.birthDate || ""}
+                        onChange={(e) =>
+                          setEditingUser({
+                            ...editingUser,
+                            birthDate: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div className="form-group">
-                  <label>Address</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={editingUser.address || ""}
-                    onChange={(e) =>
-                      setEditingUser({
-                        ...editingUser,
-                        address: e.target.value,
-                      })
-                    }
-                  />
+                <div className="mt-3">
+                  <button type="submit" className="btn btn-success">
+                    Save Changes
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={closeEditModal}
+                  >
+                    Cancel
+                  </button>
                 </div>
-                <div className="form-group">
-                  <label>Phone Number</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={editingUser.phoneNumber || ""}
-                    onChange={(e) =>
-                      setEditingUser({
-                        ...editingUser,
-                        phoneNumber: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Birth Date</label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    value={editingUser.birthDate || ""}
-                    onChange={(e) =>
-                      setEditingUser({
-                        ...editingUser,
-                        birthDate: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-                <button type="submit" className="btn btn-success">
-                  Save Changes
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={closeEditModal}
-                >
-                  Cancel
-                </button>
               </form>
             </div>
           </div>
         )}
+
         {/* modal view user */}
         {viewingUser && (
-          <div className="modal-view">
-            <div className="modal-view-content">
-              <h3>User Details</h3>
-              <ul>
-                <li>
-                  <strong>Full Name:</strong>{" "}
-                  {viewingUser.UserDetail?.fullName || "N/A"}
-                </li>
-                <li>
-                  <strong>Email:</strong> {viewingUser.email}
-                </li>
-                <li>
-                  <strong>Role:</strong> {viewingUser.role}
-                </li>
-                <li>
-                  <strong>Address:</strong>{" "}
-                  {viewingUser.UserDetail?.address || "N/A"}
-                </li>
-                <li>
-                  <strong>Phone Number:</strong>{" "}
-                  {viewingUser.UserDetail?.phoneNumber || "N/A"}
-                </li>
-                <li>
-                  <strong>Birth Date:</strong>{" "}
-                  {viewingUser.UserDetail?.birthDate || "N/A"}
-                </li>
-              </ul>
-              <button className="btn btn-secondary" onClick={closeViewModal}>
-                Close
-              </button>
-            </div>
-          </div>
-        )}
+  <div className="modal-view">
+    <div className="modal-view-content">
+      <h3>User Details</h3>
+      <ul>
+        <li>
+          <strong>Username:</strong> {viewingUser.username || "N/A"}
+        </li>
+        <li>
+          <strong>Full Name:</strong> {viewingUser.UserDetail?.fullName || "N/A"}
+        </li>
+        <li>
+          <strong>Email:</strong> {viewingUser.email}
+        </li>
+        <li>
+          <strong>Role:</strong> {viewingUser.role}
+        </li>
+        <li>
+          <strong>Address:</strong> {viewingUser.UserDetail?.address || "N/A"}
+        </li>
+        <li>
+          <strong>Phone Number:</strong> {viewingUser.UserDetail?.phoneNumber || "N/A"}
+        </li>
+        <li>
+          <strong>Birth Date:</strong> {viewingUser.UserDetail?.birthDate || "N/A"}
+        </li>
+      </ul>
+      <button className="btn btn-secondary" onClick={closeViewModal}>
+        Close
+      </button>
+    </div>
+  </div>
+)}
+
         {/* Modal Create User */}
         {showCreateUserModal && (
           <div className="modal-create">
