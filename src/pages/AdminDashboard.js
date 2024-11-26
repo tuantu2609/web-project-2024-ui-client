@@ -9,7 +9,6 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import GroupIcon from "@mui/icons-material/Group";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import PlaylistPlayIcon from "@mui/icons-material/PlaylistPlay";
-import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
 import LogoutIcon from "@mui/icons-material/Logout";
 
 function AdminDashboard() {
@@ -33,7 +32,7 @@ function AdminDashboard() {
   };
 
   // Gọi API để lấy dữ liệu
-  const accessToken = localStorage.getItem('accessToken');
+  const accessToken = localStorage.getItem("accessToken");
 
   useEffect(() => {
     if (!accessToken) {
@@ -66,16 +65,23 @@ function AdminDashboard() {
       .catch((error) => console.error("Error fetching courses:", error));
 
     // Hàm lấy tổng số ghi danh (enrollments)
-    fetch("http://localhost:3001/enrollment/all", {
+    fetch("http://localhost:3001/enrollment", {
       headers: {
         accessToken,
       },
     })
       .then((response) => response.json())
       .then((data) => {
-        setTotalEnrollments(data.length);
+        if (Array.isArray(data)) {
+          setTotalEnrollments(data.length); // Set the length if the response is an array
+        } else {
+          setTotalEnrollments(0); // Default to 0 if the response is invalid or not an array
+        }
       })
-      .catch((error) => console.error("Error fetching enrollments:", error));
+      .catch((error) => {
+        console.error("Error fetching enrollments:", error);
+        setTotalEnrollments(0); // Default to 0 in case of an error
+      });
 
     // Hàm lấy tổng số video
     fetch("http://localhost:3001/videos", {
@@ -96,7 +102,11 @@ function AdminDashboard() {
       <section className="admin__menu-navigation">
         <ul>
           <li className="no-hover">
-            <div className="nav-header">
+            <div
+              className="nav-header"
+              style={{ cursor: "pointer" }}
+              onClick={() => navigate("/AdminDashboard")}
+            >
               <span className="icon">
                 <i className="fa-solid fa-gem"></i>
               </span>
@@ -104,7 +114,10 @@ function AdminDashboard() {
             </div>
           </li>
           <li>
-            <button className="nav-btn" onClick={() => navigate("#")}>
+            <button
+              className="nav-btn"
+              onClick={() => navigate("/AdminDashboard/UsersControll")}
+            >
               <span className="icon">
                 <AccountCircleIcon />
               </span>
@@ -112,21 +125,17 @@ function AdminDashboard() {
             </button>
           </li>
           <li>
-            <button className="nav-btn" onClick={() => navigate("#")}>
+            <button
+              className="nav-btn"
+              onClick={() => navigate("/AdminDashboard/CoursesControll")}
+            >
               <span className="icon">
                 <AutoStoriesIcon />
               </span>
               <span className="title">Courses</span>
             </button>
           </li>
-          <li>
-            <button className="nav-btn" onClick={() => navigate("#")}>
-              <span className="icon">
-                <GroupIcon />
-              </span>
-              <span className="title">Enrollments</span>
-            </button>
-          </li>
+
           <li>
             <button className="nav-btn" onClick={() => navigate("#")}>
               <span className="icon">
@@ -135,14 +144,7 @@ function AdminDashboard() {
               <span className="title">Videos</span>
             </button>
           </li>
-          <li>
-            <button className="nav-btn" onClick={() => navigate("#")}>
-              <span className="icon">
-                <SettingsApplicationsIcon />
-              </span>
-              <span className="title">Settings</span>
-            </button>
-          </li>
+
           <li>
             <button className="nav-btn" onClick={logout}>
               <span className="icon">
@@ -172,12 +174,36 @@ function AdminDashboard() {
         <section>
           <div className="admin__cardBox">
             {[
-              { label: "Total Users", value: totalUsers, icon: "fa-solid fa-user" },
-              { label: "Total Courses", value: totalCourses, icon: "fa-solid fa-book-open" },
-              { label: "Total Enrollments", value: totalEnrollments, icon: "fa-solid fa-user-graduate" },
-              { label: "Total Videos", value: totalVideos, icon: "fa-solid fa-video" },
-            ].map(({ label, value, icon }, index) => (
-              <div className="admin__card" key={index}>
+              {
+                label: "Total Users",
+                value: totalUsers,
+                icon: "fa-solid fa-user",
+                route: "/AdminDashboard/UsersControll", // Ensure route is defined for all cards
+              },
+              {
+                label: "Total Courses",
+                value: totalCourses,
+                icon: "fa-solid fa-book-open",
+                route: "/AdminDashboard/CoursesControll", // Add a route for navigation
+              },
+              {
+                label: "Total Enrollments",
+                value: totalEnrollments,
+                icon: "fa-solid fa-user-graduate",
+                route: "/AdminDashboard/CoursesControll", // Add a route for navigation
+              },
+              {
+                label: "Total Videos",
+                value: totalVideos,
+                icon: "fa-solid fa-video",
+                route: "/AdminDashboard/CoursesControll", // Add a route for navigation
+              },
+            ].map(({ label, value, icon, route }, index) => (
+              <div
+                className="admin__card"
+                key={index}
+                onClick={() => navigate(route)}
+              >
                 <div>
                   <div className="numbers">{value}</div>
                   <div className="cardName">{label}</div>
