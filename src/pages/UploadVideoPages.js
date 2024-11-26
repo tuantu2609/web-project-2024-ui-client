@@ -92,7 +92,7 @@ function UploadVideoPages() {
           },
         })
         .then((response) => {
-          setAlertMessage("Video uploaded successfully!");
+          setAlertMessage("Video uploaded successfully, wait for admin response!");
           setAlertType("success");
           setIsUploading(false);
         })

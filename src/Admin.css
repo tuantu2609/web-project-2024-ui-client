@@ -407,4 +407,233 @@
   section {
     margin-bottom: 20px;
   }
+  .action-btn {
+    margin-right: 10px; /* Adjust the spacing as needed */
+  }
+  
+  .action-btn:last-child {
+    margin-right: 0; /* Remove margin for the last button */
+  }
+  
+  /* modal edit */
+
+  /* ======== Modal Wrapper ======== */
+.modal-edit {
+  display: block;
+  position: fixed;
+  z-index: 1050;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  overflow: auto;
+}
+
+/* ======== Modal Content ======== */
+.modal-edit-content {
+  max-width: 900px;
+  margin: 5% auto;
+  padding: 30px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  font-family: 'Arial', sans-serif;
+}
+
+.modal-edit-content h3 {
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-align: center;
+  color: #333;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 10px;
+}
+
+/* ======== Form Layout ======== */
+.modal-edit-content .row {
+  display: flex;
+  gap: 20px;
+}
+
+.modal-edit-content .col-6 {
+  flex: 1;
+}
+
+.modal-edit-content .form-group {
+  margin-bottom: 20px;
+}
+
+.modal-edit-content .form-group label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+.modal-edit-content .form-group input {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #f9f9f9;
+  transition: border-color 0.3s ease;
+}
+
+.modal-edit-content .form-group input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* ======== Buttons ======== */
+.modal-edit-content .mt-3 {
+  display: flex;
+  gap: 15px;
+}
+
+.modal-edit-content .btn {
+  padding: 12px 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 6px;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.modal-edit-content .btn-success {
+  background: #28a745;
+  color: #fff;
+  border: none;
+}
+
+.modal-edit-content .btn-success:hover {
+  background: #218838;
+}
+
+.modal-edit-content .btn-secondary {
+  background: #6c757d;
+  color: #fff;
+  border: none;
+}
+
+.modal-edit-content .btn-secondary:hover {
+  background: #5a6268;
+}
+
+.modal-edit-content .btn:active {
+  transform: scale(0.97);
+}
+
+/* ======== Media Query for Responsiveness ======== */
+@media (max-width: 768px) {
+  .modal-edit-content {
+    max-width: 95%;
+    padding: 20px;
+  }
+
+  .modal-edit-content .row {
+    flex-direction: column;
+  }
+
+  .modal-edit-content .col-6 {
+    width: 100%;
+  }
+}
+
+
+  .modal-view {
+    display: block; /* Hiển thị modal */
+    position: fixed;
+    z-index: 1050;
+    background: rgba(0, 0, 0, 0.5); /* Mờ nền */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+  }
+  
+  .modal-view-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 40%; /* Độ rộng modal */
+    border-radius: 5px;
+  }
+  
+  .modal-create {
+    display: block; /* Make sure the modal is visible when the state is true */
+    position: fixed;
+    z-index: 1050;
+    background: rgba(0, 0, 0, 0.5); /* Dim the background */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+  }
+  
+  .modal-create-content {
+    background-color: #fff;
+    margin: 10% auto; /* Center the modal vertically */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 40%; /* Adjust width to match other modals */
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Add shadow for a pop-up effect */
+  }
+  
+  .modal-create-content h3 {
+    margin-bottom: 20px;
+  }
+  
+  .modal-create-content .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .modal-create-content select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 1em;
+    padding-right: 30px;
+  }
+  
+  .modal-create-content .form-group select:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+  
+  .modal-create-content .d-flex button {
+    width: 45%;
+  }
+  
+  .modal-create-content .d-flex {
+    justify-content: space-between;
+  }
+  .modal-body ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .modal-body ul li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .modal-body ul li a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .modal-body ul li a:hover {
+    text-decoration: underline;
+  }
+  
   

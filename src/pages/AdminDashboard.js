@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "../Admin.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
@@ -9,11 +9,15 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import GroupIcon from "@mui/icons-material/Group";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import PlaylistPlayIcon from "@mui/icons-material/PlaylistPlay";
-import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
 import LogoutIcon from "@mui/icons-material/Logout";
 
 function AdminDashboard() {
   const { authState, setAuthState } = useContext(AuthContext);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [totalCourses, setTotalCourses] = useState(0);
+  const [totalEnrollments, setTotalEnrollments] = useState(0);
+  const [totalVideos, setTotalVideos] = useState(0);
+
   const navigate = useNavigate();
 
   const logout = () => {
@@ -27,13 +31,82 @@ function AdminDashboard() {
     navigate("/tnhh2tv");
   };
 
+  // Gọi API để lấy dữ liệu
+  const accessToken = localStorage.getItem("accessToken");
+
+  useEffect(() => {
+    if (!accessToken) {
+      console.error("Access token is missing!");
+      return;
+    }
+
+    // Hàm lấy tổng số người dùng
+    fetch("http://localhost:3001/auth", {
+      headers: {
+        accessToken,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setTotalUsers(data.length);
+      })
+      .catch((error) => console.error("Error fetching users:", error));
+
+    // Hàm lấy tổng số khóa học
+    fetch("http://localhost:3001/courses", {
+      headers: {
+        accessToken,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setTotalCourses(data.length);
+      })
+      .catch((error) => console.error("Error fetching courses:", error));
+
+    // Hàm lấy tổng số ghi danh (enrollments)
+    fetch("http://localhost:3001/enrollment", {
+      headers: {
+        accessToken,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setTotalEnrollments(data.length); // Set the length if the response is an array
+        } else {
+          setTotalEnrollments(0); // Default to 0 if the response is invalid or not an array
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching enrollments:", error);
+        setTotalEnrollments(0); // Default to 0 in case of an error
+      });
+
+    // Hàm lấy tổng số video
+    fetch("http://localhost:3001/videos", {
+      headers: {
+        accessToken,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setTotalVideos(data.length);
+      })
+      .catch((error) => console.error("Error fetching videos:", error));
+  }, [accessToken]);
+
   return (
     <div className="container-fluid">
       {/* Sidebar Navigation */}
       <section className="admin__menu-navigation">
         <ul>
           <li className="no-hover">
-            <div className="nav-header">
+            <div
+              className="nav-header"
+              style={{ cursor: "pointer" }}
+              onClick={() => navigate("/AdminDashboard")}
+            >
               <span className="icon">
                 <i className="fa-solid fa-gem"></i>
               </span>
@@ -41,7 +114,10 @@ function AdminDashboard() {
             </div>
           </li>
           <li>
-            <button className="nav-btn" onClick={() => navigate("#")}>
+            <button
+              className="nav-btn"
+              onClick={() => navigate("/AdminDashboard/UsersControll")}
+            >
               <span className="icon">
                 <AccountCircleIcon />
               </span>
@@ -49,21 +125,17 @@ function AdminDashboard() {
             </button>
           </li>
           <li>
-            <button className="nav-btn" onClick={() => navigate("#")}>
+            <button
+              className="nav-btn"
+              onClick={() => navigate("/AdminDashboard/CoursesControll")}
+            >
               <span className="icon">
                 <AutoStoriesIcon />
               </span>
               <span className="title">Courses</span>
             </button>
           </li>
-          <li>
-            <button className="nav-btn" onClick={() => navigate("#")}>
-              <span className="icon">
-                <GroupIcon />
-              </span>
-              <span className="title">Enrollments</span>
-            </button>
-          </li>
+
           <li>
             <button className="nav-btn" onClick={() => navigate("#")}>
               <span className="icon">
@@ -72,14 +144,7 @@ function AdminDashboard() {
               <span className="title">Videos</span>
             </button>
           </li>
-          <li>
-            <button className="nav-btn" onClick={() => navigate("#")}>
-              <span className="icon">
-                <SettingsApplicationsIcon />
-              </span>
-              <span className="title">Settings</span>
-            </button>
-          </li>
+
           <li>
             <button className="nav-btn" onClick={logout}>
               <span className="icon">
@@ -109,12 +174,36 @@ function AdminDashboard() {
         <section>
           <div className="admin__cardBox">
             {[
-              { label: "Total Users", value: "2,345", icon: "fa-solid fa-user" },
-              { label: "Total Courses", value: "123", icon: "fa-solid fa-book-open" },
-              { label: "Total Enrollments", value: "3,456", icon: "fa-solid fa-user-graduate" },
-              { label: "Total Videos", value: "876", icon: "fa-solid fa-video" },
-            ].map(({ label, value, icon }, index) => (
-              <div className="admin__card" key={index}>
+              {
+                label: "Total Users",
+                value: totalUsers,
+                icon: "fa-solid fa-user",
+                route: "/AdminDashboard/UsersControll", // Ensure route is defined for all cards
+              },
+              {
+                label: "Total Courses",
+                value: totalCourses,
+                icon: "fa-solid fa-book-open",
+                route: "/AdminDashboard/CoursesControll", // Add a route for navigation
+              },
+              {
+                label: "Total Enrollments",
+                value: totalEnrollments,
+                icon: "fa-solid fa-user-graduate",
+                route: "/AdminDashboard/CoursesControll", // Add a route for navigation
+              },
+              {
+                label: "Total Videos",
+                value: totalVideos,
+                icon: "fa-solid fa-video",
+                route: "/AdminDashboard/CoursesControll", // Add a route for navigation
+              },
+            ].map(({ label, value, icon, route }, index) => (
+              <div
+                className="admin__card"
+                key={index}
+                onClick={() => navigate(route)}
+              >
                 <div>
                   <div className="numbers">{value}</div>
                   <div className="cardName">{label}</div>
