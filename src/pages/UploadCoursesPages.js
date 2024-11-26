@@ -108,7 +108,7 @@ function UploadCoursesPages() {
       })
       .then((response) => {
         setAlertType("success");
-        setAlertMessage("Course uploaded successfully!");
+        setAlertMessage("Course uploaded successfully, wait for admin response!");
         setIsUploading(false);
       })
       .catch((error) => {

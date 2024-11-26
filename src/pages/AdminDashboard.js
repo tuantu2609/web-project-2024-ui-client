@@ -72,9 +72,16 @@ function AdminDashboard() {
     })
       .then((response) => response.json())
       .then((data) => {
-        setTotalEnrollments(data.length);
+        if (Array.isArray(data)) {
+          setTotalEnrollments(data.length); // Set the length if the response is an array
+        } else {
+          setTotalEnrollments(0); // Default to 0 if the response is invalid or not an array
+        }
       })
-      .catch((error) => console.error("Error fetching enrollments:", error));
+      .catch((error) => {
+        console.error("Error fetching enrollments:", error);
+        setTotalEnrollments(0); // Default to 0 in case of an error
+      });
 
     // Hàm lấy tổng số video
     fetch("http://localhost:3001/videos", {
@@ -118,21 +125,17 @@ function AdminDashboard() {
             </button>
           </li>
           <li>
-            <button className="nav-btn" onClick={() => navigate("#")}>
+            <button
+              className="nav-btn"
+              onClick={() => navigate("/AdminDashboard/CoursesControll")}
+            >
               <span className="icon">
                 <AutoStoriesIcon />
               </span>
               <span className="title">Courses</span>
             </button>
           </li>
-          <li>
-            <button className="nav-btn" onClick={() => navigate("#")}>
-              <span className="icon">
-                <GroupIcon />
-              </span>
-              <span className="title">Enrollments</span>
-            </button>
-          </li>
+
           <li>
             <button className="nav-btn" onClick={() => navigate("#")}>
               <span className="icon">
@@ -181,26 +184,25 @@ function AdminDashboard() {
                 label: "Total Courses",
                 value: totalCourses,
                 icon: "fa-solid fa-book-open",
-                route: "#", // Add a route for navigation
+                route: "/AdminDashboard/CoursesControll", // Add a route for navigation
               },
               {
                 label: "Total Enrollments",
                 value: totalEnrollments,
                 icon: "fa-solid fa-user-graduate",
-                route: "#", // Add a route for navigation
+                route: "/AdminDashboard/CoursesControll", // Add a route for navigation
               },
               {
                 label: "Total Videos",
                 value: totalVideos,
                 icon: "fa-solid fa-video",
-                route: "#", // Add a route for navigation
+                route: "/AdminDashboard/CoursesControll", // Add a route for navigation
               },
             ].map(({ label, value, icon, route }, index) => (
               <div
                 className="admin__card"
                 key={index}
-                onClick={() =>navigate(route)} 
-                
+                onClick={() => navigate(route)}
               >
                 <div>
                   <div className="numbers">{value}</div>

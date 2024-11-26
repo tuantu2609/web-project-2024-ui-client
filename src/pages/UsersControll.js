@@ -50,7 +50,7 @@ function UserControlPage() {
 
   const fetchUsers = () => {
     const accessToken = localStorage.getItem("accessToken");
-  
+
     fetch("http://localhost:3001/admin/users/details", {
       headers: { accessToken },
     })
@@ -62,12 +62,11 @@ function UserControlPage() {
           email: account.email,
           role: account.role,
         }));
-  
+
         setUsers(formattedUsers); // Update the users state
       })
       .catch((error) => console.error("Error fetching users:", error));
   };
-  
 
   useEffect(() => {
     fetchUsers();
@@ -174,17 +173,18 @@ function UserControlPage() {
     })
       .then((response) => response.json())
       .then((data) => {
-        setViewingUser(data); // Cập nhật state với thông tin user
+        setViewingUser(data); // Update the state with the fetched user data
       })
       .catch((error) => console.error("Error fetching user details:", error));
   };
+
   const closeViewModal = () => {
     setViewingUser(null);
   };
   const handleCreateUser = (e) => {
     e.preventDefault(); // Prevent form submission
     const accessToken = localStorage.getItem("accessToken"); // Get token
-  
+
     // Step 1: Create User
     fetch("http://localhost:3001/admin/create-user", {
       method: "POST",
@@ -200,10 +200,10 @@ function UserControlPage() {
           alert(`Failed to create user: ${data.error}`);
         } else {
           alert("User created successfully");
-  
+
           // Step 2: Refresh user list
           fetchUsers(); // Refresh the user list with updated data
-  
+
           // Step 3: Reset the form fields and close the modal
           setNewUser({
             username: "",
@@ -217,8 +217,6 @@ function UserControlPage() {
       })
       .catch((error) => console.error("Error creating user:", error));
   };
-  
-  
 
   return (
     <div className="container-fluid">
@@ -248,21 +246,17 @@ function UserControlPage() {
             </button>
           </li>
           <li>
-            <button className="nav-btn" onClick={() => navigate("#")}>
+            <button
+              className="nav-btn"
+              onClick={() => navigate("/AdminDashboard/CoursesControll")}
+            >
               <span className="icon">
                 <AutoStoriesIcon />
               </span>
               <span className="title">Courses</span>
             </button>
           </li>
-          <li>
-            <button className="nav-btn" onClick={() => navigate("#")}>
-              <span className="icon">
-                <GroupIcon />
-              </span>
-              <span className="title">Enrollments</span>
-            </button>
-          </li>
+
           <li>
             <button className="nav-btn" onClick={() => navigate("#")}>
               <span className="icon">
@@ -458,38 +452,59 @@ function UserControlPage() {
 
         {/* modal view user */}
         {viewingUser && (
-  <div className="modal-view">
-    <div className="modal-view-content">
-      <h3>User Details</h3>
-      <ul>
-        <li>
-          <strong>Username:</strong> {viewingUser.username || "N/A"}
-        </li>
-        <li>
-          <strong>Full Name:</strong> {viewingUser.UserDetail?.fullName || "N/A"}
-        </li>
-        <li>
-          <strong>Email:</strong> {viewingUser.email}
-        </li>
-        <li>
-          <strong>Role:</strong> {viewingUser.role}
-        </li>
-        <li>
-          <strong>Address:</strong> {viewingUser.UserDetail?.address || "N/A"}
-        </li>
-        <li>
-          <strong>Phone Number:</strong> {viewingUser.UserDetail?.phoneNumber || "N/A"}
-        </li>
-        <li>
-          <strong>Birth Date:</strong> {viewingUser.UserDetail?.birthDate || "N/A"}
-        </li>
-      </ul>
-      <button className="btn btn-secondary" onClick={closeViewModal}>
-        Close
-      </button>
-    </div>
-  </div>
-)}
+          <div className="modal-view">
+            <div className="modal-view-content">
+              <h3>User Details</h3>
+              <ul>
+                <li>
+                  <strong>Username:</strong> {viewingUser.username || "N/A"}
+                </li>
+                <li>
+                  <strong>Full Name:</strong>{" "}
+                  {viewingUser.UserDetail?.fullName || "N/A"}
+                </li>
+                <li>
+                  <strong>Email:</strong> {viewingUser.email}
+                </li>
+                <li>
+                  <strong>Role:</strong> {viewingUser.role}
+                </li>
+                <li>
+                  <strong>Address:</strong>{" "}
+                  {viewingUser.UserDetail?.address || "N/A"}
+                </li>
+                <li>
+                  <strong>Phone Number:</strong>{" "}
+                  {viewingUser.UserDetail?.phoneNumber || "N/A"}
+                </li>
+                <li>
+                  <strong>Birth Date:</strong>{" "}
+                  {viewingUser.UserDetail?.birthDate || "N/A"}
+                </li>
+              </ul>
+              <hr />
+              <h4>Enrolled Courses:</h4>
+              {viewingUser.Enrollments?.length > 0 ? (
+                <ul>
+                  {viewingUser.Enrollments.map((enrollment) => (
+                    <li key={enrollment.Course.id}>
+                      <strong>Course:</strong> {enrollment.Course.courseTitle}{" "}
+                      <small>({enrollment.Course.status})</small>
+                      <br />
+                      <strong>Description:</strong>{" "}
+                      {enrollment.Course.courseDesc}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>This user is not enrolled in any courses.</p>
+              )}
+              <button className="btn btn-secondary" onClick={closeViewModal}>
+                Close
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Modal Create User */}
         {showCreateUserModal && (

@@ -615,4 +615,25 @@
   .modal-create-content .d-flex {
     justify-content: space-between;
   }
+  .modal-body ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .modal-body ul li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .modal-body ul li a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .modal-body ul li a:hover {
+    text-decoration: underline;
+  }
+  
   
