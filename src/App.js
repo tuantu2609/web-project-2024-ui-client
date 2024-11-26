@@ -46,7 +46,7 @@ function App() {
 
       if (role === "admin") {
         axios
-        .get("http://localhost:3001/admin/auth", {
+        .get("http://52.7.83.229:3001/admin/auth", {
           headers: {
             accessToken: token,
           },
@@ -70,7 +70,7 @@ function App() {
         });
       } else {
         axios
-          .get("http://localhost:3001/auth/user", {
+          .get("http://52.7.83.229:3001/auth/user", {
             headers: {
               accessToken: token,
             },

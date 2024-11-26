@@ -105,7 +105,7 @@ const HomePage = ({ username }) => {
             >
               <div className="card">
                 <img
-                  src={course.thumbnail || "/vid.jpg"}
+                  src={course.thumbnail || "vid.jpg"}
                   className="card-img-top"
                   alt={course.courseTitle || "Course Thumbnail"}
                   // style={{ width: "100%", height: "259px", objectFit: "cover" }}

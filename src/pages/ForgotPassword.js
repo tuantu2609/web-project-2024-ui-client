@@ -215,18 +215,18 @@ const ForgotPassword = () => {
                   )}
                   <div className="button-container">
                     <button
-                      type="button"
-                      onClick={() => setStep(1)}
-                      className="btn back-button"
-                    >
-                      Back
-                    </button>
-                    <button
                       type="submit"
                       className="btn verify-button"
                       disabled={isLoading}
                     >
                       {isLoading ? <PendingIcon /> : "Verify Code"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setStep(1)}
+                      className="btn back-button"
+                    >
+                      Back
                     </button>
                   </div>
                 </form>

@@ -180,7 +180,7 @@ function UserProfile() {
         <div className="banner container-lg">
           <img
             className="img-fluid rounded-bottom-custom banner-img"
-            src="http://localhost:3000/banner.png"
+            src="banner.png"
             alt="banner"
           />
           <div className="user-profile">
@@ -188,7 +188,7 @@ function UserProfile() {
               <img
                 src={
                   editData.profilePictureURL ||
-                  "http://localhost:3000/UserAvatar.png"
+                  "/public/UserAvatar.png"
                 }
                 alt="User Avatar"
                 className="avatar rounded-circle"
@@ -284,7 +284,7 @@ function UserProfile() {
                       >
                         <div className="course-enrollment-display mb-3">
                           <img
-                            src={course.thumbnail || "vid.jpg"}
+                            src={course.thumbnail || "/public/vid.jpg"}
                             alt={course.courseTitle}
                             className="course-enrollment-img img-fluid"
                           />
