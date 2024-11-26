@@ -27,7 +27,7 @@ function AdminLogin() {
     const data = { username, password };
 
     axios
-      .post("http://52.7.83.229:3001/admin/login", data)
+      .post("http://localhost:3001/admin/login", data)
       .then((response) => {
         if (response.data.error) {
           setMessage(response.data.error);

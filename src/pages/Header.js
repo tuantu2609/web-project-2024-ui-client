@@ -56,7 +56,7 @@ function Header() {
     }
   
     axios
-      .get(`http://52.7.83.229:3001/search?query=${query}`, { // Updated to /search
+      .get(`http://localhost:3001/search?query=${query}`, { // Updated to /search
         headers: {
           accessToken: localStorage.getItem("accessToken") || "",
         },

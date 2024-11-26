@@ -52,7 +52,7 @@ function UserProfile() {
   // Hàm lấy dữ liệu người dùng
   const fetchUserData = (setUserData) => {
     axios
-      .get(`http://52.7.83.229:3001/user/details`, {
+      .get(`http://localhost:3001/user/details`, {
         headers: { accessToken: localStorage.getItem("accessToken") },
       })
       .then((response) => {
@@ -66,7 +66,7 @@ function UserProfile() {
   const fetchEnrolledCourses = async () => {
     try {
       const response = await axios.get(
-        "http://52.7.83.229:3001/enrollment/enrolled",
+        "http://localhost:3001/enrollment/enrolled",
         {
           headers: { accessToken: localStorage.getItem("accessToken") },
         }
@@ -149,7 +149,7 @@ function UserProfile() {
 
     // Gửi yêu cầu API
     axios
-      .put("http://52.7.83.229:3001/user/details", formData, {
+      .put("http://localhost:3001/user/details", formData, {
         headers: {
           accessToken: localStorage.getItem("accessToken"),
           "Content-Type": "multipart/form-data",
@@ -180,7 +180,7 @@ function UserProfile() {
         <div className="banner container-lg">
           <img
             className="img-fluid rounded-bottom-custom banner-img"
-            src="/public/banner.png"
+            src="banner.png"
             alt="banner"
           />
           <div className="user-profile">

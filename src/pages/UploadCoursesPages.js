@@ -100,7 +100,7 @@ function UploadCoursesPages() {
     setIsUploading(true);
 
     axios
-      .post("http://52.7.83.229:3001/courses", formData, {
+      .post("http://localhost:3001/courses", formData, {
         headers: {
           accessToken: localStorage.getItem("accessToken"),
           "Content-Type": "multipart/form-data",
