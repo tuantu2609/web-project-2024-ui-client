@@ -15,7 +15,7 @@ import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import PlaylistPlayIcon from "@mui/icons-material/PlaylistPlay";
 import LogoutIcon from "@mui/icons-material/Logout";
 
-function CoursesControll() {
+function CoursesControllPage() {
   const { authState, setAuthState } = useContext(AuthContext);
   const [courses, setCourses] = useState([]);
   const [search, setSearch] = useState("");
@@ -275,7 +275,7 @@ function CoursesControll() {
           </li>
 
           <li>
-            <button className="nav-btn" onClick={() => navigate("#")}>
+            <button className="nav-btn" onClick={() => navigate("/AdminDashboard/VideosControll")}>
               <span className="icon">
                 <PlaylistPlayIcon />
               </span>
@@ -413,7 +413,7 @@ function CoursesControll() {
                         View
                       </button>
                       <button
-                        className="btn btn-danger action-btn"
+                        className="btn btn-danger action-btn ms-3"
                         disabled={deletingCourseId === course.id}
                         onClick={() => handleDeleteCourse(course.id)}
                       >
@@ -488,7 +488,7 @@ function CoursesControll() {
                         Delete
                       </button> */}
                       <button
-                        className="btn btn-danger action-btn"
+                        className="btn btn-danger action-btn ms-3"
                         disabled={deletingCourseId === course.id}
                         onClick={() => handleDeleteCourse(course.id)}
                       >
@@ -620,4 +620,4 @@ function CoursesControll() {
   );
 }
 
-export default CoursesControll;
+export default CoursesControllPage;

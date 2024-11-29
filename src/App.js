@@ -23,9 +23,9 @@ import ManageCoursesPages from "./pages/ManageCoursesPages";
 import ManageVideoPages from "./pages/ManageVideosPages";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
-import UsersControll from "./pages/UsersControll";
-import CoursesControll from "./pages/CoursesControll";
-import VideosControll from "./pages/VideosControll";
+import UsersControllPage from "./pages/UsersControllPage";
+import CoursesControllPage from "./pages/CoursesControllPage";
+import VideosControllPage from "./pages/VideosControllPage";
 
 // Importing libraries
 import { AuthContext } from "./helpers/AuthContext";
@@ -127,15 +127,15 @@ function App() {
               <Route path="/AdminDashboard" element={<AdminDashboard />} />
               <Route
                 path="/AdminDashboard/UsersControll"
-                element={<UsersControll />}
+                element={<UsersControllPage />}
               />
               <Route
                 path="/AdminDashboard/CoursesControll"
-                element={<CoursesControll />}
+                element={<CoursesControllPage />}
               />
               <Route
                 path="/AdminDashboard/VideosControll"
-                element={<VideosControll />}
+                element={<VideosControllPage />}
               />
             </Routes>
           </Router>

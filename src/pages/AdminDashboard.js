@@ -137,7 +137,7 @@ function AdminDashboard() {
           </li>
 
           <li>
-            <button className="nav-btn" onClick={() => navigate("#")}>
+            <button className="nav-btn" onClick={() => navigate("/AdminDashboard/VideosControll")}>
               <span className="icon">
                 <PlaylistPlayIcon />
               </span>
