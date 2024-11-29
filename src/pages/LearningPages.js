@@ -1,35 +1,23 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
-import Header from "./Header";
 import axios from "axios";
+import "../App.css";
+import { setBodySectionMarginTop } from "../helpers/styles";
+import { convertDuration } from "../helpers/time";
 
 function LearningPages() {
+  const { courseId, videoId } = useParams();
   const [videos, setVideos] = useState([]);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [showLessonList, setShowLessonList] = useState(true);
   const [showFullDesc, setShowFullDesc] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  function convertDuration(seconds) {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = Math.floor(seconds % 60);
-
-    // Tạo định dạng
-    if (hours > 0) {
-      return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
-        2,
-        "0"
-      )}:${String(secs).padStart(2, "0")}`;
-    } else if (minutes > 0) {
-      return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(
-        2,
-        "0"
-      )}`;
-    } else {
-      return `00:${String(secs).padStart(2, "0")}`;
-    }
-  }
+  const findVideoIndexById = (videos, videoId) => {
+    return videos.findIndex((video) => video.videoId === parseInt(videoId));
+  };
 
   const handleVideoChange = (index) => {
     setCurrentVideoIndex(index);
@@ -37,43 +25,59 @@ function LearningPages() {
   };
 
   useEffect(() => {
-    const header = document.querySelector(".header-section");
-    const bodySection = document.querySelector(".body-section");
+    setIsLoading(true);
 
-    if (header && bodySection) {
-      const headerHeight = header.offsetHeight;
-      bodySection.style.marginTop = `${headerHeight}px`;
+    axios
+      .get(`http://localhost:3001/courseVideo/course-le/${courseId}`, {
+        headers: { accessToken: localStorage.getItem("accessToken") },
+      })
+      .then((response) => {
+        const videosWithFormattedDuration = response.data.map((video) => ({
+          ...video,
+          // videoDuration: convertDuration(video.Video.videoDuration),
+          videoDuration: convertDuration(Math.round(video.Video.videoDuration)),
+        }));
+        setVideos(videosWithFormattedDuration);
+
+        const initialIndex = findVideoIndexById(
+          videosWithFormattedDuration,
+          videoId
+        );
+        setCurrentVideoIndex(initialIndex >= 0 ? initialIndex : 0); // Nếu không tìm thấy, mặc định 0
+
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setIsLoading(false);
+      });
+  }, [courseId, videoId]);
+
+  useEffect(() => {
+    if (videos) {
+      setBodySectionMarginTop();
     }
+  }, [videos]);
 
-    axios.get(`http://localhost:3001/videos`).then((response) => {
-      const videosWithFormattedDuration = response.data.map((video) => ({
-        ...video,
-        videoDuration: convertDuration(video.videoDuration), // Chuyển đổi
-      }));
-      setVideos(videosWithFormattedDuration);
-    });
-  }, []);
+  if (isLoading) return <p>Loading videos...</p>;
 
   return (
     <div>
-      <Header />
-
       <div className="body-section">
         <div className="row">
           {/* Recent video */}
-          <div className={showLessonList ? "col-7" : "col-12"}>
+          <div className={showLessonList ? "col-md-7 col-sm-12" : "col-12"}>
             {/* Video section */}
             <div className="video-container">
               {videos.length > 0 ? (
                 <video
-                  key={videos[currentVideoIndex].videoURL}
+                  key={videos[currentVideoIndex].Video.videoURL}
                   width="100%"
                   height={showLessonList ? "auto" : "600"}
                   autoPlay
                   controls
                 >
                   <source
-                    src={videos[currentVideoIndex].videoURL}
+                    src={videos[currentVideoIndex].Video.videoURL}
                     type="video/mp4"
                   />
                   Your browser does not support the video tag.
@@ -86,11 +90,16 @@ function LearningPages() {
             {/* Video Title and Video Description */}
             {videos.length > 0 && (
               <div className="mt-3 ms-3">
-                <h5>{videos[currentVideoIndex].videoTitle}</h5>
+                <h5>{videos[currentVideoIndex].Video.videoTitle}</h5>
                 <pre className="mt-3">
-                  {showFullDesc
-                    ? videos[currentVideoIndex].videoDesc
-                    : `${videos[currentVideoIndex].videoDesc.slice(0, 100)}...`}
+                  {videos[currentVideoIndex].Video.videoDesc
+                    ? showFullDesc
+                      ? videos[currentVideoIndex].Video.videoDesc
+                      : `${videos[currentVideoIndex].Video.videoDesc.slice(
+                          0,
+                          100
+                        )}...`
+                    : "No description available"}
                 </pre>
                 <button
                   className="btn btn-link p-0"
@@ -105,7 +114,7 @@ function LearningPages() {
 
           {/* Show this only when showLessonList === true */}
           {showLessonList && (
-            <div className="col-5">
+            <div className="col-md-5 col-sm-12">
               <div className="lesson-list mt-2">
                 <h3>Lesson list</h3>
                 <ul className="list-group list-group-numbered">
@@ -123,7 +132,7 @@ function LearningPages() {
                       onClick={() => handleVideoChange(index)}
                     >
                       <div className="ms-2 me-auto">
-                        <div className="fw-bold">{video.videoTitle}</div>
+                        <div className="fw-bold">{video.Video.videoTitle}</div>
                         <span className="badge text-bg-secondary rounded-pill">
                           {video.videoDuration}
                         </span>
@@ -150,14 +159,9 @@ function LearningPages() {
           {showLessonList ? "Hide" : "Show"}
         </button>
       </div>
-
-      {/* <div className="footer-section">
-        <div className="container">
-          <span className="text-muted">© 2024 Học tập trực tuyến</span>
-        </div>
-      </div> */}
     </div>
   );
 }
 
+// Export the LearningPages component
 export default LearningPages;

@@ -1,32 +1,15 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import "../App.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { AuthContext } from "../helpers/AuthContext";
-import CryptoJS from "crypto-js";
 
-const secretKey = "your-secret-key";
-
-// Hàm mã hóa
-const encryptData = (data) => {
-  return CryptoJS.AES.encrypt(data, secretKey).toString();
-};
-
-// Hàm giải mã
-const decryptData = (cipherText) => {
-  const bytes = CryptoJS.AES.decrypt(cipherText, secretKey);
-  return bytes.toString(CryptoJS.enc.Utf8);
-};
-
-function Login() {
+function AdminLogin() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
   const [message, setMessage] = useState("");
   const { setAuthState } = useContext(AuthContext);
-
   let navigate = useNavigate();
 
   const handleUsernameChange = (e) => {
@@ -39,46 +22,34 @@ function Login() {
     if (message) setMessage("");
   };
 
-  const handleRememberMeChange = (e) => {
-    setRememberMe(e.target.checked);
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    const data = { username: username, password: password };
+    const data = { username, password };
+
     axios
-      .post("http://localhost:3001/auth/login", data)
+      .post("http://localhost:3001/admin/login", data)
       .then((response) => {
         if (response.data.error) {
           setMessage(response.data.error);
         } else {
+          // Lưu token với tên riêng cho admin
           localStorage.setItem("accessToken", response.data.token);
           setAuthState({
             fullName: response.data.fullName,
             id: response.data.id,
-            role: response.data.role,
+            role: "admin",
             status: true,
           });
-
-          if (rememberMe) {
-            // Mã hóa trước khi lưu
-            localStorage.setItem("rememberedUsername", encryptData(username));
-            localStorage.setItem("rememberedPassword", encryptData(password));
-          } else {
-            localStorage.removeItem("rememberedUsername");
-            localStorage.removeItem("rememberedPassword");
-          }
-
-          alert("Login successful");
-          navigate("/");
+          alert("Admin login successful");
+          navigate("/AdminDashboard");
         }
       })
       .catch((error) => {
         if (error.response) {
           if (error.response.status === 404) {
-            setMessage("User Doesn't Exist");
+            setMessage("Admin doesn't exist");
           } else if (error.response.status === 401) {
-            setMessage("Wrong Username And Password Combination");
+            setMessage("Incorrect password");
           } else {
             setMessage("Internal server error.");
           }
@@ -87,17 +58,6 @@ function Login() {
         }
       });
   };
-
-  useEffect(() => {
-    const storedUsername = localStorage.getItem("rememberedUsername");
-    const storedPassword = localStorage.getItem("rememberedPassword");
-    if (storedUsername && storedPassword) {
-      // Giải mã khi lấy ra
-      setUsername(decryptData(storedUsername));
-      setPassword(decryptData(storedPassword));
-      setRememberMe(true);
-    }
-  }, []);
 
   return (
     <div
@@ -119,7 +79,7 @@ function Login() {
       >
         <div className="log-wrapper">
           <div className="form-box login">
-            <h1>Log In</h1>
+            <h1>Admin Log In</h1>
             <form onSubmit={handleSubmit}>
               <div className="input-box">
                 <i className="bx bxs-user-circle"></i>
@@ -138,8 +98,8 @@ function Login() {
                 <i className="bx bx-lock"></i>
                 <input
                   type="password"
-                  id="pswd"
-                  name="pswd"
+                  id="password"
+                  name="password"
                   value={password}
                   onChange={handlePasswordChange}
                   required
@@ -163,30 +123,9 @@ function Login() {
                 )}
               </div>
 
-              <div className="remember-forgot">
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={rememberMe}
-                    onChange={handleRememberMeChange}
-                  />{" "}
-                  Remember me{" "}
-                </label>
-                <a href="/forgot-password">Forgot password?</a>
-              </div>
-
               <button type="submit" className="btn">
                 Login
               </button>
-
-              <div className="login-register">
-                <p>
-                  Don't have an account?{" "}
-                  <a href="/registration" className="register-link">
-                    Sign Up
-                  </a>
-                </p>
-              </div>
             </form>
           </div>
         </div>
@@ -195,4 +134,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default AdminLogin;
