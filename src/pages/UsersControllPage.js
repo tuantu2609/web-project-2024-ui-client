@@ -3,6 +3,7 @@ import "../Admin.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../helpers/AuthContext";
+import { format } from "date-fns";
 
 // Import icons from Material-UI
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -28,14 +29,16 @@ function UserControlPage() {
 
   let navigate = useNavigate();
 
-  // const formatDate = (dateString, num) => {
-  //   try {
-  //     if (num === 1) return format(new Date(dateString), "dd/MM/yyyy");
-  //     return format(new Date(dateString), "MM/yyyy");
-  //   } catch {
-  //     return "Invalid date";
-  //   }
-  // };
+  const formatDate = (dateString, num) => {
+    try {
+      if (num === 0) return format(new Date(dateString), "yyyy-MM-dd"); // For input fields
+      if (num === 1) return format(new Date(dateString), "dd/MM/yyyy"); // Display format
+      return format(new Date(dateString), "MM/yyyy"); // Another format
+    } catch {
+      return "Invalid date";
+    }
+  };
+
   const logout = () => {
     localStorage.removeItem("accessToken");
     setAuthState({
@@ -146,7 +149,7 @@ function UserControlPage() {
           alert("Failed to fetch user details");
         } else {
           const birthDate = data.UserDetail?.birthDate
-            ? new Date(data.UserDetail.birthDate).toISOString().split("T")[0] // Format to YYYY-MM-DD
+            ? formatDate(data.UserDetail.birthDate, 0)
             : "";
 
           const editingData = {
@@ -257,7 +260,10 @@ function UserControlPage() {
           </li>
 
           <li>
-            <button className="nav-btn" onClick={() => navigate("#")}>
+            <button
+              className="nav-btn"
+              onClick={() => navigate("/AdminDashboard/VideosControll")}
+            >
               <span className="icon">
                 <PlaylistPlayIcon />
               </span>
@@ -478,7 +484,9 @@ function UserControlPage() {
                 </li>
                 <li>
                   <strong>Birth Date:</strong>{" "}
-                  {viewingUser.UserDetail?.birthDate || "N/A"}
+                  {viewingUser.UserDetail?.birthDate
+                    ? formatDate(viewingUser.UserDetail.birthDate, 1)
+                    : "N/A"}
                 </li>
               </ul>
               <hr />
