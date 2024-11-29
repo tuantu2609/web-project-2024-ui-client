@@ -31,7 +31,7 @@ function VideosControllPage() {
   // Fetch videos from the API
   const fetchVideos = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/videos", {
+      const response = await axios.get("http://localhost:3001/admin/videos", {
         headers: { accessToken: localStorage.getItem("accessToken") || "" },
       });
       setVideos(response.data); // Store fetched videos in state
@@ -165,6 +165,7 @@ function VideosControllPage() {
                 <th>Title</th>
                 <th>Description</th>
                 <th>Duration</th>
+                <th>Course Title</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -176,6 +177,7 @@ function VideosControllPage() {
                     <td>{video.videoTitle}</td>
                     <td>{video.videoDesc}</td>
                     <td>{video.videoDuration || "N/A"}</td>
+                    <td>{video.courseTitle}</td>
                     <td>
                       <Button
                         variant="primary"
