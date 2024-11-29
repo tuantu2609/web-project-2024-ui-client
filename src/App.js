@@ -29,6 +29,7 @@ import VideosControll from "./pages/VideosControll";
 
 // Importing libraries
 import { AuthContext } from "./helpers/AuthContext";
+import { SocketProvider } from "./helpers/SocketContext";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -49,31 +50,31 @@ function App() {
 
       if (role === "admin") {
         axios
-        .get("http://52.7.83.229:3001/admin/auth", {
-          headers: {
-            accessToken: token,
-          },
-        })
-        .then((response) => {
-          if (response.data.error) {
+          .get("http://localhost:3001/admin/auth", {
+            headers: {
+              accessToken: token,
+            },
+          })
+          .then((response) => {
+            if (response.data.error) {
+              setAuthState((prevState) => ({ ...prevState, status: false }));
+            } else {
+              setAuthState((prevState) => ({
+                ...prevState,
+                fullName: response.data.fullName,
+                id: response.data.id,
+                role: response.data.role,
+                status: true,
+              }));
+            }
+          })
+          .catch((error) => {
+            console.error("Error during user auth:", error);
             setAuthState((prevState) => ({ ...prevState, status: false }));
-          } else {
-            setAuthState((prevState) => ({
-              ...prevState,
-              fullName: response.data.fullName,
-              id: response.data.id,
-              role: response.data.role,
-              status: true,
-            }));
-          }
-        })
-        .catch((error) => {
-          console.error("Error during user auth:", error);
-          setAuthState((prevState) => ({ ...prevState, status: false }));
-        });
+          });
       } else {
         axios
-          .get("http://52.7.83.229:3001/auth/user", {
+          .get("http://localhost:3001/auth/user", {
             headers: {
               accessToken: token,
             },
@@ -101,31 +102,45 @@ function App() {
 
   return (
     <div className="App">
-      <AuthContext.Provider value={{ authState, setAuthState }}>
-        <Router>
-          {/* useLocation phải được đặt bên trong Router */}
-          <ConditionalHeader />
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/registration" element={<Registration />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/learn/:courseId/:videoId" element={<LearningPages />} />
-            <Route path="/upload-courses" element={<UploadCoursesPages />} />
-            <Route path="/upload-video" element={<UploadVideoPages />} />
-            <Route path="/user/:id" element={<UserProfile />} />
-            <Route path="/courses/view-all" element={<ViewAllCourses />} />
-            <Route path="/courses/:id" element={<ViewCourseDetail />} />
-            <Route path="/manage-courses" element={<ManageCoursesPages />} />
-            <Route path="/manage-videos" element={<ManageVideoPages />} />
-            <Route path="/tnhh2tv" element={<AdminLogin />} />
-            <Route path="/AdminDashboard" element={<AdminDashboard />} />
-            <Route path="/AdminDashboard/UsersControll" element={<UsersControll />} />
-            <Route path="/AdminDashboard/CoursesControll" element={<CoursesControll />} />
-            <Route path="/AdminDashboard/VideosControll" element={<VideosControll />} />
-          </Routes>
-        </Router>
-      </AuthContext.Provider>
+      <SocketProvider>
+        <AuthContext.Provider value={{ authState, setAuthState }}>
+          <Router>
+            {/* useLocation phải được đặt bên trong Router */}
+            <ConditionalHeader />
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/registration" element={<Registration />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route
+                path="/learn/:courseId/:videoId"
+                element={<LearningPages />}
+              />
+              <Route path="/upload-courses" element={<UploadCoursesPages />} />
+              <Route path="/upload-video" element={<UploadVideoPages />} />
+              <Route path="/user/:id" element={<UserProfile />} />
+              <Route path="/courses/view-all" element={<ViewAllCourses />} />
+              <Route path="/courses/:id" element={<ViewCourseDetail />} />
+              <Route path="/manage-courses" element={<ManageCoursesPages />} />
+              <Route path="/manage-videos" element={<ManageVideoPages />} />
+              <Route path="/tnhh2tv" element={<AdminLogin />} />
+              <Route path="/AdminDashboard" element={<AdminDashboard />} />
+              <Route
+                path="/AdminDashboard/UsersControll"
+                element={<UsersControll />}
+              />
+              <Route
+                path="/AdminDashboard/CoursesControll"
+                element={<CoursesControll />}
+              />
+              <Route
+                path="/AdminDashboard/VideosControll"
+                element={<VideosControll />}
+              />
+            </Routes>
+          </Router>
+        </AuthContext.Provider>
+      </SocketProvider>
     </div>
   );
 }

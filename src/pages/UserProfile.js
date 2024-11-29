@@ -38,62 +38,80 @@ const formatDate = (dateString, num) => {
   }
 };
 
+const fetchCourses = async (role, setCourses) => {
+  try {
+    const endpoint =
+      role === "student"
+        ? "http://localhost:3001/enrollment/enrolled"
+        : "http://localhost:3001/courses/instructor";
+    const response = await axios.get(endpoint, {
+      headers: { accessToken: localStorage.getItem("accessToken") },
+    });
+    setCourses(response.data);
+  } catch (error) {
+    console.error("Error fetching courses:", error);
+  }
+};
+
 function UserProfile() {
   const { authState, setAuthState } = useContext(AuthContext);
   const [userData, setUserData] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editData, setEditData] = useState({});
-  const [enrolledCourses, setEnrolledCourses] = useState([]);
+  const [courses, setCourses] = useState([]);
   const [isLoading, setIsLoading] = useState(false); // Trạng thái tải
   const [successMessage, setSuccessMessage] = useState(""); // Thông báo thành công
 
   const navigate = useNavigate();
 
   // Hàm lấy dữ liệu người dùng
-  const fetchUserData = (setUserData) => {
-    axios
-      .get(`http://localhost:3001/user/details`, {
-        headers: { accessToken: localStorage.getItem("accessToken") },
-      })
-      .then((response) => {
-        setUserData(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching user details:", error);
-      });
-  };
-
-  const fetchEnrolledCourses = async () => {
+  const fetchUserData = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:3001/enrollment/enrolled",
-        {
-          headers: { accessToken: localStorage.getItem("accessToken") },
-        }
-      );
-      setEnrolledCourses(response.data);
+      const response = await axios.get(`http://localhost:3001/user/details`, {
+        headers: { accessToken: localStorage.getItem("accessToken") },
+      });
+      setUserData(response.data); // Cập nhật state userData
     } catch (error) {
-      console.error("Error fetching enrolled courses:", error);
+      console.error("Error fetching user details:", error);
+      setUserData(null); // Đảm bảo có giá trị fallback nếu lỗi xảy ra
     }
   };
+
+  // const fetchEnrolledCourses = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       "http://localhost:3001/enrollment/enrolled",
+  //       {
+  //         headers: { accessToken: localStorage.getItem("accessToken") },
+  //       }
+  //     );
+  //     setCourses(response.data);
+  //   } catch (error) {
+  //     console.error("Error fetching enrolled courses:", error);
+  //   }
+  // };
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    const fetchData = async () => {
+      window.scrollTo(0, 0);
+  
+      if (!localStorage.getItem("accessToken")) {
+        navigate("/login");
+        return;
+      }
+  
+      await fetchUserData(); // Gọi hàm để lấy dữ liệu người dùng
+      fetchCourses(authState.role, setCourses); // Gọi fetchCourses với role và setCourses
+    };
 
-    if (!localStorage.getItem("accessToken")) {
-      navigate("/login");
-      return;
-    }
-
-    fetchUserData(setUserData);
-    fetchEnrolledCourses();
+    fetchData();
 
     // Thêm sự kiện resize để cập nhật margin khi thay đổi kích thước màn hình
     window.addEventListener("resize", updatePersonalDetailMargin);
     return () => {
       window.removeEventListener("resize", updatePersonalDetailMargin);
     };
-  }, [navigate]);
+  }, [navigate, authState.role]);
 
   useLayoutEffect(() => {
     if (userData) {
@@ -180,7 +198,7 @@ function UserProfile() {
         <div className="banner container-lg">
           <img
             className="img-fluid rounded-bottom-custom banner-img"
-            src="banner.png"
+            src="http://localhost:3000/banner.png"
             alt="banner"
           />
           <div className="user-profile">
@@ -188,7 +206,7 @@ function UserProfile() {
               <img
                 src={
                   editData.profilePictureURL ||
-                  "/public/UserAvatar.png"
+                  "http://localhost:3000/UserAvatar.png"
                 }
                 alt="User Avatar"
                 className="avatar rounded-circle"
@@ -268,23 +286,29 @@ function UserProfile() {
             </div>
             <div className="col-md-6 col-sm-12">
               <div className="right-side container-lg">
-                <h4>Các khóa học đã tham gia</h4>
+                <h4>
+                  {authState.role === "student"
+                    ? "Các khóa học đã tham gia"
+                    : "Các khóa học của bạn"}
+                </h4>
                 <div className="row">
-                  {enrolledCourses.length > 0 ? (
-                    enrolledCourses.map((course) => (
+                  {courses.length > 0 ? (
+                    courses.map((course) => (
                       <div
                         className="col-12"
                         key={course.courseId}
                         onClick={() =>
-                          navigate(
-                            `/learn/${course.courseId}/${course.firstVideoId}`
-                          )
-                        } // Thêm sự kiện onClick để chuyển hướng
+                          authState.role === "student"
+                            ? navigate(
+                                `/learn/${course.courseId}/${course.firstVideoId}`
+                              )
+                            : navigate(`/courses/${course.id}`)
+                        } // Chuyển hướng tùy theo role
                         style={{ cursor: "pointer" }}
                       >
                         <div className="course-enrollment-display mb-3">
                           <img
-                            src={course.thumbnail || "/public/vid.jpg"}
+                            src={course.thumbnail || "http://localhost:3000/vid.jpg"}
                             alt={course.courseTitle}
                             className="course-enrollment-img img-fluid"
                           />
@@ -296,7 +320,11 @@ function UserProfile() {
                       </div>
                     ))
                   ) : (
-                    <p>Bạn chưa tham gia khóa học nào.</p>
+                    <p>
+                      {authState.role === "student"
+                        ? "Bạn chưa tham gia khóa học nào."
+                        : "Bạn chưa tạo khóa học nào."}
+                    </p>
                   )}
                 </div>
               </div>

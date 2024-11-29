@@ -75,44 +75,53 @@ function UploadVideoPages() {
   const handleConfirm = () => {
     setAlertMessage("");
 
-    if (videoFile && title && description && selectedCourse) {
-      const formData = new FormData();
-      formData.append("video", videoFile);
-      formData.append("videoTitle", title);
-      formData.append("videoDesc", description);
-      formData.append("courseID", selectedCourse);
-
-      setIsUploading(true);
-
-      axios
-        .post("http://localhost:3001/videos", formData, {
-          headers: {
-            accessToken: localStorage.getItem("accessToken"),
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then((response) => {
-          setAlertMessage("Video uploaded successfully, wait for admin response!");
-          setAlertType("success");
-          setIsUploading(false);
-        })
-        .catch((error) => {
-          if (error.response) {
-            setAlertMessage("Error: " + error.response.data.message);
-          } else {
-            setAlertMessage("Error: Unable to connect to the server.");
-          }
-          setAlertType("danger");
-          setIsUploading(false);
-        });
-    } else {
-      if (!videoFile) {
-        setAlertMessage("Please select a video.");
-      } else if (!title || !description) {
-        setAlertMessage("Please fill in the title and description.");
-        setAlertType("warning");
-      }
+    if (!videoFile) {
+      setAlertMessage("Please select a video.");
+      setAlertType("danger");
+      return;
     }
+    if (!title || !description) {
+      setAlertMessage("Please fill in the title and description.");
+      setAlertType("warning");
+      return;
+    }
+    if (!selectedCourse) {
+      setAlertMessage("Please select a course.");
+      setAlertType("warning");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("video", videoFile);
+    formData.append("videoTitle", title);
+    formData.append("videoDesc", description);
+    formData.append("courseID", selectedCourse);
+
+    setIsUploading(true);
+
+    axios
+      .post("http://localhost:3001/videos", formData, {
+        headers: {
+          accessToken: localStorage.getItem("accessToken"),
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        setAlertMessage(
+          "Video uploaded successfully!!!"
+        );
+        setAlertType("success");
+        setIsUploading(false);
+      })
+      .catch((error) => {
+        if (error.response) {
+          setAlertMessage("Error: " + error.response.data.message);
+        } else {
+          setAlertMessage("Error: Unable to connect to the server.");
+        }
+        setAlertType("danger");
+        setIsUploading(false);
+      });
   };
 
   return (
@@ -249,7 +258,11 @@ function UploadVideoPages() {
                         .replace(/\n/g, " "); // Loại bỏ dấu xuống dòng
                       setTitle((prevTitle) => prevTitle + text); // Thêm văn bản đã xử lý vào Title
                     }}
-                    style={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}
+                    style={{
+                      overflow: "hidden",
+                      whiteSpace: "nowrap",
+                      textOverflow: "ellipsis",
+                    }}
                     className="custom-textarea mb-3"
                     required
                   ></textarea>
