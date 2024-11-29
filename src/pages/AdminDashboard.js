@@ -41,7 +41,7 @@ function AdminDashboard() {
     }
 
     // Hàm lấy tổng số người dùng
-    fetch("http://localhost:3001/auth", {
+    fetch("http://localhost:3001/admin/users", {
       headers: {
         accessToken,
       },

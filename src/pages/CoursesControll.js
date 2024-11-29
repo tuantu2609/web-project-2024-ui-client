@@ -4,12 +4,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../helpers/AuthContext";
 
+import axios from "axios";
+
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 
 // Import icons from Material-UI
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import GroupIcon from "@mui/icons-material/Group";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import PlaylistPlayIcon from "@mui/icons-material/PlaylistPlay";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -21,6 +22,8 @@ function CoursesControll() {
   const [viewModalVisible, setViewModalVisible] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [courseVideos, setCourseVideos] = useState([]);
+  const [deletingVideoId, setDeletingVideoId] = useState(null); // ID video đang được xóa
+  const [deletingCourseId, setDeletingCourseId] = useState(null); // ID course đang được xóa
 
   const navigate = useNavigate();
 
@@ -132,26 +135,29 @@ function CoursesControll() {
   };
 
   // Handle deleting a course
-  const handleDeleteCourse = (id) => {
+  const handleDeleteCourse = async (id) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this course?"
     );
     if (!confirmDelete) return;
 
-    const accessToken = localStorage.getItem("accessToken");
-    fetch(`http://localhost:3001/admin/courses/${id}`, {
-      method: "DELETE",
-      headers: { accessToken },
-    })
-      .then((response) => {
-        if (response.ok) {
-          alert("Course deleted successfully");
-          fetchCourses();
-        } else {
-          alert("Failed to delete course");
-        }
-      })
-      .catch((error) => console.error("Error deleting course:", error));
+    setDeletingCourseId(id);
+
+    try {
+      await axios.delete(`http://localhost:3001/admin/courses/${id}`, {
+        headers: {
+          accessToken: localStorage.getItem("accessToken") || "",
+        },
+      });
+
+      alert("Course deleted successfully");
+      fetchCourses(); // Refresh the list of courses
+    } catch (error) {
+      console.error("Error deleting course:", error);
+      alert(error.response?.data?.message || "Failed to delete course");
+    } finally {
+      setDeletingCourseId(null); // Xóa trạng thái xóa
+    }
   };
 
   const filteredCourses = courses
@@ -196,33 +202,36 @@ function CoursesControll() {
     );
     if (!confirmDelete) return;
 
-    const accessToken = localStorage.getItem("accessToken");
+    setDeletingVideoId(videoId); // Đánh dấu video đang được xóa
 
     try {
-      const response = await fetch(
+      const response = await axios.delete(
         `http://localhost:3001/admin/videos/${videoId}`,
         {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            accessToken,
-          },
+          headers: { accessToken: localStorage.getItem("accessToken") },
         }
       );
 
-      if (response.ok) {
-        const data = await response.json();
-        alert(data.message || "Video deleted successfully");
+      // Kiểm tra phản hồi từ server
+      if (response.status === 200) {
+        alert(response.data.message || "Video deleted successfully");
 
-        // Update the video list
+        // Cập nhật danh sách video
         setCourseVideos((prev) => prev.filter((video) => video.id !== videoId));
       } else {
-        const errorData = await response.json();
-        alert(errorData.error || "Failed to delete video");
+        alert(response.data.message || "Failed to delete video");
       }
     } catch (error) {
-      console.error("Error deleting video:", error);
-      alert("An unexpected error occurred. Please try again.");
+      // Kiểm tra lỗi server trả về
+      if (error.response && error.response.data) {
+        alert(error.response.data.message || "Failed to delete video");
+      } else {
+        // Lỗi không liên quan đến server (network, không kết nối được...)
+        console.error("Error deleting video:", error);
+        alert("An unexpected error occurred. Please try again.");
+      }
+    } finally {
+      setDeletingVideoId(null); // Xóa trạng thái xóa
     }
   };
 
@@ -393,26 +402,29 @@ function CoursesControll() {
                     <td>{index + 1}</td>
                     <td>{course.courseTitle}</td>
                     <td>{course.courseDesc}</td>
-                    <td>
-                      {course.Instructor && course.Instructor.UserDetail
-                        ? course.Instructor.UserDetail.fullName
-                        : "N/A"}
-                    </td>
-                    <td>{course.videoCount || 0}</td> {/* Video count */}
-                    <td>{course.enrollmentCount || 0}</td>{" "}
-                    {/* Enrollment count */}
+                    <td>{course.Instructor?.UserDetail?.fullName || "N/A"}</td>
+                    <td>{course.videoCount || 0}</td>
+                    <td>{course.enrollmentCount || 0}</td>
                     <td>
                       <button
-                        className="btn btn-info action-btn"
+                        className="btn btn-info"
                         onClick={() => handleViewCourse(course)}
                       >
                         View
                       </button>
                       <button
                         className="btn btn-danger action-btn"
+                        disabled={deletingCourseId === course.id}
                         onClick={() => handleDeleteCourse(course.id)}
                       >
-                        Delete
+                        {deletingCourseId === course.id ? (
+                          <>
+                            Deleting...{" "}
+                            <span className="spinner-border spinner-border-sm ms-2" />
+                          </>
+                        ) : (
+                          "Delete"
+                        )}
                       </button>
                     </td>
                   </tr>
@@ -469,11 +481,25 @@ function CoursesControll() {
                       >
                         Approve
                       </button>
-                      <button
+                      {/* <button
                         className="btn btn-danger action-btn"
                         onClick={() => handleDeleteCourse(course.id)}
                       >
                         Delete
+                      </button> */}
+                      <button
+                        className="btn btn-danger action-btn"
+                        disabled={deletingCourseId === course.id}
+                        onClick={() => handleDeleteCourse(course.id)}
+                      >
+                        {deletingCourseId === course.id ? (
+                          <>
+                            Deleting...{" "}
+                            <span className="spinner-border spinner-border-sm ms-2" />
+                          </>
+                        ) : (
+                          "Delete"
+                        )}
                       </button>
                     </td>
                   </tr>
@@ -545,9 +571,17 @@ function CoursesControll() {
                         <Button
                           variant="danger"
                           size="sm"
+                          disabled={deletingVideoId === video.id}
                           onClick={() => handleDeleteVideo(video.id)}
                         >
-                          Delete
+                          {deletingVideoId === video.id ? (
+                            <>
+                              Deleting...{" "}
+                              <span className="spinner-border spinner-border-sm ms-2" />
+                            </>
+                          ) : (
+                            "Delete"
+                          )}
                         </Button>
                       </div>
                     </li>

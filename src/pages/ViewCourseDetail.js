@@ -138,8 +138,18 @@ function ViewCourseDetail() {
               aria-label="Close"
               onClick={() => {
                 setAlertMessage("");
+                // if (alertType === "success") {
+                //   navigate(`/learn/${id}/${videos[0].videoId}`);
+                // }
                 if (alertType === "success") {
-                  navigate(`/learn/${id}/${videos[0].videoId}`);
+                  if (videos && videos.length > 0) {
+                    // Navigate to the first video if videos exist
+                    navigate(`/learn/${id}/${videos[0].videoId}`);
+                  } else {
+                    // Display an error or navigate to a default page if no videos
+                    setAlertMessage("This course has no videos available.");
+                    setAlertType("warning");
+                  }
                 }
               }}
             ></button>

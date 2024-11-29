@@ -6,7 +6,6 @@ import { AuthContext } from "../helpers/AuthContext";
 
 // Import icons from Material-UI
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import GroupIcon from "@mui/icons-material/Group";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import PlaylistPlayIcon from "@mui/icons-material/PlaylistPlay";
 import LogoutIcon from "@mui/icons-material/Logout";

@@ -10,6 +10,7 @@ import axios from "axios";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import LoopIcon from "@mui/icons-material/Loop";
+import UploadIcon from "@mui/icons-material/Upload";
 
 function ManageCoursesPages() {
   const { authState } = useContext(AuthContext);
@@ -28,6 +29,7 @@ function ManageCoursesPages() {
   const [initialState, setInitialState] = useState({}); // To store original values
   const fileInputRef = useRef(null);
   const [loading, setLoading] = useState(true);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   let navigate = useNavigate();
 
@@ -273,6 +275,10 @@ function ManageCoursesPages() {
     }
   };
 
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -280,12 +286,19 @@ function ManageCoursesPages() {
   return (
     <div className="UploadPages-background">
       <div className="body-section">
-        <div className="d-flex align-items-center">
+        {/* <div className="d-flex align-items-center">
           <button
             className="btn btn-outline-primary ms-3 me-3 mt-3 mb-3"
             onClick={() => navigate(-1)}
           >
             <ArrowBackIosNewIcon /> Back
+          </button>
+          <button
+            className="btn btn-info me-3"
+            onClick={() => navigate("/upload-courses")}
+            disabled={isEditing}
+          >
+            <CreateNewFolderIcon /> Upload Course
           </button>
           {thumbnailPreview && (
             <button
@@ -293,7 +306,7 @@ function ManageCoursesPages() {
               onClick={handleChangeThumbnail}
               disabled={!isEditing}
             >
-              <UploadFileIcon className="me-2" /> Change Thumbnail
+              <UploadFileIcon /> Change Thumbnail
             </button>
           )}
           {isEditing ? (
@@ -332,6 +345,140 @@ function ManageCoursesPages() {
               Cancel
             </button>
           )}
+        </div> */}
+
+        <div className="d-flex align-items-center">
+          {/* Nút chính hiển thị ở màn hình nhỏ */}
+          <div className="dropdown d-md-none ms-3 me-3 mt-3 mb-3">
+            <button
+              className="btn btn-outline-primary me-3"
+              onClick={() => navigate(-1)}
+            >
+              <ArrowBackIosNewIcon /> Back
+            </button>
+            <button
+              className="btn btn-outline-primary dropdown-toggle"
+              onClick={toggleDropdown}
+            >
+              Functions
+            </button>
+            {isDropdownOpen && (
+              <div className="dropdown-menu dropdown-menu-end show">
+                <button
+                  className="dropdown-item"
+                  onClick={() => navigate("/upload-courses")}
+                  disabled={isEditing}
+                >
+                  <UploadIcon /> Upload Course
+                </button>
+                {thumbnailPreview && (
+                  <button
+                    className="dropdown-item"
+                    onClick={handleChangeThumbnail}
+                    disabled={!isEditing}
+                  >
+                    <UploadFileIcon /> Change Thumbnail
+                  </button>
+                )}
+                {isEditing && (
+                  <button
+                    className="dropdown-item"
+                    onClick={handleSaveCourse}
+                    disabled={isUploading}
+                  >
+                    {isUploading ? <LoopIcon /> : "Confirm"}
+                  </button>
+                )}
+                {isUpdating && (
+                  <>
+                    <button
+                      className="dropdown-item"
+                      onClick={handleStartEditing}
+                      disabled={isDeleting}
+                    >
+                      Update Course
+                    </button>
+                    <button
+                      className="dropdown-item"
+                      onClick={handleDeleteCourse}
+                      disabled={isDeleting}
+                    >
+                      {isDeleting ? <LoopIcon /> : "Delete Course"}
+                    </button>
+                  </>
+                )}
+                {isUpdating && isEditing && (
+                  <button className="dropdown-item" onClick={handleCancel}>
+                    Cancel
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Hiển thị nút bình thường ở màn hình lớn */}
+          <div className="position-relative d-none d-md-flex align-items-center w-100">
+            <button
+              className="btn btn-outline-primary ms-3 me-3 mt-3 mb-3"
+              onClick={() => navigate(-1)}
+            >
+              <ArrowBackIosNewIcon /> Back
+            </button>
+            <button
+              className="btn btn-info me-3"
+              onClick={() => navigate("/upload-courses")}
+              disabled={isEditing}
+            >
+              <UploadIcon /> Upload Course
+            </button>
+            {thumbnailPreview && (
+              <button
+                className="btn btn-outline-light me-3"
+                onClick={handleChangeThumbnail}
+                disabled={!isEditing}
+              >
+                <UploadFileIcon /> Change Thumbnail
+              </button>
+            )}
+            <div className="position-absolute" style={{ right: "0" }}>
+              {isEditing ? (
+                <button
+                  className="btn btn-success ms-auto"
+                  onClick={handleSaveCourse}
+                  disabled={isUploading}
+                >
+                  {isUploading ? <LoopIcon /> : "Confirm"}
+                </button>
+              ) : (
+                isUpdating && (
+                  <div className="d-flex align-items-center ms-auto me-3">
+                    <button
+                      className="btn btn-primary me-2"
+                      onClick={handleStartEditing}
+                      disabled={isDeleting}
+                    >
+                      Update Course
+                    </button>
+                    <button
+                      className="btn btn-danger"
+                      onClick={handleDeleteCourse}
+                      disabled={isDeleting}
+                    >
+                      {isDeleting ? <LoopIcon /> : "Delete Course"}
+                    </button>
+                  </div>
+                )
+              )}
+              {isUpdating && isEditing && (
+                <button
+                  className="btn btn-danger ms-2 me-3"
+                  onClick={handleCancel}
+                >
+                  Cancel
+                </button>
+              )}
+            </div>
+          </div>
         </div>
 
         {alertMessage && (

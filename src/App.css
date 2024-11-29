@@ -7,7 +7,7 @@
   --main-color: #3498db;
   --padding: 20px;
   --course-img: 250px;
-  --background-img: url("/public/background.jpg");
+  --background-img: url("http://localhost:3000/background.jpg");
 }
 
 /* SCROLL BAR */
@@ -62,6 +62,16 @@ html {
 
 .search-results .dropdown-item:hover {
   background-color: #f8f9fa;
+}
+
+/* Notification header */
+.notification-message {
+  cursor: pointer; /* Thêm hiệu ứng con trỏ */
+  transition: color 0.2s ease; /* Hiệu ứng chuyển đổi màu khi hover */
+}
+
+.notification-message:hover {
+  color: #007bff; /* Đổi màu text khi hover (ví dụ: xanh lam) */
 }
 
 /* LOGIN PAGE */

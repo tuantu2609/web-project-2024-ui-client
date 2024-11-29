@@ -27,7 +27,7 @@ function UploadCoursesPages() {
     if (!localStorage.getItem("accessToken")) {
       navigate("/login");
     } else if (authState.role !== "instructor") {
-      navigate("/");
+      // navigate("/");
     } else {
       setBodySectionMarginTop();
       window.scrollTo(0, 0);

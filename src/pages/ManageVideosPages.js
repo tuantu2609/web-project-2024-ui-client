@@ -11,6 +11,7 @@ import axios from "axios";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import LoopIcon from "@mui/icons-material/Loop";
+import UploadIcon from "@mui/icons-material/Upload";
 
 function ManageVideoPages() {
   const { authState } = useContext(AuthContext);
@@ -29,6 +30,8 @@ function ManageVideoPages() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const fileInputRef = useRef(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -81,6 +84,45 @@ function ManageVideoPages() {
 
     waitForHeaderAndSetMargin(); // Gọi hàm khi effect chạy
   }, []);
+
+  // useEffect(() => {
+  //   const waitForHeaderAndSetMargin = () => {
+  //     const header = document.querySelector(".header-section");
+  //     const bodySection = document.querySelector(".body-section");
+
+  //     if (header && bodySection) {
+  //       // Đảm bảo margin được thiết lập khi header đã hoàn thành chuyển động
+  //       const handleTransitionEnd = () => {
+  //         setBodySectionMarginTop(); // Cập nhật margin sau khi header thu nhỏ
+  //         header.removeEventListener("transitionend", handleTransitionEnd); // Xóa sự kiện lắng nghe
+  //       };
+
+  //       // Lắng nghe sự kiện transitionend
+  //       header.addEventListener("transitionend", handleTransitionEnd);
+
+  //       // Gọi ngay margin nếu không có chuyển động (ví dụ khi load trang mới)
+  //       if (
+  //         !getComputedStyle(header).transition ||
+  //         getComputedStyle(header).transition === "none"
+  //       ) {
+  //         setBodySectionMarginTop();
+  //         header.removeEventListener("transitionend", handleTransitionEnd);
+  //       }
+  //     } else {
+  //       // Nếu chưa tồn tại header hoặc bodySection, thử lại sau 100ms
+  //       setTimeout(waitForHeaderAndSetMargin, 100);
+  //     }
+  //   };
+
+  //   waitForHeaderAndSetMargin(); // Gọi hàm khi effect chạy
+
+  //   return () => {
+  //     const header = document.querySelector(".header-section");
+  //     if (header) {
+  //       header.removeEventListener("transitionend", waitForHeaderAndSetMargin);
+  //     }
+  //   };
+  // }, []);
 
   const handleCourseChange = (courseId) => {
     setSelectedCourse(courseId);
@@ -212,62 +254,127 @@ function ManageVideoPages() {
     }
   };
 
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
   return (
     <div className="UploadPages-background">
       <div className="body-section">
-        <div className="d-flex align-items-center">
-          <button
-            className="btn btn-outline-primary ms-3 me-3 mt-3 mb-3"
-            onClick={() => navigate(-1)}
-          >
-            <ArrowBackIosNewIcon /> Back
-          </button>
-          {selectedVideo && (
-            <div className="d-flex align-items-center ms-auto me-3">
-              {isEditing ? (
-                <>
-                  <button
-                    className="btn btn-success me-2"
-                    onClick={handleUpdateVideo}
-                    disabled={isUploading}
-                  >
-                    {isUploading ? <LoopIcon /> : "Save Changes"}
-                  </button>
-                  <button
-                    className="btn btn-secondary me-2"
-                    onClick={handleChangeVideo}
-                    disabled={isUploading}
-                  >
-                    <UploadFileIcon /> Change Video
-                  </button>
-                  <button
-                    className="btn btn-danger"
-                    onClick={handleCancel}
-                    disabled={isUploading}
-                  >
-                    Cancel
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button
-                    className="btn btn-primary me-2"
-                    onClick={handleStartEditing}
-                    disabled={isUploading}
-                  >
-                    Update Video
-                  </button>
-                  <button
-                    className="btn btn-danger"
-                    onClick={handleDeleteVideo}
-                    disabled={isDeleting}
-                  >
-                    {isDeleting ? <LoopIcon /> : "Delete Video"}
-                  </button>
-                </>
-              )}
-            </div>
-          )}
+        {/* Buttons */}
+        <div className="position-relative d-flex align-items-center w-100">
+          {/* Dropdown cho màn hình nhỏ */}
+          <div className="dropdown d-md-none ms-3 me-3 mt-3 mb-3">
+            <button
+              className="btn btn-outline-primary me-3"
+              onClick={() => navigate(-1)}
+            >
+              <ArrowBackIosNewIcon /> Back
+            </button>
+
+            {!selectedVideo && (
+              <button
+                className="btn btn-info me-3"
+                onClick={() => navigate("/upload-video")}
+              >
+                <UploadIcon /> Upload Video
+              </button>
+            )}
+
+            {selectedVideo && (
+              <>
+                <button
+                  className="btn btn-outline-primary dropdown-toggle"
+                  onClick={toggleDropdown}
+                >
+                  Functions
+                </button>
+                {isDropdownOpen && (
+                  <div className="dropdown-menu dropdown-menu-end show">
+                    <button
+                      className="dropdown-item"
+                      onClick={handleStartEditing}
+                      disabled={isEditing}
+                    >
+                      Update Video
+                    </button>
+                    <button
+                      className="dropdown-item"
+                      onClick={handleDeleteVideo}
+                      disabled={isDeleting}
+                    >
+                      {isDeleting ? <LoopIcon /> : "Delete Video"}
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+
+          {/* Nút cho màn hình lớn */}
+          <div className="d-none d-md-flex align-items-center">
+            <button
+              className="btn btn-outline-primary ms-3 me-3 mt-3 mb-3"
+              onClick={() => navigate(-1)}
+            >
+              <ArrowBackIosNewIcon /> Back
+            </button>
+            {!selectedVideo && (
+              <button
+                className="btn btn-info me-3"
+                onClick={() => navigate("/upload-video")}
+                disabled={isEditing}
+              >
+                <UploadIcon /> Upload Video
+              </button>
+            )}
+            {selectedVideo && (
+              <div className="position-absolute" style={{ right: "0" }}>
+                {isEditing ? (
+                  <>
+                    <button
+                      className="btn btn-success me-2"
+                      onClick={handleUpdateVideo}
+                      disabled={isUploading}
+                    >
+                      {isUploading ? <LoopIcon /> : "Save Changes"}
+                    </button>
+                    <button
+                      className="btn btn-secondary me-2"
+                      onClick={handleChangeVideo}
+                      disabled={isUploading}
+                    >
+                      <UploadFileIcon /> Change Video
+                    </button>
+                    <button
+                      className="btn btn-danger"
+                      onClick={handleCancel}
+                      disabled={isUploading}
+                    >
+                      Cancel
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      className="btn btn-primary me-2"
+                      onClick={handleStartEditing}
+                      disabled={isUploading}
+                    >
+                      Update Video
+                    </button>
+                    <button
+                      className="btn btn-danger"
+                      onClick={handleDeleteVideo}
+                      disabled={isDeleting}
+                    >
+                      {isDeleting ? <LoopIcon /> : "Delete Video"}
+                    </button>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Hidden input for file upload */}
