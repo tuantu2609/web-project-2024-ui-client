@@ -31,7 +31,6 @@
   background-color: #0056b3; /* Màu thanh cuộn khi di chuột vào  */
 }
 
-
 /* Thiết lập cho Firefox  */
 html {
   scrollbar-width: thin; /* Độ rộng của thanh cuộn  */
@@ -372,7 +371,7 @@ header {
 }
 
 .code-input:focus {
-  border-color: #007BFF; /* Màu viền khi nhập liệu */
+  border-color: #007bff; /* Màu viền khi nhập liệu */
 }
 
 /* HOMEPAGE CSS  */
@@ -677,7 +676,8 @@ header {
 }
 
 @media (max-width: 768px) {
-  .course-title, .course-desc {
+  .course-title,
+  .course-desc {
     text-align: center; /* Giữ nội dung nằm giữa trên màn hình nhỏ */
   }
 }
@@ -685,18 +685,15 @@ header {
 /* ========================================================== */
 /* Upload video Page */
 /* ========================================================== */
-.course-selector{
+.course-selector {
   font-family: Fancy Cut, Almarai, Times, serif;
 }
-
 
 .UploadPages-background {
   background-image: url("/public/background.jpg");
   background-position: center;
   background-size: cover;
 }
-
-
 
 .video-preview {
   width: 100%;
@@ -726,7 +723,12 @@ header {
 
 .custom-textarea:disabled {
   color: white !important; /* Đặt màu chữ thành trắng */
-  background-color: rgba(255, 255, 255, 0.2) !important; /* Đảm bảo nền vẫn rõ ràng */
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.2
+  ) !important; /* Đảm bảo nền vẫn rõ ràng */
   cursor: not-allowed; /* Hiển thị biểu tượng chuột cho biết không thể chỉnh sửa */
   opacity: 0.8; /* Làm mờ nội dung */
 }
@@ -735,7 +737,6 @@ header {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='white' d='M2 5L4 1H0z'/%3E%3C/svg%3E") !important;
   background-size: 8px 8px !important;
 }
-
 
 /* LEARNING PAGE CSS */
 /* transparent when at top */
@@ -999,7 +1000,6 @@ img.img-thumbnail {
   background-color: #084298;
 }
 
-
 @media (max-width: 768px) {
   .user-profile {
     position: absolute;
@@ -1028,4 +1028,37 @@ img.img-thumbnail {
 .scrollable-dropdown {
   max-height: 200px; /* Adjust height as needed */
   overflow-y: auto;
+}
+
+.date-choose{
+  position: relative;
+}
+
+.custom-dropdown {
+  display: block; /* Bắt buộc hiển thị */
+  position: absolute; /* Đảm bảo dropdown xuất hiện chính xác */
+  z-index: 1000; /* Đảm bảo nằm trên */
+  background-color: white; /* Màu nền */
+  border: 1px solid #ccc; /* Đường viền */
+  border-radius: 4px; /* Bo góc */
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  width: 100%; /* Độ rộng bằng với button */
+  max-height: 150px; /* Giới hạn chiều cao ngắn hơn */
+  overflow-y: auto; /* Cho phép cuộn nếu quá dài */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Bóng đổ */
+}
+
+
+.custom-dropdown .dropdown-item {
+  padding: 8px; /* Điều chỉnh padding */
+  cursor: pointer; /* Hiển thị như con trỏ khi hover */
+  font-size: 14px; /* Kích thước chữ */
+  color: #000; /* Màu chữ */
+}
+
+.custom-dropdown .dropdown-item:hover {
+  background-color: #f1f1f1; /* Nền khi hover */
+  color: #000; /* Màu chữ khi hover */
 }
