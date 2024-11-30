@@ -19,9 +19,9 @@ Clone the project from GitHub:
 Run the following command to install the necessary dependencies from package.json: `npm install`
 
 4. Start the Server
-Use the following command to start the server:
+Use the following command to start:
 `npm start`
-The server will run at http://localhost:3001.
+The client will run at http://localhost:3000.
 
 5. Project Structure
 The client-side code is organized into the following structure:
