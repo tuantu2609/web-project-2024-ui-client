@@ -223,7 +223,7 @@ function Header() {
       <nav className="navbar navbar-expand-lg">
         <a className="navbar-brand ms-2 d-flex align-items-center" href="/">
           <img
-            src="http://localhost:3000/logo.jpg"
+            src="/logo.jpg"
             width="30"
             height="30"
             className="d-inline-block align-top"

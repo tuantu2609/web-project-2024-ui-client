@@ -7,7 +7,7 @@
   --main-color: #3498db;
   --padding: 20px;
   --course-img: 250px;
-  --background-img: url("http://localhost:3000/background.jpg");
+  --background-img: url("../public/background.jpg");
 }
 
 /* SCROLL BAR */

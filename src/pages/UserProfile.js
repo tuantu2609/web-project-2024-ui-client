@@ -47,9 +47,19 @@ const fetchCourses = async (role, setCourses) => {
     const response = await axios.get(endpoint, {
       headers: { accessToken: localStorage.getItem("accessToken") },
     });
-    setCourses(response.data);
+    if (response.data && response.data.length > 0) {
+      setCourses(response.data); // Cập nhật danh sách khóa học nếu có dữ liệu
+    } else {
+      console.warn("No courses found for this user.");
+      setCourses([]); // Không có khóa học
+    }
   } catch (error) {
-    console.error("Error fetching courses:", error);
+    if (error.response && error.response.status === 404) {
+      console.error("Endpoint not found:", error.response.data);
+    } else {
+      console.error("Error fetching courses:", error.message);
+    }
+    setCourses([]);
   }
 };
 
@@ -94,12 +104,12 @@ function UserProfile() {
   useEffect(() => {
     const fetchData = async () => {
       window.scrollTo(0, 0);
-  
+
       if (!localStorage.getItem("accessToken")) {
         navigate("/login");
         return;
       }
-  
+
       await fetchUserData(); // Gọi hàm để lấy dữ liệu người dùng
       fetchCourses(authState.role, setCourses); // Gọi fetchCourses với role và setCourses
     };
@@ -198,7 +208,7 @@ function UserProfile() {
         <div className="banner container-lg">
           <img
             className="img-fluid rounded-bottom-custom banner-img"
-            src="http://localhost:3000/banner.png"
+            src="/banner.png"
             alt="banner"
           />
           <div className="user-profile">
@@ -206,7 +216,7 @@ function UserProfile() {
               <img
                 src={
                   editData.profilePictureURL ||
-                  "http://localhost:3000/UserAvatar.png"
+                  "/UserAvatar.png"
                 }
                 alt="User Avatar"
                 className="avatar rounded-circle"
@@ -296,7 +306,7 @@ function UserProfile() {
                     courses.map((course) => (
                       <div
                         className="col-12"
-                        key={course.courseId}
+                        key={course.courseId || course.id}
                         onClick={() =>
                           authState.role === "student"
                             ? navigate(
@@ -308,7 +318,10 @@ function UserProfile() {
                       >
                         <div className="course-enrollment-display mb-3">
                           <img
-                            src={course.thumbnail || "http://localhost:3000/vid.jpg"}
+                            src={
+                              course.thumbnail ||
+                              "/vid.jpg"
+                            }
                             alt={course.courseTitle}
                             className="course-enrollment-img img-fluid"
                           />
