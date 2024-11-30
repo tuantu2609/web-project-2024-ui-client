@@ -27,9 +27,12 @@ import UsersControllPage from "./pages/UsersControllPage";
 import CoursesControllPage from "./pages/CoursesControllPage";
 import VideosControllPage from "./pages/VideosControllPage";
 
+
+import "bootstrap/dist/css/bootstrap.min.css"; // Bootstrap CSS
+import "bootstrap/dist/js/bootstrap.bundle.min.js"; // Bootstrap JS
+
 // Importing libraries
 import { AuthContext } from "./helpers/AuthContext";
-import { SocketProvider } from "./helpers/SocketContext";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -102,7 +105,6 @@ function App() {
 
   return (
     <div className="App">
-      <SocketProvider>
         <AuthContext.Provider value={{ authState, setAuthState }}>
           <Router>
             {/* useLocation phải được đặt bên trong Router */}
@@ -140,7 +142,6 @@ function App() {
             </Routes>
           </Router>
         </AuthContext.Provider>
-      </SocketProvider>
     </div>
   );
 }

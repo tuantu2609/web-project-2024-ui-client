@@ -21,6 +21,9 @@ const Registration = () => {
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
   const [birthDate, setBirthDate] = useState({ month: "", day: "", year: "" });
+  const [isMonthDropdownOpen, setMonthDropdownOpen] = useState(false);
+  const [isDayDropdownOpen, setDayDropdownOpen] = useState(false);
+  const [isYearDropdownOpen, setYearDropdownOpen] = useState(false);
 
   const [verificationCode, setVerificationCode] = useState("");
 
@@ -212,6 +215,8 @@ const Registration = () => {
         day: prevDate.day > maxDay ? maxDay : prevDate.day, // Điều chỉnh ngày nếu vượt quá giới hạn
       };
     });
+    setErrorMessage("");
+    setMonthDropdownOpen(false); // Đóng dropdown
   };
 
   const handleYearChange = (year) => {
@@ -223,6 +228,38 @@ const Registration = () => {
         day: prevDate.day > maxDay ? maxDay : prevDate.day, // Điều chỉnh ngày nếu vượt quá giới hạn
       };
     });
+    setYearDropdownOpen(false);
+    setErrorMessage("");
+  };
+
+  const handleDayChange = (day) => {
+    setBirthDate((prevDate) => ({
+      ...prevDate,
+      day,
+    }));
+    setDayDropdownOpen(false); // Đóng dropdown sau khi chọn
+    setErrorMessage("");
+  };
+
+  const toggleMonthDropdown = (e) => {
+    e.preventDefault(); // Ngăn form submit
+    setMonthDropdownOpen(!isMonthDropdownOpen);
+    setDayDropdownOpen(false);
+    setYearDropdownOpen(false);
+  };
+
+  const toggleDayDropdown = (e) => {
+    e.preventDefault(); // Ngăn form submit
+    setDayDropdownOpen(!isDayDropdownOpen);
+    setMonthDropdownOpen(false);
+    setYearDropdownOpen(false);
+  };
+
+  const toggleYearDropdown = (e) => {
+    e.preventDefault(); // Ngăn form submit
+    setYearDropdownOpen(!isYearDropdownOpen);
+    setMonthDropdownOpen(false);
+    setDayDropdownOpen(false);
   };
 
   return (
@@ -448,61 +485,63 @@ const Registration = () => {
                   </div>
                   <div className="d-flex align-items-center">
                     <span className="me-5">Birth Day</span>
-                    <div className="dropdown me-2">
+                    {/* Dropdown chọn tháng */}
+                    <div className="date-choose me-2">
                       <button
-                        className="btn btn-secondary dropdown-toggle"
                         type="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
+                        className="btn btn-secondary"
+                        onClick={toggleMonthDropdown}
                       >
                         {birthDate.month || "Month"}
                       </button>
-                      <ul className="dropdown-menu scrollable-dropdown">
-                        {DateOptions(1, 12, handleMonthChange)}
-                      </ul>
+                      {isMonthDropdownOpen && (
+                        <ul className="custom-dropdown">
+                          {DateOptions(1, 12, handleMonthChange)}
+                        </ul>
+                      )}
                     </div>
 
-                    <div className="dropdown me-2">
+                    {/* Dropdown chọn ngày */}
+                    <div className="date-choose me-2">
                       <button
-                        className="btn btn-secondary dropdown-toggle"
                         type="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
+                        className="btn btn-secondary"
+                        onClick={toggleDayDropdown}
                       >
                         {birthDate.day || "Day"}
                       </button>
-                      <ul className="dropdown-menu scrollable-dropdown">
-                        {DateOptions(
-                          1,
-                          maxDaysInMonth(
-                            birthDate.month,
-                            birthDate.year || new Date().getFullYear()
-                          ),
-                          (value) =>
-                            setBirthDate((prevDate) => ({
-                              ...prevDate,
-                              day: value,
-                            }))
-                        )}
-                      </ul>
+                      {isDayDropdownOpen && (
+                        <ul className="custom-dropdown">
+                          {DateOptions(
+                            1,
+                            maxDaysInMonth(
+                              birthDate.month || 1,
+                              birthDate.year || new Date().getFullYear()
+                            ),
+                            handleDayChange
+                          )}
+                        </ul>
+                      )}
                     </div>
 
-                    <div className="dropdown">
+                    {/* Dropdown chọn năm */}
+                    <div className="date-choose me-2">
                       <button
-                        className="btn btn-secondary dropdown-toggle"
                         type="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
+                        className="btn btn-secondary"
+                        onClick={toggleYearDropdown}
                       >
                         {birthDate.year || "Year"}
                       </button>
-                      <ul className="dropdown-menu scrollable-dropdown">
-                        {DateOptions(
-                          1900,
-                          new Date().getFullYear(),
-                          handleYearChange
-                        )}
-                      </ul>
+                      {isYearDropdownOpen && (
+                        <ul className="custom-dropdown">
+                          {DateOptions(
+                            1900,
+                            new Date().getFullYear(),
+                            handleYearChange
+                          )}
+                        </ul>
+                      )}
                     </div>
                   </div>
                   <div className="remember-forgot mt-5">
