@@ -6,7 +6,7 @@ import { AuthContext } from "../helpers/AuthContext";
 
 // Import icons from Material-UI
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import GroupIcon from "@mui/icons-material/Group";
+// import GroupIcon from "@mui/icons-material/Group";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import PlaylistPlayIcon from "@mui/icons-material/PlaylistPlay";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -17,6 +17,7 @@ function AdminDashboard() {
   const [totalCourses, setTotalCourses] = useState(0);
   const [totalEnrollments, setTotalEnrollments] = useState(0);
   const [totalVideos, setTotalVideos] = useState(0);
+  const { API_URL } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -41,7 +42,7 @@ function AdminDashboard() {
     }
 
     // Hàm lấy tổng số người dùng
-    fetch("http://localhost:3001/admin/users", {
+    fetch(`${API_URL}/admin/users`, {
       headers: {
         accessToken,
       },
@@ -53,7 +54,7 @@ function AdminDashboard() {
       .catch((error) => console.error("Error fetching users:", error));
 
     // Hàm lấy tổng số khóa học
-    fetch("http://localhost:3001/courses", {
+    fetch(`${API_URL}/courses`, {
       headers: {
         accessToken,
       },
@@ -65,7 +66,7 @@ function AdminDashboard() {
       .catch((error) => console.error("Error fetching courses:", error));
 
     // Hàm lấy tổng số ghi danh (enrollments)
-    fetch("http://localhost:3001/enrollment", {
+    fetch(`${API_URL}/enrollment`, {
       headers: {
         accessToken,
       },
@@ -84,7 +85,7 @@ function AdminDashboard() {
       });
 
     // Hàm lấy tổng số video
-    fetch("http://localhost:3001/videos", {
+    fetch(`${API_URL}/videos`, {
       headers: {
         accessToken,
       },
@@ -94,7 +95,7 @@ function AdminDashboard() {
         setTotalVideos(data.length);
       })
       .catch((error) => console.error("Error fetching videos:", error));
-  }, [accessToken]);
+  }, [accessToken, API_URL]);
 
   return (
     <div className="container-fluid">

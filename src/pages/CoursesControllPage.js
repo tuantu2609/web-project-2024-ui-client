@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState,  } from "react";
 import "../Admin.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
@@ -24,6 +24,7 @@ function CoursesControllPage() {
   const [courseVideos, setCourseVideos] = useState([]);
   const [deletingVideoId, setDeletingVideoId] = useState(null); // ID video đang được xóa
   const [deletingCourseId, setDeletingCourseId] = useState(null); // ID course đang được xóa
+  const { API_URL } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -40,7 +41,7 @@ function CoursesControllPage() {
 
   // Fetch courses from API
   const fetchCourses = () => {
-    fetch("http://localhost:3001/admin/courses", {
+    fetch(`${API_URL}/admin/courses`, {
       headers: {
         accessToken: localStorage.getItem("accessToken"),
       },
@@ -77,7 +78,7 @@ function CoursesControllPage() {
   // Handle approving a course
   const handleApproveCourse = (id) => {
     const accessToken = localStorage.getItem("accessToken");
-    fetch(`http://localhost:3001/admin/courses/${id}/approve`, {
+    fetch(`${API_URL}/admin/courses/${id}/approve`, {
       method: "PATCH",
       headers: { accessToken },
     })
@@ -95,7 +96,7 @@ function CoursesControllPage() {
   // Handle re-approving a rejected course
   const handleReApproveCourse = (id) => {
     const accessToken = localStorage.getItem("accessToken");
-    fetch(`http://localhost:3001/admin/courses/${id}/approve`, {
+    fetch(`${API_URL}/admin/courses/${id}/approve`, {
       method: "PATCH",
       headers: { accessToken },
     })
@@ -113,7 +114,7 @@ function CoursesControllPage() {
   // Handle rejecting a course
   const handleRejectCourse = (id) => {
     const accessToken = localStorage.getItem("accessToken");
-    fetch(`http://localhost:3001/admin/courses/${id}/reject`, {
+    fetch(`${API_URL}/admin/courses/${id}/reject`, {
       // Updated endpoint for reject
       method: "PATCH",
       headers: {
@@ -144,7 +145,7 @@ function CoursesControllPage() {
     setDeletingCourseId(id);
 
     try {
-      await axios.delete(`http://localhost:3001/admin/courses/${id}`, {
+      await axios.delete(`${API_URL}/admin/courses/${id}`, {
         headers: {
           accessToken: localStorage.getItem("accessToken") || "",
         },
@@ -176,7 +177,7 @@ function CoursesControllPage() {
     });
 
   const handleViewCourse = (course) => {
-    fetch(`http://localhost:3001/admin/courses/${course.id}/details`, {
+    fetch(`${API_URL}/admin/courses/${course.id}/details`, {
       headers: { accessToken: localStorage.getItem("accessToken") },
     })
       .then((response) => response.json())
@@ -206,7 +207,7 @@ function CoursesControllPage() {
 
     try {
       const response = await axios.delete(
-        `http://localhost:3001/admin/videos/${videoId}`,
+        `${API_URL}/admin/videos/${videoId}`,
         {
           headers: { accessToken: localStorage.getItem("accessToken") },
         }

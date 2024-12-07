@@ -24,6 +24,7 @@ function UploadVideoPages() {
   const [isUploading, setIsUploading] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState("");
   const [courses, setCourses] = useState([]);
+  const { API_URL } = useContext(AuthContext);
 
   let navigate = useNavigate();
 
@@ -40,7 +41,7 @@ function UploadVideoPages() {
       setBodySectionMarginTop();
       window.scrollTo(0, 0);
       axios
-        .get("http://localhost:3001/courses/instructor", {
+        .get(`${API_URL}/courses/instructor`, {
           headers: { accessToken: localStorage.getItem("accessToken") },
         })
         .then((response) => {
@@ -100,7 +101,7 @@ function UploadVideoPages() {
     setIsUploading(true);
 
     axios
-      .post("http://localhost:3001/videos", formData, {
+      .post(`${API_URL}/videos`, formData, {
         headers: {
           accessToken: localStorage.getItem("accessToken"),
           "Content-Type": "multipart/form-data",

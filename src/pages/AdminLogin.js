@@ -10,6 +10,7 @@ function AdminLogin() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const { setAuthState } = useContext(AuthContext);
+  const { API_URL } = useContext(AuthContext);
   let navigate = useNavigate();
 
   const handleUsernameChange = (e) => {
@@ -27,7 +28,7 @@ function AdminLogin() {
     const data = { username, password };
 
     axios
-      .post("http://localhost:3001/admin/login", data)
+      .post(`${API_URL}/admin/login`, data)
       .then((response) => {
         if (response.data.error) {
           setMessage(response.data.error);

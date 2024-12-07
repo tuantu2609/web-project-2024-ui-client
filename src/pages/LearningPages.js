@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../helpers/AuthContext";
 import { useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
@@ -14,6 +15,7 @@ function LearningPages() {
   const [showLessonList, setShowLessonList] = useState(true);
   const [showFullDesc, setShowFullDesc] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const { API_URL } = useContext(AuthContext);
 
   const findVideoIndexById = (videos, videoId) => {
     return videos.findIndex((video) => video.videoId === parseInt(videoId));
@@ -28,7 +30,7 @@ function LearningPages() {
     setIsLoading(true);
 
     axios
-      .get(`http://localhost:3001/courseVideo/course-le/${courseId}`, {
+      .get(`${API_URL}/courseVideo/course-le/${courseId}`, {
         headers: { accessToken: localStorage.getItem("accessToken") },
       })
       .then((response) => {

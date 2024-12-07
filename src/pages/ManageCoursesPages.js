@@ -30,6 +30,7 @@ function ManageCoursesPages() {
   const fileInputRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { API_URL } = useContext(AuthContext);
 
   let navigate = useNavigate();
 
@@ -38,7 +39,7 @@ function ManageCoursesPages() {
       navigate("/login");
     } else if (authState?.role === "instructor") {
       axios
-        .get("http://localhost:3001/courses/instructor", {
+        .get(`${API_URL}/courses/instructor`, {
           headers: { accessToken: localStorage.getItem("accessToken") },
         })
         .then((response) => {
@@ -170,7 +171,7 @@ function ManageCoursesPages() {
 
     try {
       const response = await axios.put(
-        `http://localhost:3001/courses/${selectedCourse}`, // Update endpoint
+        `${API_URL}/courses/${selectedCourse}`, // Update endpoint
         formData,
         {
           headers: {
@@ -240,7 +241,7 @@ function ManageCoursesPages() {
 
     try {
       const response = await axios.delete(
-        `http://localhost:3001/courses/${selectedCourse}`,
+        `${API_URL}/courses/${selectedCourse}`,
         {
           headers: {
             accessToken: localStorage.getItem("accessToken"),
