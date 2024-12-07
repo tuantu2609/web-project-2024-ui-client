@@ -22,6 +22,7 @@ function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isNavbarOpen, setIsNavbarOpen] = useState(false);
+  const { API_URL } = useContext(AuthContext);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -78,7 +79,7 @@ function Header() {
     }
 
     axios
-      .get(`http://localhost:3001/search?query=${query}`, {
+      .get(`${API_URL}/search?query=${query}`, {
         headers: {
           accessToken: localStorage.getItem("accessToken") || "",
         },
@@ -101,7 +102,7 @@ function Header() {
   // Notification functions
   const fetchNotifications = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/notifications", {
+      const response = await axios.get(`${API_URL}/notifications`, {
         headers: {
           accessToken: localStorage.getItem("accessToken") || "",
         },
@@ -143,7 +144,7 @@ function Header() {
       // Chỉ xử lý nếu thông báo đang ở trạng thái "unread"
       if (targetNotification?.status === "unread") {
         await axios.patch(
-          `http://localhost:3001/notifications/${notificationId}/read`,
+          `${API_URL}/notifications/${notificationId}/read`,
           {},
           {
             headers: {
@@ -171,7 +172,7 @@ function Header() {
   const handleDeleteNotification = async (notificationId) => {
     try {
       await axios.delete(
-        `http://localhost:3001/notifications/${notificationId}`,
+        `${API_URL}/notifications/${notificationId}`,
         {
           headers: {
             accessToken: localStorage.getItem("accessToken") || "",
@@ -204,7 +205,7 @@ function Header() {
     }
 
     try {
-      await axios.delete("http://localhost:3001/notifications", {
+      await axios.delete(`${API_URL}/notifications`, {
         headers: {
           accessToken: localStorage.getItem("accessToken") || "",
         },

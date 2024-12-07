@@ -44,6 +44,8 @@ function App() {
     status: false,
   });
 
+  const API_URL = process.env.REACT_APP_API_URL;
+
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
 
@@ -53,7 +55,7 @@ function App() {
 
       if (role === "admin") {
         axios
-          .get("http://localhost:3001/admin/auth", {
+          .get(`${API_URL}/admin/auth`, {
             headers: {
               accessToken: token,
             },
@@ -77,7 +79,7 @@ function App() {
           });
       } else {
         axios
-          .get("http://localhost:3001/auth/user", {
+          .get(`${API_URL}/auth/user`, {
             headers: {
               accessToken: token,
             },
@@ -105,7 +107,7 @@ function App() {
 
   return (
     <div className="App">
-        <AuthContext.Provider value={{ authState, setAuthState }}>
+        <AuthContext.Provider value={{ authState, setAuthState, API_URL }}>
           <Router>
             {/* useLocation phải được đặt bên trong Router */}
             <ConditionalHeader />

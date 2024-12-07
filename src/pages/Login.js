@@ -26,6 +26,7 @@ function Login() {
   const [rememberMe, setRememberMe] = useState(false);
   const [message, setMessage] = useState("");
   const { setAuthState } = useContext(AuthContext);
+  const { API_URL } = useContext(AuthContext);
 
   let navigate = useNavigate();
 
@@ -47,7 +48,7 @@ function Login() {
     e.preventDefault();
     const data = { username: username, password: password };
     axios
-      .post("http://localhost:3001/auth/login", data)
+      .post(`${API_URL}/auth/login`, data)
       .then((response) => {
         if (response.data.error) {
           setMessage(response.data.error);

@@ -27,6 +27,8 @@ function UserControlPage() {
     role: "student", // Default role to "student"
   });
 
+  const { API_URL } = useContext(AuthContext);
+
   let navigate = useNavigate();
 
   const formatDate = (dateString, num) => {
@@ -53,7 +55,7 @@ function UserControlPage() {
   const fetchUsers = () => {
     const accessToken = localStorage.getItem("accessToken");
 
-    fetch("http://localhost:3001/admin/users/details", {
+    fetch(`${API_URL}/admin/users/details`, {
       headers: { accessToken },
     })
       .then((response) => response.json())
@@ -81,7 +83,7 @@ function UserControlPage() {
     if (!confirmDelete) return; // If the user cancels, exit the function
 
     const accessToken = localStorage.getItem("accessToken");
-    fetch(`http://localhost:3001/admin/users/${id}`, {
+    fetch(`${API_URL}/admin/users/${id}`, {
       method: "DELETE",
       headers: {
         accessToken,
@@ -116,7 +118,7 @@ function UserControlPage() {
       birthDate: updatedData.birthDate || null, // Send null if birthDate is empty
     };
 
-    fetch(`http://localhost:3001/admin/update-user/${id}`, {
+    fetch(`${API_URL}/admin/update-user/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -139,7 +141,7 @@ function UserControlPage() {
   const openEditModal = (id) => {
     const accessToken = localStorage.getItem("accessToken");
 
-    fetch(`http://localhost:3001/admin/users/details/${id}`, {
+    fetch(`${API_URL}/admin/users/details/${id}`, {
       headers: { accessToken },
     })
       .then((response) => response.json())
@@ -170,7 +172,7 @@ function UserControlPage() {
   };
   const openViewModal = (id) => {
     const accessToken = localStorage.getItem("accessToken");
-    fetch(`http://localhost:3001/admin/users/details/${id}`, {
+    fetch(`${API_URL}/admin/users/details/${id}`, {
       headers: { accessToken },
     })
       .then((response) => response.json())
@@ -188,7 +190,7 @@ function UserControlPage() {
     const accessToken = localStorage.getItem("accessToken"); // Get token
 
     // Step 1: Create User
-    fetch("http://localhost:3001/admin/create-user", {
+    fetch(`${API_URL}/admin/create-user`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

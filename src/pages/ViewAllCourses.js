@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext,useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Footer from "./Footer";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../helpers/AuthContext";
 
 import GroupsIcon from "@mui/icons-material/Groups";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
@@ -13,10 +14,11 @@ const ViewAllCourses = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
   const navigate = useNavigate(); // Sử dụng useNavigate
+  const { API_URL } = useContext(AuthContext);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    fetch("http://localhost:3001/courses")
+    fetch(`${API_URL}/courses`)
       .then((response) => response.json())
       // .then((data) => setCourses(data))
       .then((data) => {
@@ -27,7 +29,7 @@ const ViewAllCourses = () => {
         setCourses(activeCourses);
       })
       .catch((error) => console.error("Error fetching courses:", error));
-  }, []);
+  }, [API_URL]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;

@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "../App.css";
@@ -9,10 +9,12 @@ import Footer from "./Footer";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { setBodySectionMarginTop } from "../helpers/styles";
+import { AuthContext } from "../helpers/AuthContext";
 
 const HomePage = ({ username }) => {
   const [courses, setCourses] = useState([]);
   const navigate = useNavigate();
+  const { API_URL } = useContext(AuthContext);
 
   const responsive = {
     desktop: {
@@ -31,7 +33,7 @@ const HomePage = ({ username }) => {
 
   useEffect(() => {
     setBodySectionMarginTop();
-    fetch("http://localhost:3001/courses")
+    fetch(`${API_URL}/courses`)
       .then((response) => response.json())
       // .then((data) => setCourses(data)) //Nếu muốn hiện hết thì dùng dòng này
       .then((data) => { // Lọc chỉ các khóa học có status là "active"
@@ -41,7 +43,7 @@ const HomePage = ({ username }) => {
         setCourses(activeCourses);
       })
       .catch((error) => console.error("Error fetching courses:", error));
-  }, []);
+  }, [API_URL]);
 
   const token = localStorage.getItem("accessToken");
   const handleJoinClick = () => {

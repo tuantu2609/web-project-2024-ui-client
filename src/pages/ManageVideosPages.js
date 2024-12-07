@@ -31,6 +31,7 @@ function ManageVideoPages() {
   const [isEditing, setIsEditing] = useState(false);
   const fileInputRef = useRef(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { API_URL } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -39,7 +40,7 @@ function ManageVideoPages() {
       navigate("/login");
     } else if (authState?.role === "instructor") {
       axios
-        .get("http://localhost:3001/courses/instructor", {
+        .get(`${API_URL}/courses/instructor`, {
           headers: { accessToken: localStorage.getItem("accessToken") },
         })
         .then((response) => {
@@ -51,7 +52,7 @@ function ManageVideoPages() {
 
   const fetchVideosByCourse = (courseId) => {
     axios
-      .get(`http://localhost:3001/courseVideo/course-le/${courseId}`, {
+      .get(`${API_URL}/courseVideo/course-le/${courseId}`, {
         headers: { accessToken: localStorage.getItem("accessToken") },
       })
       .then((response) => {
@@ -189,7 +190,7 @@ function ManageVideoPages() {
         formData.append("video", videoFile);
 
         await axios.put(
-          `http://localhost:3001/videos/${selectedVideo.id}`,
+          `${API_URL}/videos/${selectedVideo.id}`,
           formData,
           {
             headers: {
@@ -201,7 +202,7 @@ function ManageVideoPages() {
       } else {
         // Nếu không có file mới, gửi JSON
         await axios.put(
-          `http://localhost:3001/videos/${selectedVideo.id}`,
+          `${API_URL}/videos/${selectedVideo.id}`,
           {
             videoTitle: title,
             videoDesc: description,
@@ -235,7 +236,7 @@ function ManageVideoPages() {
     setIsDeleting(true);
 
     try {
-      await axios.delete(`http://localhost:3001/videos/${selectedVideo.id}`, {
+      await axios.delete(`${API_URL}/videos/${selectedVideo.id}`, {
         headers: { accessToken: localStorage.getItem("accessToken") },
       });
 

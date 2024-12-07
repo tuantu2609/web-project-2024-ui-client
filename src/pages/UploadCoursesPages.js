@@ -20,6 +20,7 @@ function UploadCoursesPages() {
   const [alertType, setAlertType] = useState("danger");
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef(null); // Ref để truy cập input file
+  const { API_URL } = useContext(AuthContext);
 
   let navigate = useNavigate();
 
@@ -100,7 +101,7 @@ function UploadCoursesPages() {
     setIsUploading(true);
 
     axios
-      .post("http://localhost:3001/courses", formData, {
+      .post(`${API_URL}/courses`, formData, {
         headers: {
           accessToken: localStorage.getItem("accessToken"),
           "Content-Type": "multipart/form-data",

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { AuthContext } from "../helpers/AuthContext";
 import "../App.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +17,7 @@ const ForgotPassword = () => {
   const [confirmPassword, setConfirmPassword] = useState(""); // Xác nhận mật khẩu
   const [errorMessage, setErrorMessage] = useState(""); // Thông báo lỗi
   const [isLoading, setIsLoading] = useState(false); // Loading state
+  const { API_URL } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -26,7 +28,7 @@ const ForgotPassword = () => {
     setErrorMessage("");
 
     try {
-      await axios.post("http://localhost:3001/auth/send-reset-code", { email });
+      await axios.post(`${API_URL}/auth/send-reset-code`, { email });
       alert("Verification code sent to your email.");
       setStep(2); // Chuyển sang bước nhập mã
     } catch (error) {
@@ -45,7 +47,7 @@ const ForgotPassword = () => {
     setErrorMessage("");
 
     try {
-      await axios.post("http://localhost:3001/auth/verify-reset-code", {
+      await axios.post(`${API_URL}/auth/verify-reset-code`, {
         email,
         code: verificationCode,
       });
@@ -73,7 +75,7 @@ const ForgotPassword = () => {
     setErrorMessage("");
 
     try {
-      await axios.post("http://localhost:3001/auth/reset-password", {
+      await axios.post(`${API_URL}/auth/reset-password`, {
         email,
         password,
       });

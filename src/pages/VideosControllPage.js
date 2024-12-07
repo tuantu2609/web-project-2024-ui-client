@@ -15,6 +15,7 @@ function VideosControllPage() {
   const [videos, setVideos] = useState([]); // State for storing videos
   const [search, setSearch] = useState(""); // State for search query
   const [deletingVideoId, setDeletingVideoId] = useState(null); // State for deleting status
+  const { API_URL } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const logout = () => {
@@ -28,18 +29,6 @@ function VideosControllPage() {
     navigate("/tnhh2tv");
   };
 
-  // Fetch videos from the API
-  const fetchVideos = async () => {
-    try {
-      const response = await axios.get("http://localhost:3001/admin/videos", {
-        headers: { accessToken: localStorage.getItem("accessToken") || "" },
-      });
-      setVideos(response.data); // Store fetched videos in state
-    } catch (error) {
-      console.error("Error fetching videos:", error);
-    }
-  };
-
   // Handle deleting a video
   const handleDeleteVideo = async (videoId) => {
     const confirmDelete = window.confirm(
@@ -51,7 +40,7 @@ function VideosControllPage() {
 
     try {
       const response = await axios.delete(
-        `http://localhost:3001/admin/videos/${videoId}`,
+        `${API_URL}/admin/videos/${videoId}`,
         {
           headers: { accessToken: localStorage.getItem("accessToken") || "" },
         }
@@ -78,8 +67,19 @@ function VideosControllPage() {
   );
 
   useEffect(() => {
+    // Fetch videos from the API
+    const fetchVideos = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/admin/videos`, {
+          headers: { accessToken: localStorage.getItem("accessToken") || "" },
+        });
+        setVideos(response.data); // Store fetched videos in state
+      } catch (error) {
+        console.error("Error fetching videos:", error);
+      }
+    };
     fetchVideos(); // Fetch videos on component mount
-  }, []);
+  }, [API_URL]);
 
   return (
     <div className="container-fluid">

@@ -21,6 +21,7 @@ function ViewCourseDetail() {
   const [alertMessage, setAlertMessage] = useState("");
   const [alertType, setAlertType] = useState("danger");
   const [canViewVideos, setCanViewVideos] = useState(false);
+  const { API_URL } = useContext(AuthContext);
 
   let navigate = useNavigate();
 
@@ -39,7 +40,7 @@ function ViewCourseDetail() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3001/enrollment/enroll",
+        `${API_URL}/enrollment/enroll`,
         { courseId },
         {
           headers: {
@@ -62,15 +63,15 @@ function ViewCourseDetail() {
   };
 
   useEffect(() => {
-    axios.get(`http://localhost:3001/courses/${id}`).then((response) => {
+    axios.get(`${API_URL}/courses/${id}`).then((response) => {
       setCourse(response.data);
     });
     axios
-      .get(`http://localhost:3001/courseVideo/course-re/${id}`)
+      .get(`${API_URL}/courseVideo/course-re/${id}`)
       .then((response) => {
         setVideos(response.data);
       });
-  }, [id]);
+  }, [id, API_URL]);
 
   useEffect(() => {
     if (course) {
@@ -90,7 +91,7 @@ function ViewCourseDetail() {
 
         // Kiểm tra người dùng đã ghi danh hay chưa
         const response = await axios.get(
-          `http://localhost:3001/enrollment/check-enrollment/${id}`,
+          `${API_URL}/enrollment/check-enrollment/${id}`,
           {
             headers: {
               accessToken: localStorage.getItem("accessToken"),
@@ -109,7 +110,7 @@ function ViewCourseDetail() {
     if (course) {
       checkPermissions();
     }
-  }, [authState.id, course, id]);
+  }, [authState.id, course, id, API_URL]);
 
   if (!course) {
     return <p>Loading course details...</p>;

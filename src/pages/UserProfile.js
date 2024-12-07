@@ -38,12 +38,12 @@ const formatDate = (dateString, num) => {
   }
 };
 
-const fetchCourses = async (role, setCourses) => {
+const fetchCourses = async (role, setCourses, API_URL) => {
   try {
     const endpoint =
       role === "student"
-        ? "http://localhost:3001/enrollment/enrolled"
-        : "http://localhost:3001/courses/instructor";
+        ? `${API_URL}/enrollment/enrolled`
+        : `${API_URL}/courses/instructor`;
     const response = await axios.get(endpoint, {
       headers: { accessToken: localStorage.getItem("accessToken") },
     });
@@ -71,13 +71,13 @@ function UserProfile() {
   const [courses, setCourses] = useState([]);
   const [isLoading, setIsLoading] = useState(false); // Trạng thái tải
   const [successMessage, setSuccessMessage] = useState(""); // Thông báo thành công
-
+  const { API_URL } = useContext(AuthContext);
   const navigate = useNavigate();
 
   // Hàm lấy dữ liệu người dùng
   const fetchUserData = async () => {
     try {
-      const response = await axios.get(`http://localhost:3001/user/details`, {
+      const response = await axios.get(`${API_URL}/user/details`, {
         headers: { accessToken: localStorage.getItem("accessToken") },
       });
       setUserData(response.data); // Cập nhật state userData
@@ -90,7 +90,7 @@ function UserProfile() {
   // const fetchEnrolledCourses = async () => {
   //   try {
   //     const response = await axios.get(
-  //       "http://localhost:3001/enrollment/enrolled",
+  //       "${API_URL}/enrollment/enrolled",
   //       {
   //         headers: { accessToken: localStorage.getItem("accessToken") },
   //       }
@@ -111,7 +111,7 @@ function UserProfile() {
       }
 
       await fetchUserData(); // Gọi hàm để lấy dữ liệu người dùng
-      fetchCourses(authState.role, setCourses); // Gọi fetchCourses với role và setCourses
+      fetchCourses(authState.role, setCourses, API_URL); // Gọi fetchCourses với role và setCourses
     };
 
     fetchData();
@@ -177,7 +177,7 @@ function UserProfile() {
 
     // Gửi yêu cầu API
     axios
-      .put("http://localhost:3001/user/details", formData, {
+      .put(`${API_URL}/user/details`, formData, {
         headers: {
           accessToken: localStorage.getItem("accessToken"),
           "Content-Type": "multipart/form-data",
