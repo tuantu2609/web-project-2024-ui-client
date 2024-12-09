@@ -109,7 +109,7 @@ function UserControlPage() {
     );
   });
 
-  const handleEdit = (id, updatedData) => {
+  const handleEdit = (id, updatedData = {}, originalData = {}) => {
     const accessToken = localStorage.getItem("accessToken");
 
     // Ensure birthDate is in YYYY-MM-DD format
@@ -118,6 +118,42 @@ function UserControlPage() {
       birthDate: updatedData.birthDate || null, // Send null if birthDate is empty
     };
 
+    // Check if fields that were non-blank in the database are now blank
+    const invalidFields = Object.keys(formattedData).filter((key) => {
+      const originalValue =
+        originalData[key] !== undefined ? originalData[key] : ""; // Default to empty string if undefined
+      const updatedValue =
+        formattedData[key] !== undefined ? formattedData[key] : ""; // Default to empty string if undefined
+
+      // If the field originally had a value and now is blank
+      return (
+        originalValue.trim() !== "" && // Field was not blank originally
+        (updatedValue === "" || updatedValue === null) // Field is now blank or null
+      );
+    });
+
+    if (invalidFields.length > 0) {
+      alert(
+        `The following fields cannot be blank because they already have data: ${invalidFields.join(
+          ", "
+        )}.`
+      );
+      return; // Stop execution if validation fails
+    }
+
+    // Phone number validation: must be 10 digits and contain only numbers
+    const phoneRegex = /^\d{10}$/;
+    if (
+      formattedData.phoneNumber &&
+      !phoneRegex.test(formattedData.phoneNumber)
+    ) {
+      alert(
+        "Invalid phone number. It must be 10 digits and contain only numbers."
+      );
+      return;
+    }
+
+    // Proceed with the fetch request
     fetch(`${API_URL}/admin/update-user/${id}`, {
       method: "PUT",
       headers: {
@@ -375,6 +411,27 @@ function UserControlPage() {
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
+
+                  // Basic validation before calling handleEdit
+                  if (!editingUser.fullName.trim()) {
+                    alert("Full Name cannot be blank.");
+                    return;
+                  }
+                  if (
+                    editingUser.phoneNumber &&
+                    !/^\d{10}$/.test(editingUser.phoneNumber)
+                  ) {
+                    alert("Phone Number must be exactly 10 digits.");
+                    return;
+                  }
+                  if (
+                    editingUser.birthDate &&
+                    new Date(editingUser.birthDate) > new Date()
+                  ) {
+                    alert("Birth Date cannot be in the future.");
+                    return;
+                  }
+
                   handleEdit(editingUser.id, editingUser); // Save updated data
                   closeEditModal(); // Close the modal
                 }}
@@ -394,6 +451,7 @@ function UserControlPage() {
                             fullName: e.target.value,
                           })
                         }
+                        required
                       />
                     </div>
                     <div className="form-group">
