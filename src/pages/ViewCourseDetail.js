@@ -168,7 +168,7 @@ function ViewCourseDetail() {
             <h1 className="course-title">{course?.courseTitle}</h1>
             <p className="course-desc">{course?.courseDesc}</p>
           </div>
-          {!isEnrolled && (
+          {!isEnrolled && authState.role !== "instructor" &&  (
             <div className="col-12 text-md-start text-center mt-3">
               {course?.Instructor?.UserDetail?.fullName && (
                 <p className="course-instructor">
