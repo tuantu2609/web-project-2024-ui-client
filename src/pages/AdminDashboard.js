@@ -85,7 +85,7 @@ function AdminDashboard() {
       });
 
     // Hàm lấy tổng số video
-    fetch(`${API_URL}/videos`, {
+    fetch(`${API_URL}/admin/videos`, {
       headers: {
         accessToken,
       },
@@ -197,7 +197,7 @@ function AdminDashboard() {
                 label: "Total Videos",
                 value: totalVideos,
                 icon: "fa-solid fa-video",
-                route: "/AdminDashboard/CoursesControll", // Add a route for navigation
+                route: "/AdminDashboard/VideosControll", // Add a route for navigation
               },
             ].map(({ label, value, icon, route }, index) => (
               <div

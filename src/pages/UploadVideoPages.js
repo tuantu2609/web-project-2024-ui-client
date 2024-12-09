@@ -52,7 +52,7 @@ function UploadVideoPages() {
           console.error("Error fetching courses:", error);
         });
     }
-  }, [navigate, authState.role]);
+  }, [navigate, authState.role, API_URL]);
 
   const handleVideoUpload = (e) => {
     const file = e.target.files[0];
