@@ -48,7 +48,7 @@ function ManageVideoPages() {
         })
         .catch((error) => console.error("Error fetching courses:", error));
     }
-  }, [navigate, authState.role]);
+  }, [navigate, authState.role, API_URL]);
 
   const fetchVideosByCourse = (courseId) => {
     axios
@@ -179,6 +179,13 @@ function ManageVideoPages() {
   const handleUpdateVideo = async () => {
     if (!selectedVideo) return;
 
+
+    if (!title || !description) {
+      setAlertMessage("Please fill in the title and description.");
+      setAlertType("warning");
+      return;
+    }
+    
     setIsUploading(true);
 
     try {
@@ -189,16 +196,12 @@ function ManageVideoPages() {
         formData.append("videoDesc", description);
         formData.append("video", videoFile);
 
-        await axios.put(
-          `${API_URL}/videos/${selectedVideo.id}`,
-          formData,
-          {
-            headers: {
-              accessToken: localStorage.getItem("accessToken"),
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        await axios.put(`${API_URL}/videos/${selectedVideo.id}`, formData, {
+          headers: {
+            accessToken: localStorage.getItem("accessToken"),
+            "Content-Type": "multipart/form-data",
+          },
+        });
       } else {
         // Nếu không có file mới, gửi JSON
         await axios.put(
@@ -221,7 +224,22 @@ function ManageVideoPages() {
       fetchVideosByCourse(selectedCourse); // Refresh video list
       setIsEditing(false);
     } catch (error) {
-      setAlertMessage("Failed to update video.");
+      // Kiểm tra lỗi từ API
+      if (error.response && error.response.status === 400) {
+        const errorMessage = error.response.data.message;
+
+        if (
+          errorMessage ===
+          "A video with the same title already exists in this course."
+        ) {
+          setAlertMessage("Error: A video with the same title already exists.");
+        } else {
+          setAlertMessage("Failed to update video: " + errorMessage);
+        }
+      } else {
+        setAlertMessage("Failed to update video due to a server error.");
+      }
+
       setAlertType("danger");
     } finally {
       setIsUploading(false);
