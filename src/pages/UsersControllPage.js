@@ -112,6 +112,21 @@ function UserControlPage() {
   const handleEdit = (id, updatedData = {}, originalData = {}) => {
     const accessToken = localStorage.getItem("accessToken");
 
+    // Kiểm tra các trường bắt buộc
+    if (!updatedData.fullName || !updatedData.phoneNumber || !updatedData.birthDate) {
+      alert("Full Name, Phone Number, and Birth Date are required.");
+      return false;
+    }
+
+    // Kiểm tra số điện thoại hợp lệ (đúng 10 chữ số)
+    if (
+      updatedData.phoneNumber &&
+      !/^[0-9]{10}$/.test(updatedData.phoneNumber)
+    ) {
+      alert("Phone number must be exactly 10 digits.");
+      return;
+    }
+
     // Ensure birthDate is in YYYY-MM-DD format
     const formattedData = {
       ...updatedData,
@@ -224,6 +239,17 @@ function UserControlPage() {
   const handleCreateUser = (e) => {
     e.preventDefault(); // Prevent form submission
     const accessToken = localStorage.getItem("accessToken"); // Get token
+
+    // Kiểm tra các trường bắt buộc
+    if (
+      !newUser.username ||
+      !newUser.fullName ||
+      !newUser.email ||
+      !newUser.password
+    ) {
+      alert("Username, Full Name, Email, and Password are required.");
+      return;
+    }
 
     // Step 1: Create User
     fetch(`${API_URL}/admin/create-user`, {
@@ -474,12 +500,16 @@ function UserControlPage() {
                         type="text"
                         className="form-control"
                         value={editingUser.phoneNumber}
-                        onChange={(e) =>
-                          setEditingUser({
-                            ...editingUser,
-                            phoneNumber: e.target.value,
-                          })
-                        }
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          // Chỉ cho phép ký tự số và tối đa 10 ký tự
+                          if (/^[0-9]*$/.test(value) && value.length <= 10) {
+                            setEditingUser({
+                              ...editingUser,
+                              phoneNumber: value,
+                            });
+                          }
+                        }}
                       />
                     </div>
                     <div className="form-group">
