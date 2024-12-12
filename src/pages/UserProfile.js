@@ -139,7 +139,12 @@ function UserProfile() {
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
-    if (name === "birthDate") {
+
+    if (name === "phoneNumber") {
+      // Chỉ cho phép ký tự số
+      const numericValue = value.replace(/[^0-9]/g, "");
+      setEditData({ ...editData, [name]: numericValue });
+    } else if (name === "birthDate") {
       setEditData({ ...editData, [name]: value || "" });
     } else {
       setEditData({ ...editData, [name]: value });
@@ -163,6 +168,22 @@ function UserProfile() {
         updatedFields[key] = editData[key];
       }
     });
+
+    if (!updatedFields.fullName){
+      alert("Full name is required.");
+      setIsLoading(false);
+      return;
+    }
+
+    // Kiểm tra hợp lệ số điện thoại
+    if (
+      updatedFields.phoneNumber &&
+      !/^[0-9]{10}$/.test(updatedFields.phoneNumber)
+    ) {
+      alert("Phone number must be exactly 10 digits.");
+      setIsLoading(false);
+      return;
+    }
 
     // Thêm dữ liệu thay đổi vào FormData
     Object.keys(updatedFields).forEach((key) => {
@@ -214,10 +235,7 @@ function UserProfile() {
           <div className="user-profile">
             <div className="avatar-container">
               <img
-                src={
-                  editData.profilePictureURL ||
-                  "/UserAvatar.png"
-                }
+                src={editData.profilePictureURL || "/UserAvatar.png"}
                 alt="User Avatar"
                 className="avatar rounded-circle"
               />
@@ -318,10 +336,7 @@ function UserProfile() {
                       >
                         <div className="course-enrollment-display mb-3">
                           <img
-                            src={
-                              course.thumbnail ||
-                              "/vid.jpg"
-                            }
+                            src={course.thumbnail || "/vid.jpg"}
                             alt={course.courseTitle}
                             className="course-enrollment-img img-fluid"
                           />

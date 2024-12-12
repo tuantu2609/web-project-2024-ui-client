@@ -34,6 +34,14 @@ const Registration = () => {
 
   let navigate = useNavigate();
 
+  const handlePhoneChange = (e) => {
+    const value = e.target.value;
+    // Chỉ cho phép ký tự số và giới hạn độ dài tối đa là 10 chữ số
+    if (/^[0-9]*$/.test(value) && value.length <= 10) {
+      setPhone(value);
+    }
+  };
+
   const handleNext = async (event) => {
     event.preventDefault();
 
@@ -152,6 +160,11 @@ const Registration = () => {
       !birthDate.year
     ) {
       setErrorMessage("Please fill out all fields.");
+      return;
+    }
+
+    if (phone.length !== 10) {
+      setErrorMessage("Phone number must be exactly 10 digits.");
       return;
     }
 
@@ -481,7 +494,7 @@ const Registration = () => {
                       id="phone"
                       name="phone"
                       value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
+                      onChange={handlePhoneChange}
                       required
                     />
                     <label htmlFor="phone">Phone Number</label>
