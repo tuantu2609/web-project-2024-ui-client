@@ -10,27 +10,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # Checkout code from the repository
     - name: Checkout code
       uses: actions/checkout@v3
 
+    # Set up Node.js environment
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '20'
 
+    # Install dependencies and build the project
     - name: Install dependencies and build
       run: |
         npm install
         npm run build
 
+    # Add the known_hosts file to trust the server's SSH key
+    - name: Add VM to known_hosts
+      run: |
+        echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+
+    # Setup SSH agent and add private key
     - name: Setup SSH
       uses: webfactory/ssh-agent@v0.5.3
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+    # Deploy the built files to VM1
     - name: Deploy to VM1
       run: |
-        ssh thienly@20.2.114.34 << 'EOF'
+        ssh -o StrictHostKeyChecking=yes thienly@20.2.114.34 << 'EOF'
           cd /home/thienly/web-project-2024-ui-client
           sudo rm -rf build/*
           cp -r build/* /home/thienly/web-project-2024-ui-client/build
