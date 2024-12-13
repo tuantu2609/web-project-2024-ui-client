@@ -26,10 +26,6 @@ jobs:
         npm install
         npm run build
 
-    # Debug the build output
-    - name: Debug build output
-      run: ls -la build
-
     # Add the known_hosts file to trust the server's SSH key
     - name: Add VM to known_hosts
       run: |
@@ -46,6 +42,10 @@ jobs:
     # Deploy the built files to VM1
     - name: Deploy to VM1
       run: |
+        ssh -o StrictHostKeyChecking=yes thienly@20.2.114.34 << 'EOF'
+          sudo chown -R thienly:thienly /home/thienly/web-project-2024-ui-client
+          sudo chmod -R 755 /home/thienly/web-project-2024-ui-client
+        EOF
         scp -r ./build thienly@20.2.114.34:/home/thienly/web-project-2024-ui-client/
         ssh -o StrictHostKeyChecking=yes thienly@20.2.114.34 << 'EOF'
           cd /home/thienly/web-project-2024-ui-client
