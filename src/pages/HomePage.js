@@ -32,7 +32,7 @@ const HomePage = ({ username }) => {
   };
 
   useEffect(() => {
-    alert("CI/CD Check: This is a third test deployment!");
+    alert("CI/CD Check: This is ci/cd test deployment!");
 
     setBodySectionMarginTop();
     fetch(`${API_URL}/courses`)
