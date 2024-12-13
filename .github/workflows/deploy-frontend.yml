@@ -20,11 +20,16 @@ jobs:
       with:
         node-version: '20'
 
+    # Create .env file with secrets
+    - name: Create .env file
+      run: |
+        echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" > .env
+
     # Install dependencies and build the project
     - name: Install dependencies and build
       run: |
         npm install
-        npm run build
+        CI=false npm run build
 
     # Add the known_hosts file to trust the server's SSH key
     - name: Add VM to known_hosts
