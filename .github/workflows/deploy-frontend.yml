@@ -29,7 +29,9 @@ jobs:
     # Add the known_hosts file to trust the server's SSH key
     - name: Add VM to known_hosts
       run: |
+        mkdir -p ~/.ssh
         echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+        chmod 600 ~/.ssh/known_hosts
 
     # Setup SSH agent and add private key
     - name: Setup SSH
