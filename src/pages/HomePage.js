@@ -32,6 +32,8 @@ const HomePage = ({ username }) => {
   };
 
   useEffect(() => {
+    alert("CI/CD Check: This is a test deployment!");
+
     setBodySectionMarginTop();
     fetch(`${API_URL}/courses`)
       .then((response) => response.json())
