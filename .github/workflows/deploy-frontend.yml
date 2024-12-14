@@ -20,11 +20,16 @@ jobs:
       with:
         node-version: '20'
 
+    # Create .env file with secrets
+    - name: Create .env file
+      run: |
+        echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" > .env
+
     # Install dependencies and build the project
     - name: Install dependencies and build
       run: |
         npm install
-        npm run build
+        CI=false npm run build
 
     # Add the known_hosts file to trust the server's SSH key
     - name: Add VM to known_hosts
@@ -43,8 +48,11 @@ jobs:
     - name: Deploy to VM1
       run: |
         ssh -o StrictHostKeyChecking=yes thienly@20.2.114.34 << 'EOF'
+          sudo chown -R thienly:thienly /home/thienly/web-project-2024-ui-client
+          sudo chmod -R 755 /home/thienly/web-project-2024-ui-client
+        EOF
+        scp -r ./build thienly@20.2.114.34:/home/thienly/web-project-2024-ui-client/
+        ssh -o StrictHostKeyChecking=yes thienly@20.2.114.34 << 'EOF'
           cd /home/thienly/web-project-2024-ui-client
-          sudo rm -rf build/*
-          cp -r build/* /home/thienly/web-project-2024-ui-client/build
           sudo systemctl restart nginx
         EOF
